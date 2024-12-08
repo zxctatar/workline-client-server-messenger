@@ -14,11 +14,26 @@ qt_policy(SET QTP0004 NEW)
 
 qt_add_executable(appClient
     src/main.cpp
+    src/resources.qrc
 )
 
 qt_add_qml_module(appClient
     URI Client
     VERSION 1.0
+
+    QML_FILES src/main.qml
+    RESOURCES src/qmldir
+
+    QML_FILES src/view/loginwindow/LoginWindow.qml
+    RESOURCES src/view/loginwindow/qmldir
+
+    QML_FILES src/windows/MyCustomWindow.qml
+    RESOURCES src/windows/qmldir
+
+    QML_FILES src/resources/Colors.qml
+    RESOURCES src/resources/qmldir
+
+    RESOURCES src/resources/img/CloseApplication.svg
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qmldir</file>
+        <file>view/loginwindow/LoginWindow.qml</file>
+        <file>view/loginwindow/qmldir</file>
+        <file>windows/MyCustomWindow.qml</file>
+        <file>windows/qmldir</file>
+        <file>resources/Colors.qml</file>
+        <file>resources/qmldir</file>
+        <file>resources/img/CloseApplication.svg</file>
+    </qresource>
+</RCC>
