@@ -31,6 +31,7 @@ qt_add_qml_module(appClient
     RESOURCES src/windows/qmldir
 
     QML_FILES src/resources/Colors.qml
+    QML_FILES src/resources/Sizes.qml
     RESOURCES src/resources/qmldir
 
     RESOURCES src/resources/img/CloseApplication.svg

@@ -9,5 +9,6 @@
         <file>resources/Colors.qml</file>
         <file>resources/qmldir</file>
         <file>resources/img/CloseApplication.svg</file>
+        <file>resources/Sizes.qml</file>
     </qresource>
 </RCC>
