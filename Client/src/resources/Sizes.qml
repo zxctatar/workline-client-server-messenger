@@ -19,5 +19,4 @@ QtObject {
     //input field
     readonly property int maxInputFieldWidth: 541 // ширина поля ввода данных
     readonly property int maxInputFieldHeight: 64 // высота поля ввода данных
-
 }

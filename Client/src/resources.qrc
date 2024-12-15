@@ -5,5 +5,10 @@
         <file>resources/Sizes.qml</file>
         <file>resources/qmldir</file>
         <file>resources/Colors.qml</file>
+        <file>resources/img/FullIcon.svg</file>
+        <file>resources/Fonts.qml</file>
+        <file>resources/fonts/Inter-Regular.otf</file>
+        <file>resources/fonts/Lato-SemiBold.ttf</file>
+        <file>resources/DropShadow.qml</file>
     </qresource>
 </RCC>
