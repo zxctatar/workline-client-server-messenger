@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qmldir</file>
+        <file>resources/Sizes.qml</file>
+        <file>resources/qmldir</file>
+        <file>resources/Colors.qml</file>
+    </qresource>
+</RCC>
