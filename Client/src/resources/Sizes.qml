@@ -17,6 +17,11 @@ QtObject {
     readonly property int errorTextSize: 18 // размер текста ошибки
 
     //input field
-    readonly property int maxInputFieldWidth: 541 // ширина поля ввода данных
-    readonly property int maxInputFieldHeight: 64 // высота поля ввода данных
+    property int maxInputFieldWidth: 541 // ширина поля ввода данных
+    property int maxInputFieldHeight: 64 // высота поля ввода данных
+    property int leftPaddingSize: 25 // левый отступ поля ввода данных
+    property int rightPaddingSize: 25 // правый отступ поля ввода данных
+    property int topPaddingSize: 15 // верхний отступ поля ввода данных
+    property int bottomPaddingSize: 15 // нижний отступ поля ввода данных
+    property int radiusInputFieldRectangle: 10 // скругление квадрата
 }

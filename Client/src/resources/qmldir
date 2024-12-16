@@ -2,4 +2,4 @@ module Resources
 singleton Sizes 1.0 Sizes.qml
 singleton Colors 1.0 Colors.qml
 singleton Fonts 1.0 Fonts.qml
-singleton DropShadow 1.0 DropShadow.qml
+singleton Shadows 1.0 Shadows.qml

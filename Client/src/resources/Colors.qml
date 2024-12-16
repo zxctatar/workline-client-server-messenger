@@ -20,4 +20,8 @@ QtObject {
     //input field
     readonly property color normalInputFieldColor: "#E9E9E9" // цвет обычного поля ввода данных
     readonly property color pressedInputFieldColor: "#E4E4E4" // цвет нажатого поля ввода данных
+
+    //border
+    readonly property color normalInputFieldBorderColor: "#00000000"
+    readonly property color pressedInputFieldBorderColor: "#373737"
 }

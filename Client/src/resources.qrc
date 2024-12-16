@@ -9,6 +9,10 @@
         <file>resources/Fonts.qml</file>
         <file>resources/fonts/Inter-Regular.otf</file>
         <file>resources/fonts/Lato-SemiBold.ttf</file>
-        <file>resources/DropShadow.qml</file>
+        <file>view/loginwindow/LoginWindow.qml</file>
+        <file>view/loginwindow/qmldir</file>
+        <file>view/widgets/InputField.qml</file>
+        <file>view/widgets/qmldir</file>
+        <file>resources/Shadows.qml</file>
     </qresource>
 </RCC>

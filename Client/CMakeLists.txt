@@ -27,8 +27,14 @@ qt_add_qml_module(appClient
     QML_FILES src/resources/Sizes.qml
     QML_FILES src/resources/Colors.qml
     QML_FILES src/resources/Fonts.qml
-    QML_FILES src/resources/DropShadow.qml
+    QML_FILES src/resources/Shadows.qml
     RESOURCES src/resources/qmldir
+
+    QML_FILES src/view/widgets/InputField.qml
+    RESOURCES src/view/widgets/qmldir
+
+    QML_FILES src/view/loginwindow/LoginWindow.qml
+    RESOURCES src/view/loginwindow/qmldir
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
