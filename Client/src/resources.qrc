@@ -9,10 +9,15 @@
         <file>resources/Fonts.qml</file>
         <file>resources/fonts/Inter-Regular.otf</file>
         <file>resources/fonts/Lato-SemiBold.ttf</file>
-        <file>view/loginwindow/LoginWindow.qml</file>
-        <file>view/loginwindow/qmldir</file>
         <file>view/widgets/InputField.qml</file>
         <file>view/widgets/qmldir</file>
         <file>resources/Shadows.qml</file>
+        <file>view/widgets/WindowText.qml</file>
+        <file>view/widgets/ErrorText.qml</file>
+        <file>view/widgets/MyButton.qml</file>
+        <file>view/loginpage/qmldir</file>
+        <file>view/registrationpage/qmldir</file>
+        <file>view/registrationpage/RegistrationPage.qml</file>
+        <file>view/loginpage/LoginPage.qml</file>
     </qresource>
 </RCC>

@@ -9,6 +9,7 @@ QtObject {
     //buttons
     readonly property int maxButtonWidth: 541 // ширина кнопки
     readonly property int maxButtonHeight: 64 // высота кнопки
+    readonly property int radiusButtonRectangle: 10 // скругление квадрата кнопки
 
     //text
     readonly property int windowTextSize: 50 // размер текста окна
@@ -17,11 +18,11 @@ QtObject {
     readonly property int errorTextSize: 18 // размер текста ошибки
 
     //input field
-    property int maxInputFieldWidth: 541 // ширина поля ввода данных
-    property int maxInputFieldHeight: 64 // высота поля ввода данных
-    property int leftPaddingSize: 25 // левый отступ поля ввода данных
-    property int rightPaddingSize: 25 // правый отступ поля ввода данных
-    property int topPaddingSize: 15 // верхний отступ поля ввода данных
-    property int bottomPaddingSize: 15 // нижний отступ поля ввода данных
-    property int radiusInputFieldRectangle: 10 // скругление квадрата
+    readonly property int maxInputFieldWidth: 541 // ширина поля ввода данных
+    readonly property int maxInputFieldHeight: 64 // высота поля ввода данных
+    readonly property int leftPaddingSize: 25 // левый отступ поля ввода данных
+    readonly property int rightPaddingSize: 25 // правый отступ поля ввода данных
+    readonly property int topPaddingSize: 15 // верхний отступ поля ввода данных
+    readonly property int bottomPaddingSize: 15 // нижний отступ поля ввода данных
+    readonly property int radiusInputFieldRectangle: 10 // скругление квадрата поля ввода данных
 }

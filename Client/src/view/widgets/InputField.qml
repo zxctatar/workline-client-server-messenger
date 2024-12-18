@@ -5,16 +5,15 @@ import "../../resources"
 
 TextField {
     id: inputField
-    width: Sizes.maxInputFieldWidth
-    height: Sizes.maxInputFieldHeight
-
-    color: Colors.pressedInputFieldTextColor
+    width: Sizes.maxInputFieldWidth // 541
+    height: Sizes.maxInputFieldHeight // 64
 
     leftPadding: Sizes.leftPaddingSize // 25
     rightPadding: Sizes.rightPaddingSize // 25
     topPadding: Sizes.topPaddingSize // 15
     bottomPadding: Sizes.bottomPaddingSize // 15
 
+    color: Colors.pressedInputFieldTextColor
     placeholderTextColor: Colors.normalInputFieldTextColor
 
     font.pixelSize: Sizes.inputFieldTextSize // 26
