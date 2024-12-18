@@ -27,7 +27,7 @@ Page {
             implicitWidth: Sizes.maxInputFieldWidth
             implicitHeight: Sizes.maxInputFieldWidth
             Layout.preferredHeight: Sizes.maxInputFieldHeight
-            Layout.topMargin: 35
+            Layout.topMargin: 18
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             placeholderText: "Логин"
         }
@@ -36,7 +36,7 @@ Page {
             id: inputFieldPassword
             Layout.preferredWidth: Sizes.maxInputFieldWidth
             Layout.preferredHeight: Sizes.maxInputFieldHeight
-            Layout.topMargin: 25
+            Layout.topMargin: 18
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             placeholderText: "Пароль"
 
@@ -45,7 +45,7 @@ Page {
 
         ErrorText {
             visible: false
-            Layout.topMargin: 15
+            Layout.topMargin: 18
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             text: "Неверные данные для входа"
         }
@@ -53,7 +53,7 @@ Page {
         MyButton {
             Layout.preferredWidth: Sizes.maxButtonWidth
             Layout.preferredHeight: Sizes.maxButtonHeight
-            Layout.topMargin: 35
+            Layout.topMargin: 18
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             text: "Войти"
         }
@@ -61,7 +61,7 @@ Page {
         MyButton {
             Layout.preferredWidth: Sizes.maxButtonWidth
             Layout.preferredHeight: Sizes.maxButtonHeight
-            Layout.topMargin: 15
+            Layout.topMargin: 18
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             text: "Регистрация"
 
