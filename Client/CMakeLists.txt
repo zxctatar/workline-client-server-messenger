@@ -34,6 +34,8 @@ qt_add_qml_module(appClient
     QML_FILES src/view/widgets/WindowText.qml
     QML_FILES src/view/widgets/InputField.qml
     QML_FILES src/view/widgets/MyButton.qml
+    QML_FILES src/view/widgets/BackButton.qml
+    QML_FILES src/view/widgets/Tooltip.qml
     RESOURCES src/view/widgets/qmldir
 
     QML_FILES

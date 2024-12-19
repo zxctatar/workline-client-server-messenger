@@ -3,3 +3,5 @@ InputField 1.0 InputField.qml
 WindowText 1.0 WindowText.qml
 ErrorText 1.0 ErrorText.qml
 MyButton 1.0 MyButton.qml
+BackButton 1.0 BackButton.qml
+Tooltip 1.0 Tooltip.qml

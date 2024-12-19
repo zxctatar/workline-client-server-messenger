@@ -6,10 +6,10 @@ import "view/registrationpage"
 
 ApplicationWindow {
     id: mainWindow
-    width: 720 // Sizes.maxWindowWidth
-    height: 860 // Sizes.maxWindowHeight
-    minimumWidth: 720
-    minimumHeight: 860
+    width: 525 // Sizes.maxWindowWidth
+    height: 600 // Sizes.maxWindowHeight
+    minimumWidth: 525
+    minimumHeight: 600
     visible: true
     title: qsTr("WorkLine")
 
@@ -31,7 +31,9 @@ ApplicationWindow {
         Component {
             id: registrationPage
             RegistrationPage {
-
+                onBackButtonClicked: {
+                    stackView.pop()
+                }
             }
         }
     }

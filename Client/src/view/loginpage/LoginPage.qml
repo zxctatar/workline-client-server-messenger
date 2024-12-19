@@ -13,9 +13,19 @@ Page {
         color: Colors.windowBackgroundColor
     }
 
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+
+        onClicked: {
+            inputFieldLogin.focus = false
+            inputFieldPassword.focus = false
+        }
+    }
+
     ColumnLayout {
         anchors.centerIn: parent
-        z: 1
+        spacing: 18
 
         WindowText {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
@@ -24,10 +34,8 @@ Page {
 
         InputField {
             id: inputFieldLogin
-            implicitWidth: Sizes.maxInputFieldWidth
-            implicitHeight: Sizes.maxInputFieldWidth
+            Layout.preferredWidth: Sizes.maxInputFieldWidth
             Layout.preferredHeight: Sizes.maxInputFieldHeight
-            Layout.topMargin: 18
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             placeholderText: "Логин"
         }
@@ -36,7 +44,6 @@ Page {
             id: inputFieldPassword
             Layout.preferredWidth: Sizes.maxInputFieldWidth
             Layout.preferredHeight: Sizes.maxInputFieldHeight
-            Layout.topMargin: 18
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             placeholderText: "Пароль"
 
@@ -45,7 +52,6 @@ Page {
 
         ErrorText {
             visible: false
-            Layout.topMargin: 18
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             text: "Неверные данные для входа"
         }
@@ -53,7 +59,6 @@ Page {
         MyButton {
             Layout.preferredWidth: Sizes.maxButtonWidth
             Layout.preferredHeight: Sizes.maxButtonHeight
-            Layout.topMargin: 18
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             text: "Войти"
         }
@@ -61,23 +66,12 @@ Page {
         MyButton {
             Layout.preferredWidth: Sizes.maxButtonWidth
             Layout.preferredHeight: Sizes.maxButtonHeight
-            Layout.topMargin: 18
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             text: "Регистрация"
 
             onClicked: {
                 loginPage.registerClicked()
             }
-        }
-    }
-
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-
-        onClicked: {
-            inputFieldLogin.focus = false
-            inputFieldPassword.focus = false
         }
     }
 }

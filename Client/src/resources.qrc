@@ -19,5 +19,10 @@
         <file>view/registrationpage/qmldir</file>
         <file>view/registrationpage/RegistrationPage.qml</file>
         <file>view/loginpage/LoginPage.qml</file>
+        <file>view/widgets/BackButton.qml</file>
+        <file>resources/img/back-arrow-hovered.svg</file>
+        <file>resources/img/hint-icon.svg</file>
+        <file>resources/img/back-arrow-normal.svg</file>
+        <file>view/widgets/Tooltip.qml</file>
     </qresource>
 </RCC>

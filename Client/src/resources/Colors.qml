@@ -24,6 +24,15 @@ QtObject {
     readonly property color normalInputFieldTextColor: Qt.rgba(0, 0, 0, 0.25) // цвет текста обычного поля ввода данных
     readonly property color pressedInputFieldTextColor: "#000000" // цвет текста нажатого поля ввода данных
 
-    readonly property color normalInputFieldBorderColor: "#00000000" // цвет рамки обычного поля ввода данных
+    readonly property color normalInputFieldBorderColor: "transparent" // цвет рамки обычного поля ввода данных
     readonly property color pressedInputFieldBorderColor: "#373737" // цвет рамки нажатого поля ввода данных
+
+    //back button
+    readonly property color backgroundBackButtonColor: "transparent" // цвет заднего фона кнопки назад
+
+    //tooltip
+    readonly property color toolTipTextColor: "#000000" // цвет текста подсказки
+
+    readonly property color toolTipBorderColor: "#000000" // цвет рамки подскзки
+    readonly property color toolTipBackgroundColor: "#C6E5FF" // цвет заднего фона подсказки
 }
