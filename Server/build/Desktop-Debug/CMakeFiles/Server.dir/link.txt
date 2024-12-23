@@ -1,1 +1,1 @@
-/usr/bin/clang++-18 -DQT_QML_DEBUG -g CMakeFiles/Server.dir/main.cpp.o -o Server
+/usr/bin/clang++-18 -DQT_QML_DEBUG -g CMakeFiles/Server.dir/src/main.cpp.o CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o -o Server  /usr/lib/x86_64-linux-gnu/libboost_system.so.1.83.0 -lpqxx -lpq
