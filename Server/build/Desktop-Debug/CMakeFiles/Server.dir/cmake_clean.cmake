@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/Server.dir/src/db/Database.cpp.o"
+  "CMakeFiles/Server.dir/src/db/Database.cpp.o.d"
   "CMakeFiles/Server.dir/src/main.cpp.o"
   "CMakeFiles/Server.dir/src/main.cpp.o.d"
-  "CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o"
-  "CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o.d"
   "Server"
   "Server.pdb"
 )

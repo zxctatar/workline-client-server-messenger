@@ -83,32 +83,41 @@ CMakeFiles/Server.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Server.dir/src/main.cpp.s"
 	/usr/bin/clang++-18 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/zxctatar/Projects/workline-client-server-messenger/Server/src/main.cpp -o CMakeFiles/Server.dir/src/main.cpp.s
 
-CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o: CMakeFiles/Server.dir/flags.make
-CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o: /home/zxctatar/Projects/workline-client-server-messenger/Server/src/utils/ThreadPool.cpp
-CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o: CMakeFiles/Server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/zxctatar/Projects/workline-client-server-messenger/Server/build/Desktop-Debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o"
-	/usr/bin/clang++-18 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o -MF CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o.d -o CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o -c /home/zxctatar/Projects/workline-client-server-messenger/Server/src/utils/ThreadPool.cpp
+CMakeFiles/Server.dir/src/db/Database.cpp.o: CMakeFiles/Server.dir/flags.make
+CMakeFiles/Server.dir/src/db/Database.cpp.o: /home/zxctatar/Projects/workline-client-server-messenger/Server/src/db/Database.cpp
+CMakeFiles/Server.dir/src/db/Database.cpp.o: CMakeFiles/Server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/zxctatar/Projects/workline-client-server-messenger/Server/build/Desktop-Debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Server.dir/src/db/Database.cpp.o"
+	/usr/bin/clang++-18 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Server.dir/src/db/Database.cpp.o -MF CMakeFiles/Server.dir/src/db/Database.cpp.o.d -o CMakeFiles/Server.dir/src/db/Database.cpp.o -c /home/zxctatar/Projects/workline-client-server-messenger/Server/src/db/Database.cpp
 
-CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.i"
-	/usr/bin/clang++-18 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/zxctatar/Projects/workline-client-server-messenger/Server/src/utils/ThreadPool.cpp > CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.i
+CMakeFiles/Server.dir/src/db/Database.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Server.dir/src/db/Database.cpp.i"
+	/usr/bin/clang++-18 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/zxctatar/Projects/workline-client-server-messenger/Server/src/db/Database.cpp > CMakeFiles/Server.dir/src/db/Database.cpp.i
 
-CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.s"
-	/usr/bin/clang++-18 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/zxctatar/Projects/workline-client-server-messenger/Server/src/utils/ThreadPool.cpp -o CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.s
+CMakeFiles/Server.dir/src/db/Database.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Server.dir/src/db/Database.cpp.s"
+	/usr/bin/clang++-18 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/zxctatar/Projects/workline-client-server-messenger/Server/src/db/Database.cpp -o CMakeFiles/Server.dir/src/db/Database.cpp.s
 
 # Object files for target Server
 Server_OBJECTS = \
 "CMakeFiles/Server.dir/src/main.cpp.o" \
-"CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o"
+"CMakeFiles/Server.dir/src/db/Database.cpp.o"
 
 # External object files for target Server
 Server_EXTERNAL_OBJECTS =
 
 Server: CMakeFiles/Server.dir/src/main.cpp.o
-Server: CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o
+Server: CMakeFiles/Server.dir/src/db/Database.cpp.o
 Server: CMakeFiles/Server.dir/build.make
 Server: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.83.0
+Server: /usr/lib/x86_64-linux-gnu/libboost_log_setup.so.1.83.0
+Server: /usr/lib/x86_64-linux-gnu/libpq.so
+Server: /usr/lib/x86_64-linux-gnu/libboost_log.so.1.83.0
+Server: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.83.0
+Server: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.83.0
+Server: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.83.0
+Server: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.83.0
+Server: /usr/lib/x86_64-linux-gnu/libboost_atomic.so.1.83.0
+Server: /usr/local/lib/libpqxx.a
 Server: CMakeFiles/Server.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/zxctatar/Projects/workline-client-server-messenger/Server/build/Desktop-Debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable Server"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Server.dir/link.txt --verbose=$(VERBOSE)

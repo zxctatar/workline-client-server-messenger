@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/zxctatar/Projects/workline-client-server-messenger/Server/src/db/Database.cpp" "CMakeFiles/Server.dir/src/db/Database.cpp.o" "gcc" "CMakeFiles/Server.dir/src/db/Database.cpp.o.d"
   "/home/zxctatar/Projects/workline-client-server-messenger/Server/src/main.cpp" "CMakeFiles/Server.dir/src/main.cpp.o" "gcc" "CMakeFiles/Server.dir/src/main.cpp.o.d"
-  "/home/zxctatar/Projects/workline-client-server-messenger/Server/src/utils/ThreadPool.cpp" "CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o" "gcc" "CMakeFiles/Server.dir/src/utils/ThreadPool.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
