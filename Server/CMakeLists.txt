@@ -16,6 +16,9 @@ add_executable(Server src/main.cpp
     src/db/Database.cpp
     include/Database.h
 
+    src/db/DBConnection.cpp
+    include/DBConnection.h
+
 
 )
 
