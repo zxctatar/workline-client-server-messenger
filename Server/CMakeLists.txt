@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package (Boost 1.83.0 COMPONENTS system log log_setup REQUIRED)
 find_package(PostgreSQL REQUIRED)
 find_package(PkgConfig REQUIRED)
+find_package(nlohmann_json REQUIRED)
+
 pkg_check_modules(PQXX REQUIRED IMPORTED_TARGET libpqxx)
 
 add_executable(Server src/main.cpp
@@ -18,6 +20,12 @@ add_executable(Server src/main.cpp
 
     src/db/DBConnection.cpp
     include/DBConnection.h
+    src/server/Server.cpp
+    include/Server.h
+    src/session/Session.cpp
+    include/Session.h
+    src/utils/JsonWorker.cpp
+    include/JsonWorker.h
 
 
 )
@@ -28,7 +36,7 @@ else()
     message(FATAL_ERROR "Boost library not found.")
 endif()
 
-target_link_libraries(Server ${Boost_LIBRARIES} PkgConfig::PQXX PostgreSQL::PostgreSQL)
+target_link_libraries(Server ${Boost_LIBRARIES} PkgConfig::PQXX PostgreSQL::PostgreSQL nlohmann_json::nlohmann_json)
 
 include(GNUInstallDirs)
 install(TARGETS Server
