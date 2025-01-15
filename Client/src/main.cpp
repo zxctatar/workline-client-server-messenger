@@ -1,9 +1,12 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include "include/ServerConnector.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+
+    ServerConnector server("localhost", 8001);
 
     QQmlApplicationEngine engine;
     QObject::connect(
