@@ -38,6 +38,7 @@ Page {
             Tooltip {
                 Layout.preferredWidth: Sizes.maxToolTipWidth // 20
                 Layout.preferredHeight: Sizes.maxToolTipHeight // 20
+                Layout.alignment: Qt.AlignHCenter
 
                 toolTipText: "Другие данные вы сможете заполнить позднее в профиле"
             }

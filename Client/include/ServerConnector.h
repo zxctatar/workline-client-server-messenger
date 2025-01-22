@@ -3,6 +3,7 @@
 
 #include <QTcpSocket>
 #include "JsonWorker.h"
+#include <QTimer>
 
 class ServerConnector : public QObject
 {
@@ -20,12 +21,14 @@ private slots:
 private:
     void connectToServer();
     void reconnectToServer();
+    void settingReconnectionTimer();
 
     quint16 nextBlockSize_;
     const QString strHost_;
     const int port_;
     QTcpSocket* socket_;    
     JsonWorker jsonWorker_;
+    QTimer timerReconnect_;
 };
 
 #endif // SERVERCONNECTOR_H

@@ -1,6 +1,7 @@
 #include "../../include/ServerConnector.h"
 #include <QJsonObject>
 
+
 ServerConnector::ServerConnector(const QString& strHost, const int port, QObject* parent)
     : QObject(parent)
     , nextBlockSize_(0)
@@ -8,6 +9,7 @@ ServerConnector::ServerConnector(const QString& strHost, const int port, QObject
     , port_(port)
     , socket_(new QTcpSocket())
 {
+    settingReconnectionTimer();
     connectToServer();
 }
 
@@ -69,8 +71,38 @@ void ServerConnector::slotError(QAbstractSocket::SocketError err)
                     QString(socket_->errorString()));
 
     qDebug() << strError_;
+
+    reconnectToServer();
+}
+
+void ServerConnector::settingReconnectionTimer()
+{
+    timerReconnect_.setInterval(5000);
+
+    // Переподключение по таймеру
+    connect(&timerReconnect_, &QTimer::timeout, this, [&] {
+        if (socket_->state() == QAbstractSocket::UnconnectedState) {
+            socket_->connectToHost(strHost_, port_);
+        }
+    });
+
+    // Остановка таймера при успешном подключении
+    connect(socket_, &QTcpSocket::connected, this, [&] {
+        qDebug() << "Reconnected";
+        timerReconnect_.stop();
+    });
 }
 
 void ServerConnector::reconnectToServer()
 {
+    qDebug() << "Trying to reconnect in 5 seconds...";
+
+    if (!timerReconnect_.isActive()) {
+        timerReconnect_.start();
+    }
 }
+
+
+
+
+
