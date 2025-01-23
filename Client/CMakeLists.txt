@@ -4,13 +4,18 @@ project(Client VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick Qml)
 
 set(CMAKE_AUTORCC ON)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
 qt_policy(SET QTP0004 NEW)
+
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src
+)
 
 qt_add_executable(appClient
     src/main.cpp
@@ -46,9 +51,19 @@ qt_add_qml_module(appClient
 
     SOURCES src/connection/ServerConnector.cpp
     SOURCES include/ServerConnector.h
+
     SOURCES src/utils/JsonWorker.cpp
-    SOURCES
     SOURCES include/JsonWorker.h
+
+    SOURCES src/controller/maincontroller/MainController.cpp
+    SOURCES include/MainController.h
+
+    SOURCES src/controller/loginpagecontroller/LoginPageController.cpp
+    SOURCES include/LoginPageController.h
+
+    SOURCES src/controller/registrationpagecontroller/RegistrationPageController.cpp
+    SOURCES include/RegistrationPageController.h
+    SOURCES src/controller/registrationpagecontroller/RegistrationPageController.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -64,6 +79,7 @@ set_target_properties(appClient PROPERTIES
 
 target_link_libraries(appClient
     PRIVATE Qt6::Quick
+    PRIVATE Qt6::Qml
 )
 
 include(GNUInstallDirs)

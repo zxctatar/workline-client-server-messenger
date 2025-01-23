@@ -1,7 +1,6 @@
 #include "../../include/ServerConnector.h"
 #include <QJsonObject>
 
-
 ServerConnector::ServerConnector(const QString& strHost, const int port, QObject* parent)
     : QObject(parent)
     , nextBlockSize_(0)
@@ -15,6 +14,7 @@ ServerConnector::ServerConnector(const QString& strHost, const int port, QObject
 
 ServerConnector::~ServerConnector()
 {
+    socket_->deleteLater();
 }
 
 void ServerConnector::connectToServer()

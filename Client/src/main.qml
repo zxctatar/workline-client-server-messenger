@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import com.example.mainController 1.1
 import "view/loginpage"
 import "view/registrationpage"
 

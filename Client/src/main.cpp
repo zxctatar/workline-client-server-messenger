@@ -1,12 +1,17 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include "include/ServerConnector.h"
+#include "include/MainController.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     ServerConnector server("localhost", 8001);
+
+    MainController mainController(server);
+
+    qmlRegisterSingletonInstance<MainController>("com.example.mainController", 1, 1, "MainController", &mainController);
 
     QQmlApplicationEngine engine;
     QObject::connect(
