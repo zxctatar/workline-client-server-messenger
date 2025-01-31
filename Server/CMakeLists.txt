@@ -20,14 +20,18 @@ add_executable(Server src/main.cpp
 
     src/db/DBConnection.cpp
     include/DBConnection.h
+
     src/server/Server.cpp
     include/Server.h
+
     src/session/Session.cpp
     include/Session.h
+
     src/utils/JsonWorker.cpp
     include/JsonWorker.h
 
-
+    src/connections/ConnectedUsers.cpp
+    include/ConnectedUsers.h
 )
 
 if(Boost_FOUND)

@@ -9,7 +9,6 @@ class Database
 {
 public:
     explicit Database(boost::asio::io_context& io_context, std::string& conninfo_to_postgres, std::string& conninfo_to_worklinedatabase);
-
     ~Database();
 
 private:
