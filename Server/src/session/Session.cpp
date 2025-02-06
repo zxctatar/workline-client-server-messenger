@@ -39,17 +39,15 @@ void Session::do_read()
 
 void Session::send_id(const std::string& jsonMessageID_)
 {
-    auto self(shared_from_this());
+    auto self_(shared_from_this());
 
-    // Преобразуем длину сообщения в сетевой порядок байт (big-endian)
-    uint32_t length = htonl(jsonMessageID_.size());
+    uint32_t length_ = htonl(jsonMessageID_.size());
 
-    // Создаем буфер, который сначала содержит длину, а затем сами данные
-    std::vector<boost::asio::const_buffer> buffers;
-    buffers.push_back(boost::asio::buffer(&length, sizeof(length)));
-    buffers.push_back(boost::asio::buffer(jsonMessageID_));
+    std::vector<boost::asio::const_buffer> buffers_;
+    buffers_.push_back(boost::asio::buffer(&length_, sizeof(length_)));
+    buffers_.push_back(boost::asio::buffer(jsonMessageID_));
 
-    boost::asio::async_write(socket_, buffers, [this, self](const boost::system::error_code ec_, std::size_t bytes_transferred){
+    boost::asio::async_write(socket_, buffers_, [this, self_](const boost::system::error_code ec_, std::size_t bytes_transferred_){
         if(ec_)
         {
             BOOST_LOG_TRIVIAL(error) << ec_.message();
