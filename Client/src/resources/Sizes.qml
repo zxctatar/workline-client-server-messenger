@@ -15,6 +15,12 @@ QtObject {
     readonly property int buttonTextSize: 20 // размер текста кнопки
     readonly property int radiusButtonRectangle: 10 // скругление квадрата кнопки
 
+    //showPasswordButton
+    readonly property int maxShowPasswordButtonWidth: 36 // ширина кнопки
+    readonly property int maxShowPasswordButtonHeight: 36 // высотка кнопки
+
+    readonly property int showPasswordButtonRightMarginSize: 9 // правый отсутп кнопки показа пароля
+
     //back button
     readonly property int maxBackButtonWidth: 48 // ширина кнопки назад
     readonly property int maxBackButtonHeight: 48 // высота кнопки назад

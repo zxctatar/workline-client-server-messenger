@@ -20,7 +20,7 @@ void Server::do_accept()
             {
                 BOOST_LOG_TRIVIAL(info) << "New connection.";
                 auto session_ = std::make_shared<Session>(io_context_, std::move(socket_), connectedUsers_);
-                connectedUsers_.add_unauthorized_user(*session_.get());
+                connectedUsers_.addUnauthorizedUser(session_);
                 session_->start();
             }
             else

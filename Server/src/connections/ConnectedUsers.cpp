@@ -8,40 +8,33 @@ ConnectedUsers::ConnectedUsers()
 ConnectedUsers::~ConnectedUsers()
 {}
 
-void ConnectedUsers::add_unauthorized_user(const Session& session_)
+void ConnectedUsers::addUnauthorizedUser(std::shared_ptr<Session> session_)
 {
     id_count_++;
 
-    if(unauthorie_users.find(id_count_) == unauthorie_users.end())
+    while(unauthorized_users.find(id_count_) != unauthorized_users.end())
     {
-        unauthorie_users.emplace(id_count_, session_);
+        id_count_++;
     }
-    else
+    session_->setAccountId(id_count_);
+    unauthorized_users.emplace(id_count_, session_);
+}
+
+void ConnectedUsers::removeUnauthorizedUser(const int id_)
+{
+    unauthorized_users.erase(id_);
+}
+
+void ConnectedUsers::addAuthorizeUser(const int id_, std::shared_ptr<Session> session_)
+{
+    if(authorized_users.find(id_) == authorized_users.end())
     {
-        add_unauthorized_user(session_);
+        session_->setAccountId(id_);
+        authorized_users.emplace(id_, session_);
     }
 }
 
-void ConnectedUsers::remove_unauthorized_user(const int id_)
+void ConnectedUsers::removeAuthorizeUser(const int id_)
 {
-    if(unauthorie_users.find(id_) != unauthorie_users.end())
-    {
-        unauthorie_users.erase(id_);
-    }
-}
-
-void ConnectedUsers::add_authorize_user(const int id_, const Session& session_)
-{
-    if(authorize_users.find(id_) == authorize_users.end())
-    {
-        authorize_users.emplace(id_, session_);
-    }
-}
-
-void ConnectedUsers::remove_authorize_user(const int id_)
-{
-    if(authorize_users.find(id_) != authorize_users.end())
-    {
-        authorize_users.erase(id_);
-    }
+    authorized_users.erase(id_);
 }

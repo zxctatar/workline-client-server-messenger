@@ -24,5 +24,8 @@
         <file>resources/img/hint-icon.svg</file>
         <file>resources/img/back-arrow-normal.svg</file>
         <file>view/widgets/Tooltip.qml</file>
+        <file>view/widgets/ShowPasswordButton.qml</file>
+        <file>resources/img/passwordOff.svg</file>
+        <file>resources/img/passwordOn.svg</file>
     </qresource>
 </RCC>

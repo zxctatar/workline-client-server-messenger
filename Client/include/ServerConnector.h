@@ -18,6 +18,9 @@ private slots:
     void slotConnected();
     void slotError(QAbstractSocket::SocketError);
 
+signals:
+    void setUserId(const int received_id_);
+
 private:
     void connectToServer();
     void reconnectToServer();

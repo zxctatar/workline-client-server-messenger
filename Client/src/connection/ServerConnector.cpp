@@ -1,5 +1,6 @@
 #include "../../include/ServerConnector.h"
 #include <QJsonObject>
+#include <arpa/inet.h>
 
 ServerConnector::ServerConnector(const QString& strHost, const int port, QObject* parent)
     : QObject(parent)
@@ -8,8 +9,8 @@ ServerConnector::ServerConnector(const QString& strHost, const int port, QObject
     , port_(port)
     , socket_(new QTcpSocket())
 {
-    settingReconnectionTimer();
     connectToServer();
+    settingReconnectionTimer();
 }
 
 ServerConnector::~ServerConnector()
@@ -28,29 +29,37 @@ void ServerConnector::connectToServer()
 
 void ServerConnector::slotReadyRead()
 {
-    QDataStream in(socket_);
-    for(;;)
+    static uint32_t messageLength = 0;
+    static QByteArray messageData;
+
+    if (messageLength == 0 && socket_->bytesAvailable() >= sizeof(messageLength))
     {
-        if(!nextBlockSize_)
+        socket_->read(reinterpret_cast<char*>(&messageLength), sizeof(messageLength));
+        messageLength = ntohl(messageLength);
+
+        if (messageLength > 1024 * 1024) // Ограничение на размер сообщения (1 МБ)
         {
-            if(socket_->bytesAvailable() < sizeof(quint16))
-            {
-                break;
-            }
-            in >> nextBlockSize_;
+            qWarning() << "Message too large, closing connection";
+            return;
+        }
+    }
+
+    if (messageLength > 0)
+    {
+        while (socket_->bytesAvailable() > 0 && messageData.size() < messageLength)
+        {
+            messageData.append(socket_->readAll());
         }
 
-        if(socket_->bytesAvailable() < nextBlockSize_)
+        if (messageData.size() >= messageLength)
         {
-            break;
+            QByteArray jsonData = messageData.left(messageLength);
+            QString str_ = QString::fromUtf8(jsonData);
+            qDebug() << "Received JSON:" << str_;
+
+            messageData.remove(0, messageLength);
+            messageLength = 0;
         }
-
-        QString str_;
-        in >> str_;
-
-        QJsonObject jsonObject_ = jsonWorker_.JsonProcessing(str_);
-
-        nextBlockSize_ = 0;
     }
 }
 
@@ -88,7 +97,6 @@ void ServerConnector::settingReconnectionTimer()
 
     // Остановка таймера при успешном подключении
     connect(socket_, &QTcpSocket::connected, this, [&] {
-        qDebug() << "Reconnected";
         timerReconnect_.stop();
     });
 }

@@ -1,19 +1,21 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include "include/ServerConnector.h"
+#include <QQmlContext>
+#include <QQuickItem>
 #include "include/MainController.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    ServerConnector server("localhost", 8001);
-
-    MainController mainController(server);
-
-    qmlRegisterSingletonInstance<MainController>("com.example.mainController", 1, 1, "MainController", &mainController);
-
     QQmlApplicationEngine engine;
+
+    // MainController* mainController = new MainController();
+
+    // engine.rootContext()->setContextProperty("MainController", mainController);
+
+    qmlRegisterType<MainController>("com.mainController", 1, 0, "MainController");
+
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,

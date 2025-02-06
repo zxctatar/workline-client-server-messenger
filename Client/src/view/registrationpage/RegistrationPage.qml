@@ -7,6 +7,8 @@ import "../widgets"
 Page {
     id: registrationPage
 
+    property var controller // контроллер RegistrationPageController
+
     signal backButtonClicked()
 
     background: Rectangle {
@@ -18,6 +20,7 @@ Page {
         anchors.fill: parent
 
         onClicked: {
+            inputFieldInitials.focus = false
             inputFieldLogin.focus = false
             inputFieldPhoneNumber.focus = false
             inputFieldEmail.focus = false
@@ -45,6 +48,14 @@ Page {
         }
 
         InputField {
+            id: inputFieldInitials
+            Layout.alignment: Qt.AlignCenter
+            Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
+            Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
+            placeholderText: "ФИО"
+        }
+
+        InputField {
             id: inputFieldLogin
             Layout.alignment: Qt.AlignCenter
             Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
@@ -58,6 +69,9 @@ Page {
             Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
             Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
             placeholderText: "Введите номер телефона"
+
+            maximumLength: 11
+            validator: RegularExpressionValidator { regularExpression: /[0-9]+/ }
         }
 
         InputField {
@@ -66,6 +80,8 @@ Page {
             Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
             Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
             placeholderText: "Введите почту"
+
+            validator: RegularExpressionValidator { regularExpression: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/}
         }
 
         InputField {
@@ -74,6 +90,8 @@ Page {
             Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
             Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
             placeholderText: "Введите пароль"
+
+            isPassword: true
         }
 
         InputField {
@@ -82,13 +100,16 @@ Page {
             Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
             Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
             placeholderText: "Повторите пароль"
+
+            isPassword: true
         }
 
         ErrorText {
+            id: errorText
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             visible: false
 
-            text: "Неверные данные для входа"
+            text: "Неверные данные для регистрации"
         }
 
         MyButton {
@@ -97,6 +118,61 @@ Page {
             Layout.preferredHeight: Sizes.maxButtonHeight // 48
 
             text: "Зарегистрироваться"
+
+            onClicked: {
+                if(inputFieldInitials.length <= 0)
+                {
+                    errorText.text = "Введите ваши инициалы"
+                    errorText.visible = true
+                    return
+                }
+                else if(inputFieldLogin.length <= 0)
+                {
+                    errorText.text = "Введите логин"
+                    errorText.visible = true
+                    return
+                }
+                else if(inputFieldPhoneNumber.length <= 0)
+                {
+                    errorText.text = "Введите ваш номер телефона"
+                    errorText.visible = true
+                    return
+                }
+                else if(inputFieldPhoneNumber.length < 11)
+                {
+                    errorText.text = "Номер телефона должен содержать 11 цифр"
+                    errorText.visible = true
+                    return
+                }
+                else if(inputFieldEmail.length <= 0)
+                {
+                    errorText.text = "Введите вашу почту"
+                    errorText.visible = true
+                    return
+                }
+                else if(!inputFieldEmail.text.includes("@") || !inputFieldEmail.text.includes("."))
+                {
+                    errorText.text = "Некорректный адрес почты"
+                    errorText.visible = true
+                    return
+                }
+                else if(inputFieldPassword.length < 6)
+                {
+                    errorText.text = "Введите пароль не менее 6 символов"
+                    errorText.visible = true
+                    return
+                }
+                else if(inputFieldPassword.displayText != inputFieldConfirmPassword.displayText)
+                {
+                    errorText.text = "Пароли не совпадают"
+                    errorText.visible = true
+                    return
+                }
+
+                errorText.visible = false
+
+                registrationPage.controller.prepareRegistrationRequest(inputFieldInitials.text, inputFieldLogin.text, inputFieldPhoneNumber.text, inputFieldEmail.text, inputFieldPassword.text)
+            }
         }
     }
 

@@ -3,8 +3,6 @@ import QtQuick.Controls 2.15
 import "../../resources"
 
 Button {
-    property bool passwordField: false // поле определяющее является ли поле вводом пароля
-
     id: myButton
     width: Sizes.maxButtonWidth // 410
     height: Sizes.maxButtonHeight // 48

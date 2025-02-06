@@ -10,6 +10,8 @@ public:
 
     nlohmann::json parceJson(const std::string& data_) const;
 
+    std::string createUserIdJson(const int id_);
+
     ~JsonWorker();
 
 private:

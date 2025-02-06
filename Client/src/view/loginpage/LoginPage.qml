@@ -7,6 +7,8 @@ import "../widgets"
 Page {
     id: loginPage
 
+    property var controller // контроллер loginPageController
+
     signal registerClicked() // сигнал при нажатии на кнопку "Регистрация"
 
     background: Rectangle {
@@ -47,7 +49,7 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             placeholderText: "Пароль"
 
-            echoMode: TextInput.Password
+            isPassword: true
         }
 
         ErrorText {

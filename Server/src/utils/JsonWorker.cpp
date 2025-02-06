@@ -5,11 +5,14 @@
 JsonWorker::JsonWorker()
 {}
 
+JsonWorker::~JsonWorker()
+{}
+
 nlohmann::json JsonWorker::parceJson(const std::string& data_) const
 {
     try
     {
-        auto request_ = nlohmann::json::parse(data_);
+        nlohmann::json request_ = nlohmann::json::parse(data_);
         return request_;
     }
     catch (const std::exception& e)
@@ -19,6 +22,18 @@ nlohmann::json JsonWorker::parceJson(const std::string& data_) const
     }
 }
 
-JsonWorker::~JsonWorker()
-{}
-
+std::string JsonWorker::createUserIdJson(const int id_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "UserID";
+        json_["ID"] = id_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}

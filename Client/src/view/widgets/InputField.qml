@@ -8,8 +8,10 @@ TextField {
     width: Sizes.maxInputFieldWidth // 410
     height: Sizes.maxInputFieldHeight // 48
 
+    property bool isPassword: false
+
     leftPadding: Sizes.leftPaddingSize // 20
-    rightPadding: Sizes.rightPaddingSize // 20
+    rightPadding: showPasswordBtn.visible ? Sizes.rightPaddingSize + showPasswordBtn.width : Sizes.rightPaddingSize // 20
     topPadding: Sizes.topPaddingSize // 10
     bottomPadding: Sizes.bottomPaddingSize // 10
 
@@ -18,6 +20,16 @@ TextField {
 
     font.pixelSize: Sizes.inputFieldTextSize // 20
     font.family: Fonts.textFont
+
+    echoMode: showPasswordBtn.visible ? (showPasswordBtn.showPassword ? TextInput.Normal : TextInput.Password) : TextInput.Normal
+
+    ShowPasswordButton {
+        id: showPasswordBtn
+        visible: inputField.isPassword
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.rightMargin: Sizes.showPasswordButtonRightMarginSize // 9
+    }
 
     background: Rectangle {
         radius: Sizes.radiusInputFieldRectangle // 10
