@@ -1,21 +1,32 @@
 #include "../../include/Session.h"
-#include <iostream>
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup.hpp>
 
-Session::Session(boost::asio::io_context& io_context_, boost::asio::ip::tcp::socket socket_, ConnectedUsers& connectedUsers_)
-    : io_context_(io_context_)
+Session::Session(boost::asio::io_context& io_context_, boost::asio::ip::tcp::socket socket_, ConnectedUsers& connectedUsers_, boost::asio::thread_pool& pool_)
+    : pool_(pool_)
+    , io_context_(io_context_)
     , socket_(std::move(socket_))
     , connectedUsers_(connectedUsers_)
-    , user_id_(0)
+    , userID_(0)
+    , isAutorized(false)
 {
+}
+
+Session::~Session()
+{
+    if(isAutorized)
+    {
+        connectedUsers_.removeAuthorizeUser(userID_);
+    }
+    else
+    {
+        connectedUsers_.removeUnauthorizedUser(userID_);
+    }
 }
 
 void Session::setAccountId(const int id_)
 {
-    user_id_ = id_;
-
-    send_id(jsonWorker_.createUserIdJson(user_id_));
+    userID_ = id_;
 }
 
 void Session::start()
@@ -25,20 +36,59 @@ void Session::start()
 
 void Session::do_read()
 {
-    std::cout << "user_id_ = " << user_id_ << std::endl;
     auto self(shared_from_this());
-    socket_.async_read_some(boost::asio::buffer(data_, 1024),
-                            [this, self](boost::system::error_code ec, std::size_t lenght)
-                            {
-                                if(!ec)
-                                {
-                                    do_read();
-                                }
-                            });
+
+    boost::asio::async_read(socket_, boost::asio::buffer(&message_size_, sizeof(message_size_)),
+        [this, self](boost::system::error_code ec, std::size_t /*length*/)
+        {
+            if (!ec)
+            {
+                message_size_ = ntohl(message_size_);
+                buffer_.resize(message_size_);
+                read_message();
+            }
+            else
+            {
+                std::cerr << "Error reading message length: " << ec.message() << "\n";
+            }
+        });
 }
 
-void Session::send_id(const std::string& jsonMessageID_)
+void Session::read_message()
 {
+    auto self(shared_from_this());
+
+    boost::asio::async_read(socket_, boost::asio::buffer(buffer_),
+        [this, self](boost::system::error_code ec, std::size_t /*length*/)
+        {
+            if (!ec)
+            {
+                std::string request_(buffer_.begin(), buffer_.end());
+                nlohmann::json jsonRequest_ = jsonWorker_.parceJson(request_);
+
+                boost::asio::post(pool_, [this, self, jsonRequest_](){
+                    std::string response_ = requestRouter_.defineQuery(userID_, jsonRequest_);
+
+                    boost::asio::post(self->socket_.get_executor(), [this, self, response_](){
+                        do_write(response_);
+                        do_read();
+                    });
+                });
+            }
+            else
+            {
+                std::cerr << "Error reading message: " << ec.message() << "\n";
+            }
+        });
+}
+
+void Session::do_write(const std::string& jsonMessageID_)
+{
+    if(jsonMessageID_ == "0")
+    {
+        return;
+    }
+
     auto self_(shared_from_this());
 
     uint32_t length_ = htonl(jsonMessageID_.size());
@@ -58,11 +108,3 @@ void Session::send_id(const std::string& jsonMessageID_)
         }
     });
 }
-
-void Session::do_write()
-{
-
-}
-
-Session::~Session()
-{}

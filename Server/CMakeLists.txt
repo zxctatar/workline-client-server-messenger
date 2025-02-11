@@ -32,6 +32,8 @@ add_executable(Server src/main.cpp
 
     src/connections/ConnectedUsers.cpp
     include/ConnectedUsers.h
+    src/routers/RequestRouter.cpp
+    include/RequestRouter.h
 )
 
 if(Boost_FOUND)

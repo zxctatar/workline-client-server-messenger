@@ -3,7 +3,7 @@
 
 #include "ConnectedUsers.h"
 #include <boost/asio/io_context.hpp>
-#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio.hpp>
 
 class Server{
 
@@ -13,11 +13,10 @@ public:
 
 private:
     void do_accept();
-    void do_write();
 
+    boost::asio::thread_pool pool_;
     boost::asio::io_context& io_context_;
     boost::asio::ip::tcp::acceptor acceptor_;
-    boost::asio::ip::tcp::socket socket_;
     ConnectedUsers connectedUsers_;
 };
 
