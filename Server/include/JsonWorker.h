@@ -11,6 +11,8 @@ public:
     nlohmann::json parceJson(const std::string& data_) const;
 
     std::string createUserIdJson(const int id_);
+    std::string createRegistrationCodeJson(const std::string& code_);
+    std::string createLoginCodeJson(const std::string& code_);
 
     ~JsonWorker();
 

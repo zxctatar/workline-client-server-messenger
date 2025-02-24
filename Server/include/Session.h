@@ -4,6 +4,7 @@
 #include "ConnectedUsers.h"
 #include "JsonWorker.h"
 #include "RequestRouter.h"
+#include "DBConnectionPool.h"
 #include <memory>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio.hpp>
@@ -11,7 +12,7 @@
 class Session : public std::enable_shared_from_this<Session>
 {
 public:
-    explicit Session(boost::asio::io_context& io_context_, boost::asio::ip::tcp::socket socket_, ConnectedUsers& connectedUsers_, boost::asio::thread_pool& pool_);
+    explicit Session(boost::asio::io_context& io_context_, boost::asio::ip::tcp::socket socket_, ConnectedUsers& connectedUsers_, boost::asio::thread_pool& threadPool_, DBConnectionPool& connectionPool_);
     ~Session();
 
     void start();
@@ -25,7 +26,8 @@ private:
 
     RequestRouter requestRouter_;
     JsonWorker jsonWorker_;
-    boost::asio::thread_pool& pool_;
+    DBConnectionPool& connectionPool_;
+    boost::asio::thread_pool& threadPool_;
     boost::asio::io_context& io_context_;
     boost::asio::ip::tcp::socket socket_;
     ConnectedUsers& connectedUsers_;

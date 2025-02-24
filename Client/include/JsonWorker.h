@@ -12,6 +12,8 @@ public:
 
     QJsonObject JsonProcessing(const QString& jsonStr_);
 
+    QString createJsonGET_ID(const QString& info_);
+
 private:
 
 };

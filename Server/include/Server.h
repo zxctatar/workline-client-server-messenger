@@ -1,6 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include "DBConnectionPool.h"
 #include "ConnectedUsers.h"
 #include <boost/asio/io_context.hpp>
 #include <boost/asio.hpp>
@@ -14,7 +15,9 @@ public:
 private:
     void do_accept();
 
-    boost::asio::thread_pool pool_;
+    std::string conninfo_to_worklinedatabase;
+    DBConnectionPool connectionPool_;
+    boost::asio::thread_pool threadPool_;
     boost::asio::io_context& io_context_;
     boost::asio::ip::tcp::acceptor acceptor_;
     ConnectedUsers connectedUsers_;

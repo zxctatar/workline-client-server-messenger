@@ -37,3 +37,35 @@ std::string JsonWorker::createUserIdJson(const int id_)
         return nullptr;
     }
 }
+
+std::string JsonWorker::createRegistrationCodeJson(const std::string& code_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Registration";
+        json_["Code"] = code_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createLoginCodeJson(const std::string& code_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Login";
+        json_["Code"] = code_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}

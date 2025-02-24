@@ -18,6 +18,8 @@ private:
     void createUsers(pqxx::connection& connection_to_db_);
     void createTables(pqxx::connection& connection_to_worklinedatabase_);
     void setPrivileges(pqxx::connection& connection_to_db_);
+    void createTrigger(pqxx::connection& connection_to_worklinedatabase_);
+    void insertAdmin(pqxx::connection& connection_to_worklinedatabase_);
 
     boost::asio::io_context& io_context_;
     std::string conninfo_to_postgres_;

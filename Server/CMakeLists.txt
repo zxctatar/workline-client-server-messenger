@@ -32,8 +32,17 @@ add_executable(Server src/main.cpp
 
     src/connections/ConnectedUsers.cpp
     include/ConnectedUsers.h
+
     src/routers/RequestRouter.cpp
     include/RequestRouter.h
+
+    src/db/managers/UserDBManager.cpp
+    include/UserDBManager.h
+
+    src/db/DBConnectionPool.cpp
+    include/DBConnectionPool.h
+    src/db/DatabaseQueries.cpp
+    include/DatabaseQueries.h
 )
 
 if(Boost_FOUND)

@@ -5,7 +5,9 @@ MainController::MainController(QObject* parent)
     , userModel_(new UserModel(this))
 {
     serverConnector_ = (new ServerConnector("localhost", 8001, this));
-    connect(serverConnector_, &ServerConnector::setUserId, userModel_, &UserModel::setId);
+    connect(userModel_, &UserModel::getIdSignal, serverConnector_, &ServerConnector::slotSendToServer);
+    connect(serverConnector_, &ServerConnector::setUserIdSignal, userModel_, &UserModel::setIdSlot);
+    connect(serverConnector_, &ServerConnector::connectedToServerSignal, userModel_, &UserModel::requestIdSlot);
 }
 
 MainController::~MainController()

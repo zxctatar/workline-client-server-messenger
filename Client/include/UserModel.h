@@ -14,7 +14,11 @@ public:
     ~UserModel();
 
 public slots:
-    void setId(const int received_id_);
+    void setIdSlot(const int received_id_);
+    void requestIdSlot();
+
+signals:
+    void getIdSignal(const QString& info_);
 
 private:
     int id_;

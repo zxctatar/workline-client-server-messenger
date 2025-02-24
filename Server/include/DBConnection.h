@@ -9,7 +9,7 @@
 class DBConnection
 {
 public:
-    explicit DBConnection(boost::asio::io_context& io_context, const std::string& conninfo);
+    explicit DBConnection(const std::string& conninfo);
 
     void reconnect();
     void stop();
@@ -22,8 +22,6 @@ public:
 private:
 
     std::unique_ptr<pqxx::connection> connection_;
-    std::unique_ptr<boost::asio::steady_timer> reconnect_timer_;
-    boost::asio::io_context& io_context_;
     std::string conninfo_;
     bool started_;
 };

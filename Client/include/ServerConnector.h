@@ -18,13 +18,18 @@ private slots:
     void slotConnected();
     void slotError(QAbstractSocket::SocketError);
 
+public slots:
+    void slotSendToServer(const QString& info_);
+
 signals:
-    void setUserId(const int received_id_);
+    void setUserIdSignal(const int received_id_);
+    void connectedToServerSignal();
 
 private:
     void connectToServer();
     void reconnectToServer();
     void settingReconnectionTimer();
+    void workingWithResponse(const QJsonObject& jsonObj_);
 
     quint16 nextBlockSize_;
     const QString strHost_;

@@ -22,6 +22,8 @@ void ServerConnector::connectToServer()
 {
     socket_->connectToHost(strHost_, port_);
 
+    socket_->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+
     connect(socket_, &QTcpSocket::connected, this, &ServerConnector::slotConnected);
     connect(socket_, &QTcpSocket::readyRead, this, &ServerConnector::slotReadyRead);
     connect(socket_, &QTcpSocket::errorOccurred, this, &ServerConnector::slotError);
@@ -29,42 +31,79 @@ void ServerConnector::connectToServer()
 
 void ServerConnector::slotReadyRead()
 {
-    static uint32_t messageLength = 0;
-    static QByteArray messageData;
+    static uint32_t message_size_ = 0;
+    static QByteArray messageData_;
 
-    if (messageLength == 0 && socket_->bytesAvailable() >= sizeof(messageLength))
+    if (message_size_ == 0 && socket_->bytesAvailable() >= sizeof(message_size_))
     {
-        socket_->read(reinterpret_cast<char*>(&messageLength), sizeof(messageLength));
-        messageLength = ntohl(messageLength);
+        socket_->read(reinterpret_cast<char*>(&message_size_), sizeof(message_size_));
+        message_size_ = ntohl(message_size_);
 
-        if (messageLength > 1024 * 1024) // Ограничение на размер сообщения (1 МБ)
+        if (message_size_ > 1024 * 1024) // Ограничение на размер сообщения (1 МБ)
         {
             qWarning() << "Message too large, closing connection";
             return;
         }
     }
 
-    if (messageLength > 0)
+    if (message_size_ > 0)
     {
-        while (socket_->bytesAvailable() > 0 && messageData.size() < messageLength)
+        while (socket_->bytesAvailable() > 0 && messageData_.size() < message_size_)
         {
-            messageData.append(socket_->readAll());
+            messageData_.append(socket_->readAll());
         }
 
-        if (messageData.size() >= messageLength)
+        if (messageData_.size() >= message_size_)
         {
-            QByteArray jsonData = messageData.left(messageLength);
+            QByteArray jsonData = messageData_.left(message_size_);
             QString str_ = QString::fromUtf8(jsonData);
-            qDebug() << "Received JSON:" << str_;
 
-            messageData.remove(0, messageLength);
-            messageLength = 0;
+            messageData_.remove(0, message_size_);
+            message_size_ = 0;
+
+            workingWithResponse(jsonWorker_.JsonProcessing(str_));
         }
     }
 }
 
+void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
+{
+    if(jsonObj_["Info"] == "UserID")
+    {
+        emit setUserIdSignal(jsonObj_["ID"].toInt());
+    }
+}
+
+void ServerConnector::slotSendToServer(const QString& info_)
+{
+    QString request_;
+
+    if(info_ == "GET_ID")
+    {
+        request_ = jsonWorker_.createJsonGET_ID(info_);
+    }
+
+    QByteArray data_ = request_.toUtf8();
+
+    qDebug() << data_;
+
+    uint32_t lenght_ = htonl(data_.size());
+
+    qDebug() << lenght_;
+
+    if(socket_->state() == QAbstractSocket::ConnectedState)
+    {
+        socket_->write(reinterpret_cast<char*>(&lenght_), sizeof(lenght_));
+        socket_->write(data_);
+
+        qDebug() << "Отправлено";
+    }
+}
+
+
 void ServerConnector::slotConnected()
 {
+    emit connectedToServerSignal();
     qDebug() << "Connected to the server";
 }
 

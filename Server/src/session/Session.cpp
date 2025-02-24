@@ -2,8 +2,9 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup.hpp>
 
-Session::Session(boost::asio::io_context& io_context_, boost::asio::ip::tcp::socket socket_, ConnectedUsers& connectedUsers_, boost::asio::thread_pool& pool_)
-    : pool_(pool_)
+Session::Session(boost::asio::io_context& io_context_, boost::asio::ip::tcp::socket socket_, ConnectedUsers& connectedUsers_, boost::asio::thread_pool& threadPool_, DBConnectionPool& connectionPool_)
+    : connectionPool_(connectionPool_)
+    , threadPool_(threadPool_)
     , io_context_(io_context_)
     , socket_(std::move(socket_))
     , connectedUsers_(connectedUsers_)
@@ -17,10 +18,6 @@ Session::~Session()
     if(isAutorized)
     {
         connectedUsers_.removeAuthorizeUser(userID_);
-    }
-    else
-    {
-        connectedUsers_.removeUnauthorizedUser(userID_);
     }
 }
 
@@ -66,8 +63,8 @@ void Session::read_message()
                 std::string request_(buffer_.begin(), buffer_.end());
                 nlohmann::json jsonRequest_ = jsonWorker_.parceJson(request_);
 
-                boost::asio::post(pool_, [this, self, jsonRequest_](){
-                    std::string response_ = requestRouter_.defineQuery(userID_, jsonRequest_);
+                boost::asio::post(threadPool_, [this, self, jsonRequest_](){
+                    std::string response_ = requestRouter_.defineQuery(userID_, jsonRequest_, connectionPool_);
 
                     boost::asio::post(self->socket_.get_executor(), [this, self, response_](){
                         do_write(response_);
@@ -84,11 +81,6 @@ void Session::read_message()
 
 void Session::do_write(const std::string& jsonMessageID_)
 {
-    if(jsonMessageID_ == "0")
-    {
-        return;
-    }
-
     auto self_(shared_from_this());
 
     uint32_t length_ = htonl(jsonMessageID_.size());
@@ -104,7 +96,7 @@ void Session::do_write(const std::string& jsonMessageID_)
         }
         else
         {
-            BOOST_LOG_TRIVIAL(info) << "Sent the id to the client";
+            BOOST_LOG_TRIVIAL(info) << "Sent response to the user";
         }
     });
 }

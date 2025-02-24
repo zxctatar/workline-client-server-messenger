@@ -3,10 +3,8 @@
 #include <boost/log/utility/setup.hpp>
 #include <thread>
 
-DBConnection::DBConnection(boost::asio::io_context& io_context, const std::string& conninfo)
-    : reconnect_timer_(std::make_unique<boost::asio::steady_timer>(io_context))
-    , io_context_(io_context)
-    , conninfo_(conninfo)
+DBConnection::DBConnection(const std::string& conninfo)
+    : conninfo_(conninfo)
     , started_(false)
 {
 }
@@ -51,6 +49,7 @@ void DBConnection::reconnect()
 
         std::this_thread::sleep_for(std::chrono::seconds(5));
         reconnect();
+
         // reconnect_timer_->expires_after(std::chrono::seconds(5));
         // reconnect_timer_->async_wait([this](const boost::system::error_code& ec){
         //     if(!ec)

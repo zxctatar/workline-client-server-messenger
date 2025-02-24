@@ -15,8 +15,8 @@ void Database::initializing()
 {
     int8_t stage_ = 0;
 
-    DBConnection connection_to_postgres_(io_context_, conninfo_to_postgres_);
-    DBConnection connection_to_worklinedatabase_(io_context_, conninfo_to_worklinedatabase_);
+    DBConnection connection_to_postgres_(conninfo_to_postgres_);
+    DBConnection connection_to_worklinedatabase_(conninfo_to_worklinedatabase_);
 
     while(true)
     {
@@ -51,7 +51,15 @@ void Database::initializing()
             case 3:
                 setPrivileges(connection_to_worklinedatabase_.getConnection());
                 stage_++;
-                connection_to_worklinedatabase_.stop();
+                // no break: intentionally falling through
+            case 4:
+                createTrigger(connection_to_worklinedatabase_.getConnection());
+                stage_++;
+                break;
+                // no break: intentionally falling through
+            case 5:
+                insertAdmin(connection_to_worklinedatabase_.getConnection());
+                stage_++;
                 break;
             }
             break;
@@ -182,6 +190,13 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                 AND table_name = 'users'
             )");
 
+        pqxx::result result_check_admin_table_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'admins'
+            )");
+
         check_tables_.commit();
 
         if(result_check_users_table_.empty())
@@ -193,14 +208,15 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
             create_users_table_.exec(R"(
                 CREATE TABLE users(
                     user_id SERIAL PRIMARY KEY,
+                    firstname VARCHAR(50) NOT NULL,
+                    lastname VARCHAR(50) NOT NULL,
+                    middlename VARCHAR(50) NOT NULL,
                     login VARCHAR(50) NOT NULL,
-                    password VARCHAR(50) NOT NULL,
                     email VARCHAR(100) NOT NULL,
                     phone_number BIGINT NOT NULL,
-                    firstname VARCHAR(50),
-                    lastname VARCHAR(50),
-                    middlename VARCHAR(50),
-                    registration_date TIMESTAMP
+                    Registration_date TIMESTAMP,
+                    password VARCHAR(50) NOT NULL,
+                    verified_user BOOLEAN NOT NULL DEFAULT FALSE
                     ))");
 
             create_users_table_.commit();
@@ -210,6 +226,27 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
         else
         {
             BOOST_LOG_TRIVIAL(info) << "Users table already exists.";
+        }
+
+        if(result_check_admin_table_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Admin table not found. Creating users table...";
+
+            pqxx::work create_admin_table_(connection_to_worklinedatabase_);
+
+            create_admin_table_.exec(R"(
+                CREATE TABLE admins(
+                    admin_id SERIAL PRIMARY KEY,
+                    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE
+                    ))");
+
+            create_admin_table_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the admin table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Admin table already exists.";
         }
     }
     catch (const pqxx::broken_connection& e)
@@ -234,7 +271,6 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
 
         pqxx::work check_user_roles_(connection_to_worklinedatabase_);
 
-        // Выполнение запроса для SELECT
         pqxx::result result_check_privileges_ = check_user_roles_.exec(R"(
             SELECT privilege_type
             FROM information_schema.role_table_grants
@@ -260,6 +296,7 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
 
             pqxx::nontransaction add_select_privilege_(connection_to_worklinedatabase_);
             add_select_privilege_.exec("GRANT SELECT ON ALL TABLES IN SCHEMA public TO wluser;");
+            add_select_privilege_.exec("GRANT USAGE ON SEQUENCE users_user_id_seq TO wluser;");
             add_select_privilege_.commit();
         }
         else
@@ -291,6 +328,74 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
     catch (const std::exception& e)
     {
         BOOST_LOG_TRIVIAL(error) << e.what();
+    }
+}
+
+void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
+{
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Creating a trigger...";
+
+        pqxx::work create_trigger(connection_to_worklinedatabase_);
+
+        create_trigger.exec("DROP TRIGGER IF EXISTS trigger_set_verified ON admins;");
+        create_trigger.exec("DROP FUNCTION IF EXISTS set_verified_on_admin_insert;");
+
+        // SQL-команда для создания функции триггера
+        create_trigger.exec(R"(
+            CREATE OR REPLACE FUNCTION set_verified_on_admin_insert()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                UPDATE users
+                SET verified_user = TRUE
+                WHERE user_id = NEW.user_id;
+                RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql;
+        )");
+
+        // SQL-команда для создания триггера
+        create_trigger.exec(R"(
+            CREATE TRIGGER trigger_set_verified
+            AFTER INSERT ON admins
+            FOR EACH ROW
+            EXECUTE FUNCTION set_verified_on_admin_insert();
+        )");
+
+        create_trigger.commit();
+        BOOST_LOG_TRIVIAL(info) << "Trigger created successfully.";
+    }
+    catch (const std::exception &e)
+    {
+        BOOST_LOG_TRIVIAL(error) << "Error creating trigger: " << e.what();
+    }
+}
+
+void Database::insertAdmin(pqxx::connection& connection_to_worklinedatabase_)
+{
+    try
+    {
+        pqxx::work txn1(connection_to_worklinedatabase_);
+
+        pqxx::result result = txn1.exec(R"(
+            INSERT INTO users (firstname, lastname, middlename, login, email, phone_number, password, verified_user)
+            VALUES ('Максим', 'Кнутов', 'Владимирович', 'zxctatar', 'maksimknutov80@gmail.com', 79333668855, '123123', FALSE);
+        )");
+
+        txn1.commit();
+
+        pqxx::work txn(connection_to_worklinedatabase_);
+
+        txn.exec(R"(
+            INSERT INTO admins (user_id) VALUES (1);
+        )");
+
+        txn.commit();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error creating user: " << e.what() << std::endl;
     }
 }
 
