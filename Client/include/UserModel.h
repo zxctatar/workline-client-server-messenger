@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <qqml.h>
+#include "JsonWorker.h"
 
 class UserModel : public QObject
 {
@@ -15,13 +16,10 @@ public:
 
 public slots:
     void setIdSlot(const int received_id_);
-    void requestIdSlot();
-
-signals:
-    void getIdSignal(const QString& info_);
 
 private:
     int id_;
+    JsonWorker jsonWorker_;
 };
 
 #endif // USERMODEL_H

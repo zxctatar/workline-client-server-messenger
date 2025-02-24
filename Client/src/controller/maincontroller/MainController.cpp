@@ -5,9 +5,7 @@ MainController::MainController(QObject* parent)
     , userModel_(new UserModel(this))
 {
     serverConnector_ = (new ServerConnector("localhost", 8001, this));
-    connect(userModel_, &UserModel::getIdSignal, serverConnector_, &ServerConnector::slotSendToServer);
     connect(serverConnector_, &ServerConnector::setUserIdSignal, userModel_, &UserModel::setIdSlot);
-    connect(serverConnector_, &ServerConnector::connectedToServerSignal, userModel_, &UserModel::requestIdSlot);
 }
 
 MainController::~MainController()
@@ -53,6 +51,7 @@ void MainController::createLoginPageController()
     if(!loginPageController_)
     {
         loginPageController_ = new LoginPageController(*serverConnector_, this);
+        connect(loginPageController_, &LoginPageController::loginRequestSignal, serverConnector_, &ServerConnector::slotSendToServer);
     }
 }
 
@@ -61,6 +60,8 @@ void MainController::createRegPageController()
     if(!regPageController_)
     {
         regPageController_ = new RegistrationPageController(*serverConnector_, this);
+        connect(regPageController_, &RegistrationPageController::registrationRequestSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendRegistrationCodeSignal, regPageController_, &RegistrationPageController::codeProcessing);
     }
 }
 

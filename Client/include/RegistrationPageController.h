@@ -1,5 +1,5 @@
-#ifndef REGISTRATIONPAGECONTROLLER_H
-#define REGISTRATIONPAGECONTROLLER_H
+#ifndef RegistrationPAGECONTROLLER_H
+#define RegistrationPAGECONTROLLER_H
 
 #include <QObject>
 #include "qqml.h"
@@ -15,15 +15,23 @@ public:
     explicit RegistrationPageController(ServerConnector& serverConnector_, QObject* parent = nullptr);
     ~RegistrationPageController();
 
-    Q_INVOKABLE void prepareRegistrationRequest(const QString& q_initials, const QString& q_login, const QString& q_phoneNumber, const QString& q_email, const QString& password) const;
+    Q_INVOKABLE void prepareRegistrationRequest(const QString& q_initials, const QString& q_login, const QString& q_phoneNumber, const QString& q_email, const QString& q_password) const;
 
-    Q_INVOKABLE void emitSignal();
 signals:
-    void mySignal();
+    void registrationRequestSignal(const QString& request_) const;
+
+    void loginExistsSignal() const;
+    void phoneNumberExistsSignal() const;
+    void emailExistsSignal() const;
+    void regOkSignal() const;
+    void errorRegSignal() const;
+
+public slots:
+    void codeProcessing(const QString& code_) const;
 
 private:
     ServerConnector& serverConnector_;
     JsonWorker jsonWorker_;
 };
 
-#endif // REGISTRATIONPAGECONTROLLER_H
+#endif // RegistrationPAGECONTROLLER_H

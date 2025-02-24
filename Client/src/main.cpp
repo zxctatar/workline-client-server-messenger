@@ -1,4 +1,4 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickItem>
@@ -6,13 +6,9 @@
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-
-    // MainController* mainController = new MainController();
-
-    // engine.rootContext()->setContextProperty("MainController", mainController);
 
     qmlRegisterType<MainController>("com.mainController", 1, 0, "MainController");
 

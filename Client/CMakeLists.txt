@@ -4,7 +4,7 @@ project(Client VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Qml)
+find_package(Qt6 REQUIRED COMPONENTS Quick Qml Widgets)
 
 set(CMAKE_AUTORCC ON)
 
@@ -42,6 +42,8 @@ qt_add_qml_module(appClient
     QML_FILES src/view/widgets/BackButton.qml
     QML_FILES src/view/widgets/Tooltip.qml
     QML_FILES src/view/widgets/ShowPasswordButton.qml
+    QML_FILES src/view/widgets/MyPopup.qml
+    QML_FILES src/view/widgets/NotificationManager.qml
     RESOURCES src/view/widgets/qmldir
 
     QML_FILES src/view/loginpage/LoginPage.qml
@@ -64,6 +66,7 @@ qt_add_qml_module(appClient
 
     SOURCES src/controller/registrationpagecontroller/RegistrationPageController.cpp
     SOURCES include/RegistrationPageController.h
+
     SOURCES src/model/UserModel.cpp
     SOURCES include/UserModel.h
 )
@@ -82,6 +85,7 @@ set_target_properties(appClient PROPERTIES
 target_link_libraries(appClient
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Qml
+    PRIVATE Qt6::Widgets
 )
 
 include(GNUInstallDirs)

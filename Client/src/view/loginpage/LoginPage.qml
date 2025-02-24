@@ -53,6 +53,7 @@ Page {
         }
 
         ErrorText {
+            id: errorText
             visible: false
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             text: "Неверные данные для входа"
@@ -63,6 +64,17 @@ Page {
             Layout.preferredHeight: Sizes.maxButtonHeight
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             text: "Войти"
+
+            onClicked: {
+                if(inputFieldPassword.length < 6)
+                {
+                    errorText.text = "Неверный пароль"
+                    errorText.visible = true
+                    return
+                }
+
+                loginPage.controller.prepareLoginRequest(inputFieldLogin.text, inputFieldPassword.text)
+            }
         }
 
         MyButton {
@@ -76,4 +88,39 @@ Page {
             }
         }
     }
+
+    Connections {
+        target: loginPage.controller
+
+        function onIncorrectDataSignal() {
+            errorText.text = "Неверные данные."
+            errorText.visible = true
+            return
+        }
+
+        function onAccessAllowedSignal() {
+
+        }
+
+        function onAccessDeniedSignal() {
+            errorText.text = "Доступ запрещён."
+        }
+
+        function onErrorLoginSignal() {
+
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

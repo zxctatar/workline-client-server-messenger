@@ -23,7 +23,8 @@ public slots:
 
 signals:
     void setUserIdSignal(const int received_id_);
-    void connectedToServerSignal();
+    void sendRegistrationCodeSignal(const QString& code_);
+    void sendLoginCodeSignal(const QString& code_);
 
 private:
     void connectToServer();

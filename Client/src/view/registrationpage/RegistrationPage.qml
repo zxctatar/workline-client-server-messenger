@@ -9,6 +9,8 @@ Page {
 
     property var controller // контроллер RegistrationPageController
 
+    property var notificationManager // mainWindow notificationManager
+
     signal backButtonClicked()
 
     background: Rectangle {
@@ -173,6 +175,43 @@ Page {
 
                 registrationPage.controller.prepareRegistrationRequest(inputFieldInitials.text, inputFieldLogin.text, inputFieldPhoneNumber.text, inputFieldEmail.text, inputFieldPassword.text)
             }
+        }
+    }
+
+    Connections {
+        target: registrationPage.controller
+        function onLoginExistsSignal() {
+            errorText.text = "Данный логин занят"
+            errorText.visible = true
+            return
+        }
+
+        function onPhoneNumberExistsSignal() {
+            errorText.text = "Данный номер телефона занят"
+            errorText.visible = true
+            return
+        }
+
+        function onEmailExistsSignal() {
+            errorText.text = "Данная почта занята"
+            errorText.visible = true
+            return
+        }
+
+        function onRegOkSignal() {
+            errorText.visible = false
+
+            registrationPage.notificationManager.showNotification("Регистрация: Регистрация успешна")
+
+            return
+        }
+
+        function onErrorRegSignal() {
+            errorText.visible = false
+
+            registrationPage.notificationManager.showNotification("Регистрация: Ошибка на сервере")
+
+            return
         }
     }
 

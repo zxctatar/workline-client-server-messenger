@@ -20,6 +20,12 @@ QtObject {
     //error text
     readonly property color errorTextColor: "#FF0000" // цвет текста ошибки
 
+    //popup
+    readonly property color popupTextColor: "#000000" // цвет текста popup
+
+    readonly property color popupBackgroundColor: "#C5E4FE" // цвет заднего фона popup
+    readonly property color popupBorderColor: "#000000" // цвет рамки popup
+
     //input field
     readonly property color normalInputFieldColor: "#E9E9E9" // цвет обычного поля ввода данных
     readonly property color pressedInputFieldColor: "#E4E4E4" // цвет нажатого поля ввода данных

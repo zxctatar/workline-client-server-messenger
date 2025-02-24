@@ -27,5 +27,8 @@
         <file>view/widgets/ShowPasswordButton.qml</file>
         <file>resources/img/passwordOff.svg</file>
         <file>resources/img/passwordOn.svg</file>
+        <file>view/widgets/MyPopup.qml</file>
+        <file>resources/img/Icon.svg</file>
+        <file>view/widgets/NotificationManager.qml</file>
     </qresource>
 </RCC>

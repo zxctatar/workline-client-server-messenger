@@ -31,6 +31,14 @@ QtObject {
     //error text
     readonly property int errorTextSize: 16 // размер текста ошибки
 
+    //popup
+    readonly property int maxPopupWidth: 400 // ширина popup
+    readonly property int maxPopupHeight: 50 // высота popup
+
+    readonly property int popupTextSize: 16 // размер текста popup
+
+    readonly property int radiusPopupSize: 10 // скургление квадрата popup
+
     //input field
     readonly property int maxInputFieldWidth: 410 // ширина поля ввода данных
     readonly property int maxInputFieldHeight: 48 // высота поля ввода данных
@@ -50,5 +58,5 @@ QtObject {
 
     readonly property int toolTipTextSize: 14 // размер текста подсказки
 
-    readonly property int radiusToolTipSize: 5 // цвет скругления квадрата подсказки
+    readonly property int radiusToolTipSize: 5 // скругления квадрата подсказки
 }

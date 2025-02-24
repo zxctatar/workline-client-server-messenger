@@ -72,24 +72,21 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     {
         emit setUserIdSignal(jsonObj_["ID"].toInt());
     }
+    else if(jsonObj_["Info"] == "Registration")
+    {
+        emit sendRegistrationCodeSignal(jsonObj_["Code"].toString());
+    }
+    else if(jsonObj_["Info"] == "Login")
+    {
+        //emit sendLoginCodeSignal(jsonObj_["Code"].isString());
+    }
 }
 
-void ServerConnector::slotSendToServer(const QString& info_)
+void ServerConnector::slotSendToServer(const QString& request_)
 {
-    QString request_;
-
-    if(info_ == "GET_ID")
-    {
-        request_ = jsonWorker_.createJsonGET_ID(info_);
-    }
-
     QByteArray data_ = request_.toUtf8();
 
-    qDebug() << data_;
-
     uint32_t lenght_ = htonl(data_.size());
-
-    qDebug() << lenght_;
 
     if(socket_->state() == QAbstractSocket::ConnectedState)
     {
@@ -103,7 +100,6 @@ void ServerConnector::slotSendToServer(const QString& info_)
 
 void ServerConnector::slotConnected()
 {
-    emit connectedToServerSignal();
     qDebug() << "Connected to the server";
 }
 

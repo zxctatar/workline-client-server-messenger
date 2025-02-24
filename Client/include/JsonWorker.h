@@ -12,7 +12,9 @@ public:
 
     QJsonObject JsonProcessing(const QString& jsonStr_);
 
-    QString createJsonGET_ID(const QString& info_);
+    QString createJsonGET_ID() const;
+    QString createJsonRegistration(const QString& lastname_, const QString& firstname_, const QString& middlename_, const QString& login_, const QString& phoneNumber_, const QString& email_, const QString& password_) const;
+    QString createJsonLogin(const QString& login_, const QString& password_) const;
 
 private:
 
