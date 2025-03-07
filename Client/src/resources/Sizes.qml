@@ -8,12 +8,18 @@ QtObject {
 
     readonly property int windowTextSize: 30 // размер текста окна
 
+    // login page
+    readonly property int loginPageWidgetsSpacing: 18 // расстояние между виджетами в окне логина
+
     //buttons
     readonly property int maxButtonWidth: 410 // ширина кнопки
     readonly property int maxButtonHeight: 48 // высота кнопки
 
     readonly property int buttonTextSize: 20 // размер текста кнопки
     readonly property int radiusButtonRectangle: 10 // скругление квадрата кнопки
+
+    //add server button
+    readonly property int addServerButtonRadius: 10 // радиус кнопки добавления сервера
 
     //showPasswordButton
     readonly property int maxShowPasswordButtonWidth: 36 // ширина кнопки

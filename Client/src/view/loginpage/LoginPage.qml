@@ -9,7 +9,10 @@ Page {
 
     property var controller // контроллер loginPageController
 
+    property var notificationManager // mainWindow notificationManager
+
     signal registerClicked() // сигнал при нажатии на кнопку "Регистрация"
+    signal loginSuccess() // сигнал при успешном входе
 
     background: Rectangle {
         color: Colors.windowBackgroundColor
@@ -27,7 +30,7 @@ Page {
 
     ColumnLayout {
         anchors.centerIn: parent
-        spacing: 18
+        spacing: Sizes.loginPageWidgetsSpacing
 
         WindowText {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
@@ -99,15 +102,21 @@ Page {
         }
 
         function onAccessAllowedSignal() {
-
+            errorText.visible = false
+            loginPage.loginSuccess()
+            return
         }
 
         function onAccessDeniedSignal() {
-            errorText.text = "Доступ запрещён."
+            errorText.visible = false
+            loginPage.notificationManager.shownotificationManager("Доступ запрещён.")
+            return
         }
 
         function onErrorLoginSignal() {
-
+            errorText.visible = false
+            loginPage.notificationManager.shownotificationManager("Ошибка на сервере.")
+            return
         }
     }
 }

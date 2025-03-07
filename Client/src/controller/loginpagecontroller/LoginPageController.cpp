@@ -1,8 +1,7 @@
 #include "../../../include/LoginPageController.h"
 
-LoginPageController::LoginPageController(ServerConnector& serverConnector_, QObject* parent)
+LoginPageController::LoginPageController(QObject* parent)
     : QObject(parent)
-    , serverConnector_(serverConnector_)
 {
 }
 
@@ -17,21 +16,23 @@ void LoginPageController::prepareLoginRequest(const QString& q_login, const QStr
     emit loginRequestSignal(request_);
 }
 
-void LoginPageController::codeProcessing(const QString& code_) const
+void LoginPageController::slotResponseProcessing(const QJsonObject& jsonObj_) const
 {
-    if(code_ == "INCORRECT_DATA")
+    if(jsonObj_["Code"].toString() == "INCORRECT_DATA")
     {
         emit incorrectDataSignal();
     }
-    else if(code_ == "ACCESS_ALLOWED")
+    else if(jsonObj_["Code"].toString() == "ACCESS_ALLOWED_ADMIN" || jsonObj_["Code"].toString() == "ACCESS_ALLOWED_USER")
     {
+        emit sendUserDataSignal(jsonObj_["UserId"].toInt(), jsonObj_["UserRole"].toString());
+
         emit accessAllowedSignal();
     }
-    else if(code_ == "ACCESS_DENIED")
+    else if(jsonObj_["Code"].toString() == "ACCESS_DENIED")
     {
         emit accessDeniedSignal();
     }
-    else if(code_ == "ERROR")
+    else if(jsonObj_["Code"].toString() == "ERROR")
     {
         emit errorLoginSignal();
     }

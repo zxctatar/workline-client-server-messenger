@@ -12,7 +12,7 @@ class LoginPageController : public QObject
     QML_ELEMENT
 
 public:
-    explicit LoginPageController(ServerConnector& serverConnector_, QObject* parent = nullptr);
+    explicit LoginPageController(QObject* parent = nullptr);
     ~LoginPageController();
 
     Q_INVOKABLE void prepareLoginRequest(const QString& q_login, const QString& q_password) const;
@@ -25,11 +25,12 @@ signals:
     void accessDeniedSignal() const;
     void errorLoginSignal() const;
 
+    void sendUserDataSignal(const int receivedUserId_, const QString& receivedUserRole_) const;
+
 public slots:
-    void codeProcessing(const QString& code_) const;
+    void slotResponseProcessing(const QJsonObject& jsonObj_) const;
 
 private:
-    ServerConnector& serverConnector_;
     JsonWorker jsonWorker_;
 };
 

@@ -50,7 +50,8 @@ void ServerConnector::slotReadyRead()
     {
         while (socket_->bytesAvailable() > 0 && messageData_.size() < message_size_)
         {
-            messageData_.append(socket_->readAll());
+            QByteArray chunk_ = socket_->read(message_size_ - messageData_.size());
+            messageData_.append(chunk_);
         }
 
         if (messageData_.size() >= message_size_)
@@ -68,17 +69,21 @@ void ServerConnector::slotReadyRead()
 
 void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
 {
-    if(jsonObj_["Info"] == "UserID")
-    {
-        emit setUserIdSignal(jsonObj_["ID"].toInt());
-    }
-    else if(jsonObj_["Info"] == "Registration")
+    if(jsonObj_["Info"] == "Registration")
     {
         emit sendRegistrationCodeSignal(jsonObj_["Code"].toString());
     }
     else if(jsonObj_["Info"] == "Login")
     {
-        //emit sendLoginCodeSignal(jsonObj_["Code"].isString());
+        emit sendLoginCodeSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Add_Server")
+    {
+        emit sendServerTableCodeSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Get_Servers")
+    {
+        emit sendUserServers(jsonObj_);
     }
 }
 

@@ -3,12 +3,12 @@ import QtQuick.Controls 2.15
 import Qt.labs.platform
 
 QtObject {
-    id: notification
+    id: notificationManager
     property ApplicationWindow mainWindow
     property SystemTrayIcon tray
     property MyPopup popup
 
-    function showNotification(message) {
+    function shownotificationManager(message) {
         if (mainWindow.active) {
             // Окно активно, показываем уведомление внутри приложения
             popup.popupText = message

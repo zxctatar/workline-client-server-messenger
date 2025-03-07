@@ -5,11 +5,17 @@ import QtQuick.Controls 2.15
 import Qt.labs.platform
 import "view/loginpage"
 import "view/registrationpage"
+import "view/mainpage"
 import "view/widgets"
 import com.mainController 1.0
 
 ApplicationWindow {
     id: mainWindow
+
+    onClosing: {
+        close.accepted = false
+        hide()
+    }
 
     MainController {
         id: mainController
@@ -73,8 +79,12 @@ ApplicationWindow {
 
             LoginPage {
                 controller: mainController.loginPageController
+                notificationManager: notificationManager
                 onRegisterClicked: {
                     stackView.push(registrationPage)
+                }
+                onLoginSuccess: {
+                    stackView.replace(mainPage)
                 }
             }
         }
@@ -87,6 +97,14 @@ ApplicationWindow {
                 onBackButtonClicked: {
                     stackView.pop()
                 }
+            }
+        }
+
+        Component {
+            id: mainPage
+            MainPage {
+                mainController: mainController.getMainController()
+                notificationManager: notificationManager
             }
         }
     }

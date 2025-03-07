@@ -14,6 +14,9 @@ QtObject {
     readonly property color hoverButtonTextColor: "#292929" // цвет текста кнопки когда навелись
     readonly property color normalButtonTextColor: "#373737" // цвет обычной кнопки
 
+    //add server button
+    readonly property color addServerButtonBackgroundColor: "#5EA9EA"
+
     //show password button
     readonly property color showPasswordButtonColor: "transparent" // цвет заднего фона кнопки показа пароля
 

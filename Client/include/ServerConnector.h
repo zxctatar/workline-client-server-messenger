@@ -22,9 +22,10 @@ public slots:
     void slotSendToServer(const QString& info_);
 
 signals:
-    void setUserIdSignal(const int received_id_);
     void sendRegistrationCodeSignal(const QString& code_);
-    void sendLoginCodeSignal(const QString& code_);
+    void sendLoginCodeSignal(const QJsonObject& jsonObj_);
+    void sendServerTableCodeSignal(const QJsonObject& jsonObj_);
+    void sendUserServers(const QJsonObject& jsonObj_);
 
 private:
     void connectToServer();

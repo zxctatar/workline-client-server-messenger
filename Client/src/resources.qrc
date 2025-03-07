@@ -30,5 +30,13 @@
         <file>view/widgets/MyPopup.qml</file>
         <file>resources/img/Icon.svg</file>
         <file>view/widgets/NotificationManager.qml</file>
+        <file>view/mainpage/MainPage.qml</file>
+        <file>view/mainpage/qmldir</file>
+        <file>view/widgets/ServerTable.qml</file>
+        <file>view/widgets/ServerObject.qml</file>
+        <file>resources/img/Plus.svg</file>
+        <file>view/widgets/AddServerButton.qml</file>
+        <file>view/widgets/windows/AddServerWindow.qml</file>
+        <file>view/widgets/windows/qmldir</file>
     </qresource>
 </RCC>

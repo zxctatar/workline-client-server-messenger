@@ -44,13 +44,22 @@ qt_add_qml_module(appClient
     QML_FILES src/view/widgets/ShowPasswordButton.qml
     QML_FILES src/view/widgets/MyPopup.qml
     QML_FILES src/view/widgets/NotificationManager.qml
+    QML_FILES src/view/widgets/ServerTable.qml
+    QML_FILES src/view/widgets/ServerObject.qml
+    QML_FILES src/view/widgets/AddServerButton.qml
     RESOURCES src/view/widgets/qmldir
+
+    QML_FILES src/view/widgets/windows/AddServerWindow.qml
+    RESOURCES src/view/widgets/windows/qmldir
 
     QML_FILES src/view/loginpage/LoginPage.qml
     RESOURCES src/view/loginpage/qmldir
 
     QML_FILES src/view/registrationpage/RegistrationPage.qml
     RESOURCES src/view/registrationpage/qmldir
+
+    QML_FILES src/view/mainpage/MainPage.qml
+    RESOURCES src/view/mainpage/qmldir
 
     SOURCES src/connection/ServerConnector.cpp
     SOURCES include/ServerConnector.h
@@ -67,8 +76,14 @@ qt_add_qml_module(appClient
     SOURCES src/controller/registrationpagecontroller/RegistrationPageController.cpp
     SOURCES include/RegistrationPageController.h
 
-    SOURCES src/model/UserModel.cpp
+    SOURCES src/model/usermodel/UserModel.cpp
     SOURCES include/UserModel.h
+
+    SOURCES src/controller/servertablecontroller/ServerTableController.cpp
+    SOURCES include/ServerTableController.h
+
+    SOURCES src/model/servermodel/ServerModel.cpp
+    SOURCES include/ServerModel.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

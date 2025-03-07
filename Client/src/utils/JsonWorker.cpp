@@ -56,3 +56,23 @@ QString JsonWorker::createJsonLogin(const QString& login_, const QString& passwo
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;
 }
+
+QString JsonWorker::createJsonAddServer(const QString& serverName_, const QString& serverDescriptrion_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Add_Server");
+    jsonObject_.insert("serverName", serverName_);
+    jsonObject_.insert("serverDescription", serverDescriptrion_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}
+
+QString JsonWorker::createJsonGetServers() const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Get_Servers");
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}

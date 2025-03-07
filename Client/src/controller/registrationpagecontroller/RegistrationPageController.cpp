@@ -1,9 +1,8 @@
 #include "../../../include/RegistrationPageController.h"
 #include <QStringList>
 
-RegistrationPageController::RegistrationPageController(ServerConnector& serverConnector_, QObject* parent)
+RegistrationPageController::RegistrationPageController(QObject* parent)
     : QObject(parent)
-    , serverConnector_(serverConnector_)
 {
 
 }
@@ -24,7 +23,7 @@ void RegistrationPageController::prepareRegistrationRequest(const QString& q_ini
     emit registrationRequestSignal(request_);
 }
 
-void RegistrationPageController::codeProcessing(const QString& code_) const
+void RegistrationPageController::slotCodeProcessing(const QString& code_) const
 {
     if(code_ == "LOGIN_EXISTS")
     {
