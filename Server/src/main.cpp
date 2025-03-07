@@ -19,7 +19,7 @@ int main()
     std::string conninfo_to_postgres = "dbname=postgres user=admin password=15900512 hostaddr=127.0.0.1";
     std::string conninfo_to_worklinedatabase = "dbname=worklinedatabase user=admin password=15900512 hostaddr=127.0.0.1";
 
-    Database db(io_context, conninfo_to_postgres, conninfo_to_worklinedatabase);
+    //Database db(io_context, conninfo_to_postgres, conninfo_to_worklinedatabase);
 
     Server server(io_context);
 

@@ -55,7 +55,7 @@ void Database::initializing()
             case 4:
                 createTrigger(connection_to_worklinedatabase_.getConnection());
                 stage_++;
-                break;
+                //break;
                 // no break: intentionally falling through
             case 5:
                 insertAdmin(connection_to_worklinedatabase_.getConnection());
@@ -190,11 +190,25 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                 AND table_name = 'users'
             )");
 
-        pqxx::result result_check_admin_table_ = check_tables_.exec(R"(
+        pqxx::result result_check_admins_table_ = check_tables_.exec(R"(
             SELECT 1
             FROM information_schema.tables
             WHERE table_schema = 'public'
                 AND table_name = 'admins'
+            )");
+
+        pqxx::result result_check_servers_table_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'servers'
+            )");
+
+        pqxx::result result_check_users_on_servers_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'users_on_servers'
             )");
 
         check_tables_.commit();
@@ -228,9 +242,9 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
             BOOST_LOG_TRIVIAL(info) << "Users table already exists.";
         }
 
-        if(result_check_admin_table_.empty())
+        if(result_check_admins_table_.empty())
         {
-            BOOST_LOG_TRIVIAL(info) << "Admin table not found. Creating users table...";
+            BOOST_LOG_TRIVIAL(info) << "Admin table not found. Creating admin table...";
 
             pqxx::work create_admin_table_(connection_to_worklinedatabase_);
 
@@ -247,6 +261,50 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
         else
         {
             BOOST_LOG_TRIVIAL(info) << "Admin table already exists.";
+        }
+
+        if(result_check_servers_table_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Server table not found. Creating server table...";
+
+            pqxx::work create_server_table_(connection_to_worklinedatabase_);
+
+            create_server_table_.exec(R"(
+                CREATE TABLE servers(
+                    server_id SERIAL PRIMARY KEY,
+                    server_name VARCHAR(255) NOT NULL,
+                    server_description VARCHAR(255)
+                    ))");
+
+            create_server_table_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the server table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Server table already exists.";
+        }
+
+        if(result_check_users_on_servers_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Users_on_servers table not found. Creating table...";
+
+            pqxx::work create_users_on_servers_table_(connection_to_worklinedatabase_);
+
+            create_users_on_servers_table_.exec(R"(
+                CREATE TABLE users_on_servers(
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    server_id INTEGER NOT NULL REFERENCES servers(server_id) ON DELETE CASCADE
+                    ))");
+
+            create_users_on_servers_table_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the users_on_servers table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Users_on_servers table already exists.";
         }
     }
     catch (const pqxx::broken_connection& e)
@@ -297,6 +355,8 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
             pqxx::nontransaction add_select_privilege_(connection_to_worklinedatabase_);
             add_select_privilege_.exec("GRANT SELECT ON ALL TABLES IN SCHEMA public TO wluser;");
             add_select_privilege_.exec("GRANT USAGE ON SEQUENCE users_user_id_seq TO wluser;");
+            add_select_privilege_.exec("GRANT USAGE ON SEQUENCE servers_server_id_seq TO wluser;");
+
             add_select_privilege_.commit();
         }
         else

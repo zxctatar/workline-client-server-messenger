@@ -2,6 +2,7 @@
 #define JSONWORKER_H
 
 #include <nlohmann/json.hpp>
+#include "struct/ServerStruct.h"
 
 class JsonWorker
 {
@@ -12,7 +13,11 @@ public:
 
     std::string createUserIdJson(const int id_);
     std::string createRegistrationCodeJson(const std::string& code_);
-    std::string createLoginCodeJson(const std::string& code_);
+    std::string createLoginSuccessJson(const std::string& code_, const int userID_, const std::string& userRole_);
+    std::string createLoginUnsuccessJson(const std::string& code_);
+    std::string createAddingServerSuccessJson(const std::string& code_, const int serverID_, const std::string& serverName_, const std::string& serverDescription);
+    std::string createAddingServerUnsuccessJson(const std::string& code_);
+    std::string createGetServersJson(const std::vector<ServerStruct> servers_);
 
     ~JsonWorker();
 

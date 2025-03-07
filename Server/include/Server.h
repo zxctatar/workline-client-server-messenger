@@ -5,6 +5,7 @@
 #include "ConnectedUsers.h"
 #include <boost/asio/io_context.hpp>
 #include <boost/asio.hpp>
+#include <set>
 
 class Server{
 
@@ -21,6 +22,7 @@ private:
     boost::asio::io_context& io_context_;
     boost::asio::ip::tcp::acceptor acceptor_;
     ConnectedUsers connectedUsers_;
+    std::set<std::shared_ptr<Session>> active_sessions_;
 };
 
 #endif // SERVER_H

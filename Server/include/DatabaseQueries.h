@@ -17,7 +17,19 @@ public:
 
     static pqxx::result checkDataVerification(pqxx::transaction_base& conn_, const std::string& login_, const std::string& password_);
 
-    static pqxx::result checkAccess(pqxx::transaction_base& conn_, const std::string& login_, const std::string& password_);
+    static pqxx::result checkAccess(pqxx::transaction_base& conn_, const int userID_);
+
+    static pqxx::result getUserId(pqxx::transaction_base& conn_, const std::string& login_);
+
+    static pqxx::result checkIsAdmin(pqxx::transaction_base& conn_, const int userID_);
+
+    static pqxx::result checkServerName(pqxx::transaction_base& conn_, const std::string& serverName_);
+
+    static pqxx::result addNewServer(pqxx::transaction_base& conn_, const std::string& serverName_, const std::string& serverDescription_);
+
+    static pqxx::result getUserServres(pqxx::transaction_base& conn_, const int userID_);
+
+    static pqxx::result getAllServers(pqxx::transaction_base& conn_);
 };
 
 #endif // DATABASEQUERIES_H

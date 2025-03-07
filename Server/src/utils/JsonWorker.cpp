@@ -54,13 +54,88 @@ std::string JsonWorker::createRegistrationCodeJson(const std::string& code_)
     }
 }
 
-std::string JsonWorker::createLoginCodeJson(const std::string& code_)
+std::string JsonWorker::createLoginSuccessJson(const std::string& code_, const int userID_, const std::string& userRole_)
 {
     try
     {
         nlohmann::json json_;
         json_["Info"] = "Login";
         json_["Code"] = code_;
+        json_["UserId"] = userID_;
+        json_["UserRole"] = userRole_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createLoginUnsuccessJson(const std::string& code_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Login";
+        json_["Code"] = code_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createAddingServerSuccessJson(const std::string& code_, const int serverID_, const std::string& serverName_, const std::string& serverDescription_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Add_Server";
+        json_["Code"] = code_;
+        json_["ServerID"] = serverID_;
+        json_["ServerName"] = serverName_;
+        json_["ServerDescription"] = serverDescription_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+std::string JsonWorker::createAddingServerUnsuccessJson(const std::string& code_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Add_Server";
+        json_["Code"] = code_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createGetServersJson(const std::vector<ServerStruct> servers_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Get_Servers";
+
+        for(const auto& i : servers_)
+        {
+            nlohmann::json jsonServer_;
+            i.to_json(jsonServer_);
+            json_["Servers"].push_back(jsonServer_);
+        }
+
         return json_.dump();
     }
     catch (const std::exception& e)

@@ -1,5 +1,6 @@
 #include "../../include/ConnectedUsers.h"
 #include "../../include/Session.h"
+#include <iostream>
 
 ConnectedUsers::ConnectedUsers()
     : id_count_(0)
@@ -8,16 +9,35 @@ ConnectedUsers::ConnectedUsers()
 ConnectedUsers::~ConnectedUsers()
 {}
 
-void ConnectedUsers::addAuthorizeUser(const int id_, std::shared_ptr<Session> session_)
+void ConnectedUsers::addAuthorizeUser(const int id_, std::weak_ptr<Session> session_)
 {
+    std::lock_guard<std::mutex> lock(mutex_);
     if(authorized_users.find(id_) == authorized_users.end())
     {
-        session_->setAccountId(id_);
+        session_.lock()->setAccountId(id_);
         authorized_users.emplace(id_, session_);
     }
 }
 
-void ConnectedUsers::removeAuthorizeUser(const int id_)
+void ConnectedUsers::addAuthorizeAdmin(const int id_, std::weak_ptr<Session> session_)
 {
-    authorized_users.erase(id_);
+    std::lock_guard<std::mutex> lock(mutex_);
+    if(authorized_admins.find(id_) == authorized_admins.end())
+    {
+        session_.lock()->setAccountId(id_);
+        authorized_admins.emplace(id_, session_);
+    }
 }
+
+void ConnectedUsers::removeAuthorize(const int id_)
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    authorized_users.erase(id_);
+    authorized_admins.erase(id_);
+}
+
+std::unordered_map<int, std::weak_ptr<Session>> ConnectedUsers::getAuthorizeAdmin() const
+{
+    return authorized_admins;
+}
+

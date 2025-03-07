@@ -22,7 +22,8 @@ void Server::do_accept()
             if(!ec_)
             {
                 BOOST_LOG_TRIVIAL(info) << "New connection.";
-                auto session_ = std::make_shared<Session>(io_context_, std::move(socket_), connectedUsers_, threadPool_, connectionPool_);
+                auto session_ = std::make_shared<Session>(io_context_, active_sessions_, std::move(socket_), connectedUsers_, threadPool_, connectionPool_);
+                active_sessions_.insert(session_);
                 session_->start();
             }
             else

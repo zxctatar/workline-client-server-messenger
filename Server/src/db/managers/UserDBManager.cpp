@@ -55,7 +55,7 @@ std::string UserDBManager::regUser(std::shared_ptr<DBConnection> connection_, co
             return "REG_OK";
         }
     }
-    catch (std::exception& e)
+    catch (const std::exception& e)
     {
         BOOST_LOG_TRIVIAL(error) << e.what();
 
@@ -63,8 +63,12 @@ std::string UserDBManager::regUser(std::shared_ptr<DBConnection> connection_, co
     }
 }
 
-std::string UserDBManager::loginUser(std::shared_ptr<DBConnection> connection_, const std::string& login_, const std::string& password_) const
+LoginResult UserDBManager::loginUser(std::shared_ptr<DBConnection> connection_, const std::string& login_, const std::string& password_) const
 {
+    LoginResult result_;
+    result_.userID_ = 0;
+    result_.userRole_ = "none";
+
     try
     {
         BOOST_LOG_TRIVIAL(info) << "Login data verification...";
@@ -72,7 +76,6 @@ std::string UserDBManager::loginUser(std::shared_ptr<DBConnection> connection_, 
         if(!connection_->isConnected() || !connection_->isStarted())
         {
             BOOST_LOG_TRIVIAL(error) << "Сonnection problem.";
-            return "0";
         }
 
         pqxx::work data_verification_(connection_->getConnection());
@@ -81,30 +84,59 @@ std::string UserDBManager::loginUser(std::shared_ptr<DBConnection> connection_, 
 
         if(result_data_verification_.empty())
         {
-            return "INCORRECT_DATA";
+            result_.code_ = "INCORRECT_DATA";
+            return result_;
         }
         else
         {
-            pqxx::work access_check_(connection_->getConnection());
-            pqxx::result result_access_check_ = DatabaseQueries::checkAccess(access_check_, login_, password_);
+            pqxx::work get_user_id_(connection_->getConnection());
+            pqxx::result result_get_user_id_ = DatabaseQueries::getUserId(get_user_id_, login_);
 
-            bool access_ = result_access_check_[0][0].as<bool>();
+            const int userID_ = result_get_user_id_[0][0].as<int>();
 
-            if(access_)
+            get_user_id_.commit();
+
+            pqxx::work check_is_admin_(connection_->getConnection());
+            pqxx::result result_check_is_admin_ = DatabaseQueries::checkIsAdmin(check_is_admin_, userID_);
+            check_is_admin_.commit();
+
+            if(result_check_is_admin_.empty())
             {
-                return "ACCESS_ALLOWED";
+                pqxx::work access_check_(connection_->getConnection());
+                pqxx::result result_access_check_ = DatabaseQueries::checkAccess(access_check_, userID_);
+
+                bool access_ = result_access_check_[0][0].as<bool>();
+
+                access_check_.commit();
+
+                if(access_)
+                {
+                    result_.code_ = "ACCESS_ALLOWED_USER";
+                    result_.userID_ = userID_;
+                    result_.userRole_ = "user";
+                    return result_;
+                }
+                else
+                {
+                    result_.code_ = "ACCESS_DENIED";
+                    return result_;
+                }
             }
             else
             {
-                return "ACCESS_DENIED";
+                result_.code_ = "ACCESS_ALLOWED_ADMIN";
+                result_.userID_ = userID_;
+                result_.userRole_ = "admin";
+                return result_;
             }
         }
-
     }
     catch (const std::exception& e)
     {
         BOOST_LOG_TRIVIAL(error) << e.what();
 
-        return "ERROR";
+        result_.code_ = "ERROR";
+
+        return result_;
     }
 }

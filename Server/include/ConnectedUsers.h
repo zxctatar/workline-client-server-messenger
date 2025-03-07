@@ -2,7 +2,8 @@
 #define CONNECTEDUSERS_H
 
 #include <boost/uuid/uuid_generators.hpp>
-#include <map>
+#include <unordered_map>
+#include <mutex>
 #include <memory>
 
 class Session;
@@ -13,15 +14,17 @@ public:
     explicit ConnectedUsers();
     ~ConnectedUsers();
 
-    void addUnauthorizedUser(std::shared_ptr<Session> session_);
-    void removeUnauthorizedUser(const int id_);
+    void addAuthorizeUser(const int id_, std::weak_ptr<Session> session_);
+    void addAuthorizeAdmin(const int id_, std::weak_ptr<Session> session_);
+    void removeAuthorize(const int id_);
 
-    void addAuthorizeUser(const int id_, std::shared_ptr<Session> session_);
-    void removeAuthorizeUser(const int id_);
+    std::unordered_map<int, std::weak_ptr<Session>> getAuthorizeAdmin() const;
 
 private:
-    std::map<int, std::shared_ptr<Session>> authorized_users;
-    std::map<int, std::shared_ptr<Session>> unauthorized_users;
+    std::unordered_map<int, std::weak_ptr<Session>> authorized_users;
+    std::unordered_map<int, std::weak_ptr<Session>> authorized_admins;
+
+    std::mutex mutex_;
 
     int id_count_;
 };

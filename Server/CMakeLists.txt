@@ -43,6 +43,11 @@ add_executable(Server src/main.cpp
     include/DBConnectionPool.h
     src/db/DatabaseQueries.cpp
     include/DatabaseQueries.h
+    src/db/managers/ServerDBManager.cpp
+    include/ServerDBManager.h
+    include/struct/LoginResult.h
+    include/struct/AddResult.h
+    include/struct/ServerStruct.h
 )
 
 if(Boost_FOUND)
