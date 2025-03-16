@@ -30,6 +30,9 @@ public:
     static pqxx::result getUserServres(pqxx::transaction_base& conn_, const int userID_);
 
     static pqxx::result getAllServers(pqxx::transaction_base& conn_);
+
+    static pqxx::result getUserData(pqxx::transaction_base& conn_, const std::string& login_);
+
 };
 
 #endif // DATABASEQUERIES_H

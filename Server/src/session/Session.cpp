@@ -1,5 +1,4 @@
 #include "../../include/Session.h"
-#include <thread>
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup.hpp>
 
@@ -53,6 +52,13 @@ void Session::do_read()
     boost::asio::async_read(socket_, boost::asio::buffer(&message_size_, sizeof(message_size_)),
         [this, self](boost::system::error_code ec, std::size_t /*length*/)
         {
+            auto shared_self = self.lock();
+            if(!shared_self)
+            {
+                BOOST_LOG_TRIVIAL(warning) << "Session already destroyed.";
+                return;
+            }
+
             if (!ec)
             {
                 message_size_ = ntohl(message_size_);
@@ -74,13 +80,27 @@ void Session::read_message()
     boost::asio::async_read(socket_, boost::asio::buffer(buffer_),
                             [this, self](boost::system::error_code ec, std::size_t /*length*/)
                             {
+                                auto shared_self = self.lock();
+                                if (!shared_self)
+                                {
+                                    BOOST_LOG_TRIVIAL(warning) << "Session already destroyed.";
+                                    return;
+                                }
+
                                 if (!ec)
                                 {
                                     std::string request_(buffer_.begin(), buffer_.end());
                                     nlohmann::json jsonRequest_ = jsonWorker_.parceJson(request_);
 
                                     boost::asio::post(threadPool_, [this, self, jsonRequest_](){
-                                        requestRouter_.defineQuery(self.lock()->socket_.get_executor(), userID_, jsonRequest_, connectionPool_, shared_from_this(), connectedUsers_);
+                                        try
+                                        {
+                                            requestRouter_.defineQuery(self.lock()->socket_.get_executor(), userID_, jsonRequest_, connectionPool_, shared_from_this(), connectedUsers_);
+                                        }
+                                        catch (const std::exception& e)
+                                        {
+                                            BOOST_LOG_TRIVIAL(error) << "Exception in requestRouter: " << e.what();
+                                        }
                                     });
 
                                     buffer_.clear();
@@ -98,7 +118,7 @@ void Session::do_write(const std::string& jsonMessage_)
     bool write_in_progress = !write_queue_.empty();
     write_queue_.push_back(jsonMessage_);
 
-    if (!write_in_progress) // Только если нет активной отправки
+    if (!write_in_progress)
     {
         write_next();
     }

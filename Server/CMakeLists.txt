@@ -48,6 +48,7 @@ add_executable(Server src/main.cpp
     include/struct/LoginResult.h
     include/struct/AddResult.h
     include/struct/ServerStruct.h
+    include/struct/ReconnectResult.h
 )
 
 if(Boost_FOUND)

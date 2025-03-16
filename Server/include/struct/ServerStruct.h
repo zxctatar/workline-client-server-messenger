@@ -2,7 +2,7 @@
 #define SERVERSTRUCT_H
 
 #include <string>
-#include "nlohmann/json.hpp""
+#include "nlohmann/json.hpp"
 
 struct ServerStruct {
     int serverID_;

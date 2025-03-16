@@ -65,3 +65,8 @@ pqxx::result DatabaseQueries::getAllServers(pqxx::transaction_base& conn_)
 {
     return conn_.exec_params(R"(SELECT server_id, server_name, server_description FROM servers)");
 }
+
+pqxx::result DatabaseQueries::getUserData(pqxx::transaction_base& conn_, const std::string& login_)
+{
+    return conn_.exec_params(R"(SELECT firstname, lastname, middlename, email, phone_number FROM users WHERE login = $1)", login_);
+}

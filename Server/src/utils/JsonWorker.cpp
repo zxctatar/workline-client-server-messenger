@@ -54,15 +54,22 @@ std::string JsonWorker::createRegistrationCodeJson(const std::string& code_)
     }
 }
 
-std::string JsonWorker::createLoginSuccessJson(const std::string& code_, const int userID_, const std::string& userRole_)
+std::string JsonWorker::createLoginSuccessJson(const std::string& code_, const std::string& firstName_, const std::string& lastName_, const std::string& middleName_, const std::string& email_, const std::string& phoneNumber_, const int userID_, const std::string& userRole_, const std::string& userLogin_, const std::string& userPassword_)
 {
     try
     {
         nlohmann::json json_;
         json_["Info"] = "Login";
         json_["Code"] = code_;
+        json_["UserFirstName"] = firstName_;
+        json_["UserLastName"] = lastName_;
+        json_["UserMiddleName"] = middleName_;
+        json_["UserEmail"] = email_;
+        json_["UserPhoneNumber"] = phoneNumber_;
         json_["UserId"] = userID_;
         json_["UserRole"] = userRole_;
+        json_["UserLogin"] = userLogin_;
+        json_["UserPassword"] = userPassword_;
         return json_.dump();
     }
     catch (const std::exception& e)

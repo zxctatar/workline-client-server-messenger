@@ -1,7 +1,6 @@
 #include "../../include/RequestRouter.h"
 #include "../../include/Session.h"
 #include <memory>
-#include <iostream>
 
 RequestRouter::RequestRouter()
 {
@@ -18,7 +17,6 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         std::string responseJson_ = jsonWorker_.createUserIdJson(userID_);
 
         boost::asio::post(executor_, [this, session_, responseJson_](){
-            //do read везде
             session_.lock()->do_write(responseJson_);
         });
     }
@@ -82,12 +80,11 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             {
                 connUsers_.addAuthorizeUser(response_.userID_, session_);
             }
-            responseJson_ = jsonWorker_.createLoginSuccessJson(response_.code_, response_.userID_, response_.userRole_);
+            responseJson_ = jsonWorker_.createLoginSuccessJson(response_.code_, response_.userFirstName_, response_.userLastName_, response_.userMiddleName_, response_.userEmail_, response_.userPhoneNumber, response_.userID_, response_.userRole_, response_.userLogin_, response_.userPassword_);
         }
 
         boost::asio::post(executor_, [this, session_, responseJson_](){
             session_.lock()->do_write(responseJson_);
-            //session_->do_read();
         });
     }
     else if(json_["Info"] == "Add_Server")
@@ -139,8 +136,28 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             session_.lock()->do_write(responseJson_);
         });
     }
-    else
+    else if(json_["Info"] == "Reconnect")
     {
+        if(!json_.contains("login") || !json_.contains("password"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        std::string login_ = json_["login"].get<std::string>();
+        std::string password_ = json_["password"].get<std::string>();
+
+        auto connection_ = connectionPool_.getConnection();
+        ReconnectResult response_ = userManager_.reconnectUser(connection_, login_, password_);
+        connectionPool_.returnConnection(connection_);
+
+        if(response_.userRole_ == "user")
+        {
+            connUsers_.addAuthorizeUser(response_.userID_, session_);
+        }
+        else if(response_.userRole_ == "admin")
+        {
+            connUsers_.addAuthorizeAdmin(response_.userID_, session_);
+        }
     }
 }
 
