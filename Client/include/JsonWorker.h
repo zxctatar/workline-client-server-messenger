@@ -18,6 +18,7 @@ public:
     QString createJsonLogin(const QString& login_, const QString& password_) const;
     QString createJsonAddServer(const QString& serverName_, const QString& serverDescriptrion_) const;
     QString createJsonGetServers() const;
+    QString createJsonReconnect(const QString& login_, const QString& password_) const;
 
 private:
 };

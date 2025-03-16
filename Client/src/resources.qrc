@@ -9,34 +9,47 @@
         <file>resources/Fonts.qml</file>
         <file>resources/fonts/Inter-Regular.otf</file>
         <file>resources/fonts/Lato-SemiBold.ttf</file>
-        <file>view/widgets/InputField.qml</file>
-        <file>view/widgets/qmldir</file>
         <file>resources/Shadows.qml</file>
-        <file>view/widgets/WindowText.qml</file>
-        <file>view/widgets/ErrorText.qml</file>
-        <file>view/widgets/MyButton.qml</file>
-        <file>view/loginpage/qmldir</file>
-        <file>view/registrationpage/qmldir</file>
-        <file>view/registrationpage/RegistrationPage.qml</file>
-        <file>view/loginpage/LoginPage.qml</file>
-        <file>view/widgets/BackButton.qml</file>
         <file>resources/img/back-arrow-hovered.svg</file>
         <file>resources/img/hint-icon.svg</file>
         <file>resources/img/back-arrow-normal.svg</file>
-        <file>view/widgets/Tooltip.qml</file>
-        <file>view/widgets/ShowPasswordButton.qml</file>
         <file>resources/img/passwordOff.svg</file>
         <file>resources/img/passwordOn.svg</file>
-        <file>view/widgets/MyPopup.qml</file>
         <file>resources/img/Icon.svg</file>
-        <file>view/widgets/NotificationManager.qml</file>
-        <file>view/mainpage/MainPage.qml</file>
-        <file>view/mainpage/qmldir</file>
-        <file>view/widgets/ServerTable.qml</file>
-        <file>view/widgets/ServerObject.qml</file>
         <file>resources/img/Plus.svg</file>
-        <file>view/widgets/AddServerButton.qml</file>
-        <file>view/widgets/windows/AddServerWindow.qml</file>
-        <file>view/widgets/windows/qmldir</file>
+        <file>resources/img/MenuButton.svg</file>
+        <file>view/windows/AddServerWindow.qml</file>
+        <file>view/windows/MenuWindow.qml</file>
+        <file>view/windows/qmldir</file>
+        <file>view/customwidgets/compositewidgets/qmldir</file>
+        <file>view/customwidgets/compositewidgets/ServerTable.qml</file>
+        <file>view/customwidgets/compositewidgets/TopBar.qml</file>
+        <file>view/customwidgets/widgets/AddServerButton.qml</file>
+        <file>view/customwidgets/widgets/BackButton.qml</file>
+        <file>view/customwidgets/widgets/ErrorText.qml</file>
+        <file>view/customwidgets/widgets/InputField.qml</file>
+        <file>view/customwidgets/widgets/MenuButton.qml</file>
+        <file>view/customwidgets/widgets/MyButton.qml</file>
+        <file>view/customwidgets/widgets/MyPopup.qml</file>
+        <file>view/customwidgets/widgets/NotificationManager.qml</file>
+        <file>view/customwidgets/widgets/qmldir</file>
+        <file>view/customwidgets/widgets/ServerObject.qml</file>
+        <file>view/customwidgets/widgets/ShowPasswordButton.qml</file>
+        <file>view/customwidgets/widgets/Tooltip.qml</file>
+        <file>view/customwidgets/widgets/WindowText.qml</file>
+        <file>view/customwidgets/widgets/MenuWidget.qml</file>
+        <file>view/customwidgets/widgets/Separator.qml</file>
+        <file>view/apppages/loginpage/LoginPage.qml</file>
+        <file>view/apppages/loginpage/qmldir</file>
+        <file>view/apppages/mainpage/qmldir</file>
+        <file>view/apppages/mainpage/MainPage.qml</file>
+        <file>view/apppages/registrationpage/qmldir</file>
+        <file>view/apppages/registrationpage/RegistrationPage.qml</file>
+        <file>view/windowpages/menumainpage/MenuMainPage.qml</file>
+        <file>view/windowpages/menumainpage/qmldir</file>
+        <file>view/windowpages/menuprofilepage/MenuProfilePage.qml</file>
+        <file>view/customwidgets/widgets/MenuPageInputField.qml</file>
+        <file>view/customwidgets/widgets/MenuText.qml</file>
+        <file>view/customwidgets/widgets/MenuPageLabel.qml</file>
     </qresource>
 </RCC>

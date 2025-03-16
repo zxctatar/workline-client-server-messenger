@@ -14,8 +14,30 @@ QtObject {
     readonly property color hoverButtonTextColor: "#292929" // цвет текста кнопки когда навелись
     readonly property color normalButtonTextColor: "#373737" // цвет обычной кнопки
 
+    //separator
+    readonly property color separatorColor: "#B0D5FF" // цвет разделителя
+
+    //menu button
+    readonly property color menuButtonBackgroundColor: "transparent" // цвет заднего фона кнопки меню
+
+    //menu widget (button)
+    readonly property color hoveredMenuWidgetColor: "#C1D7EA" // цвет виджета меню когда навелись
+    readonly property color normalMenuWidgetColor: "transparent" // цвет обычного виджета меню
+
+    //top bar
+    readonly property color topBarBackgroundColor: "#8BB3D7" // цвет заднего фона верхнего меню
+
     //add server button
-    readonly property color addServerButtonBackgroundColor: "#5EA9EA"
+    readonly property color addServerButtonBackgroundColor: "#5EA9EA" // цвет заднего фона кнопки добавления сервера
+
+    //add server window
+    readonly property color addServerWindowBackgroundColor: "#D3E3F1" // цвет заднего фона окна добавления сервера
+
+    //menu window
+    readonly property color menuWindowBackgroundColor: "#D3E3F1" // цвет заднего фона окна меню
+
+    //server table
+    readonly property color serverTableBackgroundColor: "#0D497D" // цвет заднего фона таблицы серверов
 
     //show password button
     readonly property color showPasswordButtonColor: "transparent" // цвет заднего фона кнопки показа пароля

@@ -35,31 +35,47 @@ qt_add_qml_module(appClient
     QML_FILES src/resources/Shadows.qml
     RESOURCES src/resources/qmldir
 
-    QML_FILES src/view/widgets/ErrorText.qml
-    QML_FILES src/view/widgets/WindowText.qml
-    QML_FILES src/view/widgets/InputField.qml
-    QML_FILES src/view/widgets/MyButton.qml
-    QML_FILES src/view/widgets/BackButton.qml
-    QML_FILES src/view/widgets/Tooltip.qml
-    QML_FILES src/view/widgets/ShowPasswordButton.qml
-    QML_FILES src/view/widgets/MyPopup.qml
-    QML_FILES src/view/widgets/NotificationManager.qml
-    QML_FILES src/view/widgets/ServerTable.qml
-    QML_FILES src/view/widgets/ServerObject.qml
-    QML_FILES src/view/widgets/AddServerButton.qml
-    RESOURCES src/view/widgets/qmldir
+    QML_FILES src/view/customwidgets/compositewidgets/TopBar.qml
+    QML_FILES src/view/customwidgets/compositewidgets/ServerTable.qml
+    RESOURCES src/view/customwidgets/compositewidgets/qmldir
 
-    QML_FILES src/view/widgets/windows/AddServerWindow.qml
-    RESOURCES src/view/widgets/windows/qmldir
+    QML_FILES src/view/customwidgets/widgets/ErrorText.qml
+    QML_FILES src/view/customwidgets/widgets/WindowText.qml
+    QML_FILES src/view/customwidgets/widgets/InputField.qml
+    QML_FILES src/view/customwidgets/widgets/MyButton.qml
+    QML_FILES src/view/customwidgets/widgets/BackButton.qml
+    QML_FILES src/view/customwidgets/widgets/Tooltip.qml
+    QML_FILES src/view/customwidgets/widgets/ShowPasswordButton.qml
+    QML_FILES src/view/customwidgets/widgets/MyPopup.qml
+    QML_FILES src/view/customwidgets/widgets/NotificationManager.qml
+    QML_FILES src/view/customwidgets/widgets/ServerObject.qml
+    QML_FILES src/view/customwidgets/widgets/AddServerButton.qml
+    QML_FILES src/view/customwidgets/widgets/MenuButton.qml
+    QML_FILES src/view/customwidgets/widgets/MenuWidget.qml
+    QML_FILES src/view/customwidgets/widgets/Separator.qml
+    QML_FILES src/view/customwidgets/widgets/MenuPageInputField.qml
+    QML_FILES src/view/customwidgets/widgets/MenuText.qml
+    QML_FILES src/view/customwidgets/widgets/MenuPageLabel.qml
+    RESOURCES src/view/customwidgets/widgets/qmldir
 
-    QML_FILES src/view/loginpage/LoginPage.qml
-    RESOURCES src/view/loginpage/qmldir
+    QML_FILES src/view/windowpages/menuprofilepage/MenuProfilePage.qml
+    RESOURCES src/view/windowpages/menuprofilepage/qmldir
 
-    QML_FILES src/view/registrationpage/RegistrationPage.qml
-    RESOURCES src/view/registrationpage/qmldir
+    QML_FILES src/view/windowpages/menumainpage/MenuMainPage.qml
+    RESOURCES src/view/windowpages/menumainpage/qmldir
 
-    QML_FILES src/view/mainpage/MainPage.qml
-    RESOURCES src/view/mainpage/qmldir
+    QML_FILES src/view/windows/AddServerWindow.qml
+    QML_FILES src/view/windows/MenuWindow.qml
+    RESOURCES src/view/windows/qmldir
+
+    QML_FILES src/view/apppages/loginpage/LoginPage.qml
+    RESOURCES src/view/apppages/loginpage/qmldir
+
+    QML_FILES src/view/apppages/registrationpage/RegistrationPage.qml
+    RESOURCES src/view/apppages/registrationpage/qmldir
+
+    QML_FILES src/view/apppages/mainpage/MainPage.qml
+    RESOURCES src/view/apppages/mainpage/qmldir
 
     SOURCES src/connection/ServerConnector.cpp
     SOURCES include/ServerConnector.h
@@ -84,6 +100,13 @@ qt_add_qml_module(appClient
 
     SOURCES src/model/servermodel/ServerModel.cpp
     SOURCES include/ServerModel.h
+
+    SOURCES src/controller/useraccountcontroller/UserAccountController.cpp
+    SOURCES include/UserAccountController.h
+
+    SOURCES src/controller/topbarcontroller/TopBarController.cpp
+    SOURCES include/TopBarController.h
+
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

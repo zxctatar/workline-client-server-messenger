@@ -26,6 +26,8 @@ signals:
     void sendLoginCodeSignal(const QJsonObject& jsonObj_);
     void sendServerTableCodeSignal(const QJsonObject& jsonObj_);
     void sendUserServers(const QJsonObject& jsonObj_);
+    void checkAuthorizationSignal();
+
 
 private:
     void connectToServer();

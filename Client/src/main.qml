@@ -3,16 +3,16 @@ import QtQml
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Qt.labs.platform
-import "view/loginpage"
-import "view/registrationpage"
-import "view/mainpage"
-import "view/widgets"
+import "view/apppages/loginpage"
+import "view/apppages/registrationpage"
+import "view/apppages/mainpage"
+import "view/customwidgets/widgets"
 import com.mainController 1.0
 
 ApplicationWindow {
     id: mainWindow
 
-    onClosing: {
+    onClosing: close => {
         close.accepted = false
         hide()
     }

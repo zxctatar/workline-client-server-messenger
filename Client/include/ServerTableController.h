@@ -27,7 +27,7 @@ signals:
     void addServerSignal(const QString& info_) const;
     void needServers(const QString& info_) const;
 
-    void addNewServerSignal(const QString& name, const QString& description_) const;
+    void serverAdded() const;
     void serverNameExistsSignal() const;
     void errorCreateServerSignal() const;
 

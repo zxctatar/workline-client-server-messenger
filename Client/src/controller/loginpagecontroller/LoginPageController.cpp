@@ -7,6 +7,7 @@ LoginPageController::LoginPageController(QObject* parent)
 
 LoginPageController::~LoginPageController()
 {
+
 }
 
 void LoginPageController::prepareLoginRequest(const QString& q_login, const QString& q_password) const
@@ -24,7 +25,7 @@ void LoginPageController::slotResponseProcessing(const QJsonObject& jsonObj_) co
     }
     else if(jsonObj_["Code"].toString() == "ACCESS_ALLOWED_ADMIN" || jsonObj_["Code"].toString() == "ACCESS_ALLOWED_USER")
     {
-        emit sendUserDataSignal(jsonObj_["UserId"].toInt(), jsonObj_["UserRole"].toString());
+        emit sendUserDataSignal(jsonObj_["UserFirstName"].toString(), jsonObj_["UserLastName"].toString(), jsonObj_["UserMiddleName"].toString(), jsonObj_["UserEmail"].toString(), jsonObj_["UserPhoneNumber"].toString(), jsonObj_["UserLogin"].toString(), jsonObj_["UserPassword"].toString(), jsonObj_["UserId"].toInt(), jsonObj_["UserRole"].toString());
 
         emit accessAllowedSignal();
     }

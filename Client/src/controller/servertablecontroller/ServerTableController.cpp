@@ -56,7 +56,7 @@ void ServerTableController::slotServerProcessing(const QJsonObject& jsonObj_) co
         QString serverName_ = serverObj_["name"].toString();
         QString serverDescription_ = serverObj_["description"].toString();
 
-        serverModel_->addServer(serverID_, serverName_, serverDescription_);
+        serverModel_->addServer(serverID_, serverName_[0], serverName_, serverDescription_);
     }
 }
 
@@ -64,7 +64,8 @@ void ServerTableController::slotCodeProcessing(const QJsonObject& jsonObj_) cons
 {
     if(jsonObj_["Code"].toString() == "SERVER_ADDED")
     {
-        serverModel_->addServer(jsonObj_["ServerID"].toInt(), jsonObj_["ServerName"].toString(), jsonObj_["ServerDescription"].toString());
+        serverModel_->addServer(jsonObj_["ServerID"].toInt(), jsonObj_["ServerName"].toString()[0], jsonObj_["ServerName"].toString(), jsonObj_["ServerDescription"].toString());
+        emit serverAdded();
     }
     else if(jsonObj_["Code"].toString() == "SERVER_NAME_EXISTS")
     {

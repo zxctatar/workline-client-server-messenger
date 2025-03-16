@@ -2,9 +2,12 @@
 
 MainController::MainController(QObject* parent)
     : QObject(parent)
-    , userModel_(new UserModel(this))
+    , userAccountController_(new UserAccountController(this))
 {
     serverConnector_ = (new ServerConnector("localhost", 8001, this));
+
+    connect(serverConnector_, &ServerConnector::checkAuthorizationSignal, userAccountController_, &UserAccountController::slotCheckAuthorization);
+    connect(userAccountController_, &UserAccountController::sendAuthorizationDataSignal, serverConnector_, &ServerConnector::slotSendToServer);
 }
 
 MainController::~MainController()
@@ -17,9 +20,9 @@ MainController::~MainController()
     {
         delete regPageController_;
     }
-    if(userModel_)
+    if(userAccountController_)
     {
-        delete userModel_;
+        delete userAccountController_;
     }
     if(serverConnector_)
     {
@@ -53,6 +56,7 @@ RegistrationPageController* MainController::getRegPageController()
     }
     return regPageController_;
 }
+
 ServerTableController* MainController::getServerTableController()
 {
     if(!serverTableController_)
@@ -60,6 +64,15 @@ ServerTableController* MainController::getServerTableController()
         createServerTableController();
     }
     return serverTableController_;
+}
+
+TopBarController* MainController::getTopBarController()
+{
+    if(!topBarController_)
+    {
+        createTopBarController();
+    }
+    return topBarController_;
 }
 
 void MainController::createLoginPageController()
@@ -70,7 +83,7 @@ void MainController::createLoginPageController()
         connect(loginPageController_, &LoginPageController::loginRequestSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendLoginCodeSignal, loginPageController_, &LoginPageController::slotResponseProcessing);
 
-        connect(loginPageController_, &LoginPageController::sendUserDataSignal, userModel_, &UserModel::slotSetUserData);
+        connect(loginPageController_, &LoginPageController::sendUserDataSignal, userAccountController_, &UserAccountController::slotSetUserData);
     }
 }
 
@@ -89,12 +102,25 @@ void MainController::createServerTableController()
     if(!serverTableController_)
     {
         serverTableController_ = new ServerTableController(this);
-        connect(serverTableController_, &ServerTableController::needUserRoleSignal, userModel_, &UserModel::slotSendUserRole);
-        connect(userModel_, &UserModel::sendUserRoleSignal, serverTableController_, &ServerTableController::slotSetUserRole);
+        connect(serverTableController_, &ServerTableController::needUserRoleSignal, userAccountController_, &UserAccountController::slotSendUserRole);
+        connect(userAccountController_, &UserAccountController::sendUserRoleSignal, serverTableController_, &ServerTableController::slotSetUserRole);
 
         connect(serverTableController_, &ServerTableController::addServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendServerTableCodeSignal, serverTableController_, &ServerTableController::slotCodeProcessing);
         connect(serverTableController_, &ServerTableController::needServers, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendUserServers, serverTableController_, &ServerTableController::slotServerProcessing);
+    }
+}
+
+void MainController::createTopBarController()
+{
+    if(!topBarController_)
+    {
+        topBarController_ = new TopBarController(this);
+        connect(topBarController_, &TopBarController::needUserRoleSignal, userAccountController_, &UserAccountController::slotSendUserRole);
+        connect(userAccountController_, &UserAccountController::sendUserRoleSignal, topBarController_, &TopBarController::slotSetUserRole);
+
+        connect(topBarController_, &TopBarController::needUserDataSignal, userAccountController_, &UserAccountController::slotSendUserData);
+        connect(userAccountController_, &UserAccountController::sendUserDataSignal, topBarController_, &TopBarController::slotSetUserData);
     }
 }

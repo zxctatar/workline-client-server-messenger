@@ -28,6 +28,8 @@ QVariant ServerModel::data(const QModelIndex& index_, int role_) const
     {
     case Qt::DisplayRole:
         return server_.name_;
+    case Qt::UserRole + 1:
+        return server_.id_;
     default:
         return QVariant();
     }
@@ -38,12 +40,13 @@ QHash<int, QByteArray> ServerModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[Qt::DisplayRole] = "name";
     roles[Qt::BackgroundRole] = "color";
+    roles[Qt::UserRole + 1] = "id";
     return roles;
 }
 
-void ServerModel::addServer(const int id_, const QString& name_, const QString& description_)
+void ServerModel::addServer(const int id_, const QString& name_, const QString& fullName_, const QString& description_)
 {
     beginInsertRows(QModelIndex(), servers_.size(), servers_.size());
-    servers_.append({id_, name_, description_});
+    servers_.append({id_, name_, fullName_, description_});
     endInsertRows();
 }

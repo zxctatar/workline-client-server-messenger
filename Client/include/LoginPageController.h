@@ -25,7 +25,7 @@ signals:
     void accessDeniedSignal() const;
     void errorLoginSignal() const;
 
-    void sendUserDataSignal(const int receivedUserId_, const QString& receivedUserRole_) const;
+    void sendUserDataSignal(const QString& receivedUserFirstName_, const QString& receivedUserLastName_, const QString& receivedUserMiddleName_, const QString& receivedUserEmail_, const QString& receivedUserPhoneNumber_, const QString& receivedUserLogin_, const QString& receivedUserPassword_, const int receivedUserId_, const QString& receivedUserRole_) const;
 
 public slots:
     void slotResponseProcessing(const QJsonObject& jsonObj_) const;

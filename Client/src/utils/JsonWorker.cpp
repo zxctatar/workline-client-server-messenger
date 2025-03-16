@@ -76,3 +76,14 @@ QString JsonWorker::createJsonGetServers() const
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;
 }
+
+QString JsonWorker::createJsonReconnect(const QString& login_, const QString& password_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Reconnect");
+    jsonObject_.insert("login", login_);
+    jsonObject_.insert("password", password_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}
