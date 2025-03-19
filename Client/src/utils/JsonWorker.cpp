@@ -87,3 +87,44 @@ QString JsonWorker::createJsonReconnect(const QString& login_, const QString& pa
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;
 }
+
+QString JsonWorker::createJsonDeleteServer(const int serverId_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "DeleteServer");
+    jsonObject_.insert("serverId", serverId_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}
+
+QString JsonWorker::createJsonGetUnverUsers() const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Get_UnverUsers");
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}
+
+QString JsonWorker::createJsonApproveUser(const int userId_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Approve_User");
+    jsonObject_.insert("userId", userId_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}
+
+QString JsonWorker::createJsonRejectUser(const int userId_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Reject_User");
+    jsonObject_.insert("userId", userId_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}
+
+

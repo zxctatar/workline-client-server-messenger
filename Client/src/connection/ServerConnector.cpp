@@ -85,6 +85,26 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     {
         emit sendUserServers(jsonObj_);
     }
+    else if(jsonObj_["Info"] == "DeleteServer")
+    {
+        emit sendDeleteServerId(jsonObj_["serverId"].toInt());
+    }
+    else if(jsonObj_["Info"] == "Get_UnverUsers")
+    {
+        emit sendUnverUsers(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Approve_User")
+    {
+        emit sendApproveUser(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Reject_User")
+    {
+        emit sendRejectUser(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Delete_unver_user")
+    {
+        emit sendDeleteUnverUser(jsonObj_["userId"].toInt());
+    }
 }
 
 void ServerConnector::slotSendToServer(const QString& request_)

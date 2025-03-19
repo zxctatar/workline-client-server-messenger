@@ -56,6 +56,9 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/widgets/MenuPageInputField.qml
     QML_FILES src/view/customwidgets/widgets/MenuText.qml
     QML_FILES src/view/customwidgets/widgets/MenuPageLabel.qml
+    QML_FILES src/view/customwidgets/widgets/ApplicationObject.qml
+    QML_FILES src/view/customwidgets/widgets/ApproveButton.qml
+    QML_FILES src/view/customwidgets/widgets/RejectButton.qml
     RESOURCES src/view/customwidgets/widgets/qmldir
 
     QML_FILES src/view/windowpages/menuprofilepage/MenuProfilePage.qml
@@ -63,6 +66,9 @@ qt_add_qml_module(appClient
 
     QML_FILES src/view/windowpages/menumainpage/MenuMainPage.qml
     RESOURCES src/view/windowpages/menumainpage/qmldir
+
+    QML_FILES src/view/windowpages/menuapplicationpage/MenuApplicationPage.qml
+    RESOURCES src/view/windowpages/menuapplicationpage/qmldir
 
     QML_FILES src/view/windows/AddServerWindow.qml
     QML_FILES src/view/windows/MenuWindow.qml
@@ -107,6 +113,10 @@ qt_add_qml_module(appClient
     SOURCES src/controller/topbarcontroller/TopBarController.cpp
     SOURCES include/TopBarController.h
 
+    SOURCES src/controller/applicationpagecontroller/ApplicationPageController.cpp
+    SOURCES include/ApplicationPageController.h
+    SOURCES src/model/unverifiedusermodel/UnverifiedUserModel.cpp
+    SOURCES include/UnverifiedUserModel.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

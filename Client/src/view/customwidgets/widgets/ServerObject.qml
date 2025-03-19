@@ -3,8 +3,14 @@ import QtQuick.Controls 2.15
 import "../../../resources"
 
 Button {
+    id: serverObject
+
     width: Sizes.maxServerObjectWidth // 55
     height: Sizes.maxServerObjectHeight // 55
+
+    signal deleteServerClicked(int serverId)
+
+    property int serverId
 
     palette.buttonText: "black"
     font.pixelSize: Sizes.serverObjectTextSize // 32
@@ -15,14 +21,34 @@ Button {
         color: "#93CCFF"
     }
 
+    Menu {
+        id: contextMenu
+
+        MenuItem {
+            text: "Удалить"
+
+            onClicked: {
+                serverObject.deleteServerClicked(serverObject.serverId)
+            }
+        }
+    }
+
     MouseArea {
         id: mouseArea
         anchors.fill: parent
 
         cursorShape: Qt.PointingHandCursor
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-        onClicked: {
-            parent.clicked()
+        onClicked: (mouse) => {
+            if(mouse.button == Qt.LeftButton)
+            {
+                parent.clicked()
+            }
+            else if(mouse.button == Qt.RightButton)
+            {
+                contextMenu.open()
+            }
         }
     }
 }

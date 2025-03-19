@@ -201,7 +201,7 @@ Page {
         function onRegOkSignal() {
             errorText.visible = false
 
-            registrationPage.notificationManager.shownotificationManager("Регистрация: Регистрация успешна")
+            registrationPage.notificationManager.showNotificationManager("Регистрация: Регистрация успешна")
 
             return
         }
@@ -209,7 +209,7 @@ Page {
         function onErrorRegSignal() {
             errorText.visible = false
 
-            registrationPage.notificationManager.shownotificationManager("Регистрация: Ошибка на сервере")
+            registrationPage.notificationManager.showNotificationManager("Регистрация: Ошибка на сервере")
 
             return
         }

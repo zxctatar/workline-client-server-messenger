@@ -6,6 +6,7 @@ import "../../resources"
 import "../customwidgets/widgets"
 import "../windowpages/menumainpage"
 import "../windowpages/menuprofilepage"
+import "../windowpages/menuapplicationpage"
 
 Popup {
     id: menuWindow
@@ -15,6 +16,8 @@ Popup {
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
     property var controller // topBarController topBar.qml
+
+    property var notificationManager // topBar notificationManager
 
     property string userRole
 
@@ -42,7 +45,6 @@ Popup {
 
     Component.onCompleted: {
         menuWindow.controller.getUserRole()
-        menuWindow.controller.getUserData()
     }
 
     onClosed: {
@@ -52,7 +54,6 @@ Popup {
         menuWindow.width = Sizes.maxMenuWindowWidth // 230
         menuWindow.height = Sizes.maxMenuWindowHeight // 550
     }
-
 
     Overlay.modal: Rectangle {
         color: Qt.rgba(0, 0, 0, 0.50)
@@ -92,10 +93,19 @@ Popup {
                 userRole: menuWindow.userRole
 
                 onProfileButtonClicked: {
+                    menuWindow.controller.getUserData()
+
                     menuWindow.width = Sizes.maxMenuProfilePageWidth // 300
                     menuWindow.height = Sizes.maxMenuProfilePageHeight // 550
 
                     stackView.push(menuProfilePage)
+                }
+
+                onApplicationButtonClicked: {
+                    menuWindow.width = Sizes.maxMenuApplicationPageWidth // 475
+                    menuWindow.height = Sizes.maxMenuApplicationPageHeight // 550
+
+                    stackView.push(menuApplicationPage)
                 }
             }
         }
@@ -117,6 +127,30 @@ Popup {
                 middleName: menuWindow.middleName
                 email: menuWindow.email
                 phoneNumber: menuWindow.phoneNumber
+
+                onBackButtonClicked: {
+                    stackView.pop()
+                    menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                    menuWindow.height = Sizes.maxMenuWindowHeight // 550
+                }
+            }
+
+        }
+    }
+
+    Component {
+        id: menuApplicationPage
+
+        Item {
+            width: stackView.width
+            height: stackView.height
+
+            MenuApplicationPage {
+                width: parent.width
+                height: parent.height
+
+                notificationManager: menuWindow.notificationManager
+                controller: menuWindow.controller.applicationPageController
 
                 onBackButtonClicked: {
                     stackView.pop()

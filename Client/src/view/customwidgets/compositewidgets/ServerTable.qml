@@ -59,8 +59,14 @@ Item {
                 required property int id
                 required property string name
 
+                serverId: id
+
                 anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
                 text: name
+
+                onDeleteServerClicked:(serverId) => {
+                    serverTable.controller.deleteServer(serverId)
+                }
             }
 
             footer: Item {

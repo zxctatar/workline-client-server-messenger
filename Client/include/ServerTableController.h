@@ -19,12 +19,14 @@ public:
     Q_INVOKABLE ServerModel* getServerModel() const;
     Q_INVOKABLE void preparingAddServerRequest(const QString& q_serverName, const QString& q_serverDescription);
     Q_INVOKABLE void getServers() const;
+    Q_INVOKABLE void deleteServer(const int serverId_);
 
 signals:
     void needUserRoleSignal() const;
     void setUserRoleSignal(const QString& userRole_) const;
 
     void addServerSignal(const QString& info_) const;
+    void deleteServerSignal(const QString& info_) const;
     void needServers(const QString& info_) const;
 
     void serverAdded() const;
@@ -35,6 +37,7 @@ public slots:
     void slotSetUserRole(const QString& userRole_) const;
     void slotCodeProcessing(const QJsonObject& jsonObj_) const;
     void slotServerProcessing(const QJsonObject& jsonObj_) const;
+    void slotDeleteServer(const int serverId_);
 
 private:
 

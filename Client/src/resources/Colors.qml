@@ -17,6 +17,14 @@ QtObject {
     //separator
     readonly property color separatorColor: "#B0D5FF" // цвет разделителя
 
+    //approve button
+    readonly property color hoverApproveButtonColor: Qt.rgba(85/255, 206/255, 94/255, 1)
+    readonly property color normalApproveButtonColor: Qt.rgba(85/255, 206/255, 94/255, 0.50)
+
+    //reject button
+    readonly property color hoverRejectButtonColor: Qt.rgba(255, 0, 0)
+    readonly property color normalRejectButtonColor: Qt.rgba(255, 0, 0, 0.5)
+
     //menu button
     readonly property color menuButtonBackgroundColor: "transparent" // цвет заднего фона кнопки меню
 

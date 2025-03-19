@@ -18,6 +18,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
     void addServer(const int id_, const QString& name, const QString& fullName_, const QString& description_);
+    void deleteServer(const int serverId_);
 
 private:
     struct Server {

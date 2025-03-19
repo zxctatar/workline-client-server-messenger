@@ -22,11 +22,11 @@ Page {
 
     BackButton {
         id: backButton
-        width: 40
-        height: 40
+        width: Sizes.maxBackButtonMenuWidth // 40
+        height: Sizes.maxBackButtonMenuHeight // 40
 
-        anchors.leftMargin: 7
-        anchors.topMargin: 7
+        anchors.leftMargin: Sizes.backButtonLeftMarginSizeMenu // 7
+        anchors.topMargin: Sizes.backButtonTopMarginSizeMenu // 7
         anchors.left: parent.left
         anchors.top: parent.top
 
@@ -37,8 +37,8 @@ Page {
 
     WindowText {
         id: windowText
-        anchors.topMargin: 10
-        font.pixelSize: 20
+        anchors.topMargin: Sizes.textTopMargin // 10
+        font.pixelSize: Sizes.menuTextSizeInMenu // 20
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         text: "Профиль"
@@ -52,22 +52,8 @@ Page {
         spacing: Sizes.mainPageWidgetsSpacing
 
         MenuText {
-            id: firstname
-            Layout.topMargin: 10
-            text: "Имя"
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-        }
-
-        MenuPageLabel {
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            Layout.fillWidth: true
-            text: menuProfilePage.firstName
-        }
-
-        MenuText {
             id: lastname
-            Layout.topMargin: 25
+            Layout.topMargin: 10
             text: "Фамилия"
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
         }
@@ -77,6 +63,20 @@ Page {
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
             Layout.fillWidth: true
             text: menuProfilePage.lastName
+        }
+
+        MenuText {
+            id: firstname
+            Layout.topMargin: 25
+            text: "Имя"
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+        }
+
+        MenuPageLabel {
+            Layout.preferredHeight: 20
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+            Layout.fillWidth: true
+            text: menuProfilePage.firstName
         }
 
         MenuText {

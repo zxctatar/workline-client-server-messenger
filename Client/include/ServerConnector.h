@@ -26,8 +26,12 @@ signals:
     void sendLoginCodeSignal(const QJsonObject& jsonObj_);
     void sendServerTableCodeSignal(const QJsonObject& jsonObj_);
     void sendUserServers(const QJsonObject& jsonObj_);
+    void sendDeleteServerId(const int serverId_);
+    void sendUnverUsers(const QJsonObject& jsonObj_);
+    void sendApproveUser(const QJsonObject& jsonObj_);
+    void sendRejectUser(const QJsonObject& jsonObj_);
+    void sendDeleteUnverUser(const int userId_);
     void checkAuthorizationSignal();
-
 
 private:
     void connectToServer();

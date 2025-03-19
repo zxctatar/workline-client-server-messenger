@@ -51,5 +51,13 @@
         <file>view/customwidgets/widgets/MenuPageInputField.qml</file>
         <file>view/customwidgets/widgets/MenuText.qml</file>
         <file>view/customwidgets/widgets/MenuPageLabel.qml</file>
+        <file>view/windowpages/menuapplicationpage/MenuApplicationPage.qml</file>
+        <file>view/windowpages/menuapplicationpage/qmldir</file>
+        <file>view/customwidgets/widgets/ApplicationObject.qml</file>
+        <file>view/customwidgets/widgets/ApproveButton.qml</file>
+        <file>view/customwidgets/widgets/RejectButton.qml</file>
+        <file>resources/img/yes.svg</file>
+        <file>resources/img/no.svg</file>
+        <file>resources/img/avatar.svg</file>
     </qresource>
 </RCC>

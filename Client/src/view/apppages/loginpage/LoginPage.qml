@@ -109,13 +109,13 @@ Page {
 
         function onAccessDeniedSignal() {
             errorText.visible = false
-            loginPage.notificationManager.shownotificationManager("Доступ запрещён.")
+            loginPage.notificationManager.showNotificationManager("Доступ запрещён.")
             return
         }
 
         function onErrorLoginSignal() {
             errorText.visible = false
-            loginPage.notificationManager.shownotificationManager("Ошибка на сервере.")
+            loginPage.notificationManager.showNotificationManager("Ошибка на сервере.")
             return
         }
     }

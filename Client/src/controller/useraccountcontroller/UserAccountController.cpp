@@ -8,6 +8,10 @@ UserAccountController::UserAccountController(QObject* parent)
 
 UserAccountController::~UserAccountController()
 {
+    if(userModel_)
+    {
+        delete userModel_;
+    }
 }
 
 void UserAccountController::slotSetUserData(const QString& receivedUserFirstName_, const QString& receivedUserLastName_, const QString& receivedUserMiddleName_, const QString& receivedUserEmail_, const QString& receivedUserPhoneNumber_, const QString& receivedUserLogin_, const QString& receivedUserPassword_, const int receivedUserId_, const QString& receivedUserRole_)

@@ -10,6 +10,7 @@ Page {
     property string userRole
 
     signal profileButtonClicked()
+    signal applicationButtonClicked()
 
     background: Rectangle {
         color: Colors.menuWindowBackgroundColor
@@ -35,6 +36,7 @@ Page {
 
         Separator {
             Layout.fillWidth: true
+            visible: menuMainPage.userRole == "admin" ? true : false
         }
 
         MenuWidget {
@@ -44,6 +46,10 @@ Page {
             text: "Заявки"
 
             visible: menuMainPage.userRole == "admin" ? true : false
+
+            onClicked: {
+                menuMainPage.applicationButtonClicked()
+            }
         }
     }
 }

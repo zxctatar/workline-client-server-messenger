@@ -16,13 +16,22 @@ QtObject {
 
     readonly property int separatorHeight: 2 // высота разделителя
 
+    //application object
+    readonly property int maxApplicationobjectHeight: 50 // высота объекта заявки
+
+    readonly property int maxApplicationObjectImageWidth: 40 // ширина иконки объекта заявок
+    readonly property int maxApplicationObjectImageHeight: 40 // высота иконки объекта заявок
+
     //menu window
     readonly property int maxMenuWindowWidth: 230 // ширина окна меню
     readonly property int maxMenuWindowHeight: 550 // высота окна меню
 
     readonly property int radiusMenuWindow: 5 // скругление углов окна меню
 
-    readonly property int menuTextSize: 16 // размер текста меню
+    readonly property int menuTextSizeInMenu: 20 // размер текста в меню
+    readonly property int menuTextSizeInWidgets: 16 // размер текста в виджетах меню
+
+    readonly property int textTopMargin: 10 // отступ текста сверху в меню
 
     //menu main page
     readonly property int mainPageWidgetsSpacing: 3 // расстояние между виджетами в главном окне меню
@@ -31,6 +40,10 @@ QtObject {
     readonly property int maxMenuProfilePageWidth: 300 // ширина окна профиля меню
     readonly property int maxMenuProfilePageHeight: 550 // высота окна профиля меню
 
+    //menu application page
+    readonly property int maxMenuApplicationPageWidth: 475 // ширина окна заявок меню
+    readonly property int maxMenuApplicationPageHeight: 550 // высота окна профиля меню
+
     //menu widget (button)
     readonly property int maxMenuWidgetWidth: 200 // ширина виджета меню
     readonly property int maxMenuWidgetHeight: 50 // высота виджета меню
@@ -38,6 +51,14 @@ QtObject {
     //menu button
     readonly property int maxMenuButtonWidth: 47 // ширина кнопки меню
     readonly property int maxMenuButtonHeight: 47 // высота кнопки меню
+
+    //approve button
+    readonly property int maxApproveButtonWidth: 35 // ширина кнопки одобрить
+    readonly property int maxApproveButtonHeight: 35 // высота кнопки одобрить
+
+    //reject button
+    readonly property int maxRejectButtonWidth: 35 // ширина кнопки отколнить
+    readonly property int maxRejectButtonHeight: 35 // высота кнопки отклонить
 
     //add server window
     readonly property int maxAddServerWindowWidth: 475 // ширина окна добавления сервера
@@ -79,12 +100,19 @@ QtObject {
 
     readonly property int showPasswordButtonRightMarginSize: 9 // правый отсутп кнопки показа пароля
 
-    //back button
-    readonly property int maxBackButtonRegPageWidth: 48 // ширина кнопки назад
-    readonly property int maxBackButtonRegPageHeight: 48 // высота кнопки назад
+    //back button in app
+    readonly property int maxBackButtonRegPageWidth: 48 // ширина кнопки назад в приложении
+    readonly property int maxBackButtonRegPageHeight: 48 // высота кнопки назад в приложении
 
-    readonly property int backButtonLeftMarginSize: 9 // левый отступ кнопки назад
-    readonly property int backButtonTopMarginSize: 9 // верхний отступ кнопки назад
+    readonly property int backButtonLeftMarginSize: 9 // левый отступ кнопки назад в приложении
+    readonly property int backButtonTopMarginSize: 9 // верхний отступ кнопки назад в приложении
+
+    //back button in menu
+    readonly property int maxBackButtonMenuWidth: 40 // ширина кнопки назад в меню
+    readonly property int maxBackButtonMenuHeight: 40 // высота кнопки назад в меню
+
+    readonly property int backButtonLeftMarginSizeMenu: 7 // левый отступ кнопки назад в меню
+    readonly property int backButtonTopMarginSizeMenu: 7 // верхний отступ кнопки назад в меню
 
     //error text
     readonly property int errorTextSize: 16 // размер текста ошибки

@@ -50,3 +50,26 @@ void ServerModel::addServer(const int id_, const QString& name_, const QString& 
     servers_.append({id_, name_, fullName_, description_});
     endInsertRows();
 }
+
+void ServerModel::deleteServer(const int serverId_)
+{
+    int index_ = -1;
+
+    for(int i = 0; i < servers_.size(); ++i)
+    {
+        if(serverId_ == servers_[i].id_)
+        {
+            index_ = i;
+            break;
+        }
+    }
+
+    if(index_ == -1)
+    {
+        return;
+    }
+
+    beginRemoveRows(QModelIndex(), index_, index_);
+    servers_.remove(index_);
+    endRemoveRows();
+}

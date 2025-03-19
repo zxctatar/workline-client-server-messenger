@@ -8,7 +8,7 @@ QtObject {
     property SystemTrayIcon tray
     property MyPopup popup
 
-    function shownotificationManager(message) {
+    function showNotificationManager(message) {
         if (mainWindow.active) {
             // Окно активно, показываем уведомление внутри приложения
             popup.popupText = message

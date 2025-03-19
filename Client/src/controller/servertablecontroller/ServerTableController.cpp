@@ -8,6 +8,10 @@ ServerTableController::ServerTableController(QObject* parent)
 
 ServerTableController::~ServerTableController()
 {
+    if(serverModel_)
+    {
+        delete serverModel_;
+    }
 }
 
 ServerModel* ServerTableController::getServerModel() const
@@ -75,4 +79,15 @@ void ServerTableController::slotCodeProcessing(const QJsonObject& jsonObj_) cons
     {
         emit errorCreateServerSignal();
     }
+}
+
+void ServerTableController::slotDeleteServer(const int serverId_)
+{
+    serverModel_->deleteServer(serverId_);
+}
+
+void ServerTableController::deleteServer(const int serverId_)
+{
+    QString request_ = jsonWorker_.createJsonDeleteServer(serverId_);
+    emit deleteServerSignal(request_);
 }

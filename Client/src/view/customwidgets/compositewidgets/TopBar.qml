@@ -34,6 +34,6 @@ Item {
         parent: Overlay.overlay
         anchors.centerIn: parent
         controller: topBar.controller
-        //notificationManager: topBar.notificationManager
+        notificationManager: topBar.notificationManager
     }
 }

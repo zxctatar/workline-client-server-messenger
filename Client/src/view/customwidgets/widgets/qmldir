@@ -16,3 +16,6 @@ Separator 1.0 Separator.qml
 MenuPageInputField 1.0 MenuPageInputField.qml
 MenuText 1.0 MenuText.qml
 MenuPageLabel 1.0 MenuPageLabel.qml
+ApplicationObject 1.0 ApplicationObject.qml
+ApproveButton 1.0 ApproveButton.qml
+RejectButton 1.0 RejectButton.qml

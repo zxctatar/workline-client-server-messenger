@@ -19,6 +19,10 @@ public:
     QString createJsonAddServer(const QString& serverName_, const QString& serverDescriptrion_) const;
     QString createJsonGetServers() const;
     QString createJsonReconnect(const QString& login_, const QString& password_) const;
+    QString createJsonDeleteServer(const int serverId_) const;
+    QString createJsonGetUnverUsers() const;
+    QString createJsonApproveUser(const int userId_) const;
+    QString createJsonRejectUser(const int userId_) const;
 
 private:
 };
