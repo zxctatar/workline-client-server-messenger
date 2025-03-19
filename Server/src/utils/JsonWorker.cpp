@@ -129,7 +129,7 @@ std::string JsonWorker::createAddingServerUnsuccessJson(const std::string& code_
     }
 }
 
-std::string JsonWorker::createGetServersJson(const std::vector<ServerStruct> servers_)
+std::string JsonWorker::createGetServersJson(const std::vector<ServerStruct>& servers_)
 {
     try
     {
@@ -143,6 +143,95 @@ std::string JsonWorker::createGetServersJson(const std::vector<ServerStruct> ser
             json_["Servers"].push_back(jsonServer_);
         }
 
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createDeleteServerJson(const ServerDeleteStruct& serverDeleteStruct_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "DeleteServer";
+        json_["serverId"] = serverDeleteStruct_.serverId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createGetUnverUsersJson(const std::vector<UnverUserStruct>& unverUsers_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Get_UnverUsers";
+
+        for(const auto& i : unverUsers_)
+        {
+            nlohmann::json jsonUnverUser_;
+            i.to_json(jsonUnverUser_);
+            json_["UnverUsers"].push_back(jsonUnverUser_);
+        }
+
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createApproveUserJson(const std::string& response_, const int userId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Approve_User";
+        json_["code"] = response_;
+        json_["userId"] = userId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createRejectUserJson(const std::string& response_, const int userId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Reject_User";
+        json_["code"] = response_;
+        json_["userId"] = userId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createDeleteFromUnverUserJson(const int userId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Delete_unver_user";
+        json_["userId"] = userId_;
         return json_.dump();
     }
     catch (const std::exception& e)

@@ -27,12 +27,23 @@ public:
 
     static pqxx::result addNewServer(pqxx::transaction_base& conn_, const std::string& serverName_, const std::string& serverDescription_);
 
-    static pqxx::result getUserServres(pqxx::transaction_base& conn_, const int userID_);
+    static pqxx::result getUserServers(pqxx::transaction_base& conn_, const int userID_);
 
     static pqxx::result getAllServers(pqxx::transaction_base& conn_);
 
     static pqxx::result getUserData(pqxx::transaction_base& conn_, const std::string& login_);
 
+    static pqxx::result deleteServer(pqxx::transaction_base& conn_, const int serverId_);
+
+    static pqxx::result getUsersIdOnServers(pqxx::transaction_base& conn_, const int serverId_);
+
+    static pqxx::result getUnverUsers(pqxx::transaction_base& conn_);
+
+    static pqxx::result checkIfUserRejected(pqxx::transaction_base& conn_, const int userId_);
+
+    static pqxx::result approveUser(pqxx::transaction_base& conn_, const int userId_);
+
+    static pqxx::result rejectUser(pqxx::transaction_base& conn_, const int userId_);
 };
 
 #endif // DATABASEQUERIES_H

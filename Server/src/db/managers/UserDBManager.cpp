@@ -223,7 +223,7 @@ ReconnectResult UserDBManager::reconnectUser(std::shared_ptr<DBConnection> conne
             }
             else
             {
-                result_.userRole_ = "admin";
+                // result_.userRole_ = "admin";
                 return result_;
             }
         }
@@ -237,3 +237,176 @@ ReconnectResult UserDBManager::reconnectUser(std::shared_ptr<DBConnection> conne
     }
 }
 
+std::vector<int> UserDBManager::getUsersOnServers(std::shared_ptr<DBConnection> connection_, const int serverId_) const
+{
+    std::vector<int> usersOnServersId_;
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Get users on servers id...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Сonnection problem.";
+        }
+
+        pqxx::work get_users_id_(connection_->getConnection());
+        pqxx::result result_get_users_id_ = DatabaseQueries::getUsersIdOnServers(get_users_id_, serverId_);
+        get_users_id_.commit();
+
+        for(const auto& row : result_get_users_id_)
+        {
+            int userId_ = row["user_id"].as<int>();
+            usersOnServersId_.push_back(userId_);
+        }
+
+        return usersOnServersId_;
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return usersOnServersId_;
+    }
+}
+
+std::vector<UnverUserStruct> UserDBManager::getUnverUsers(std::shared_ptr<DBConnection> connection_) const
+{
+    std::vector<UnverUserStruct> unverUsers_;
+
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Get unverified users...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Connection problem.";
+        }
+
+        pqxx::work get_unver_users_(connection_->getConnection());
+        pqxx::result result_get_unver_users_ = DatabaseQueries::getUnverUsers(get_unver_users_);
+        get_unver_users_.commit();
+
+        for(const auto& row : result_get_unver_users_)
+        {
+            UnverUserStruct unverUser_;
+            unverUser_.userId_ = row[0].as<int>();
+            unverUser_.firstName_ = row[1].as<std::string>();
+            unverUser_.lastName_ = row[2].as<std::string>();
+            unverUser_.middleName_ = row[3].as<std::string>();
+
+            unverUsers_.push_back(unverUser_);
+        }
+
+        BOOST_LOG_TRIVIAL(info) << "Unverified users have been received.";
+
+        return unverUsers_;
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return unverUsers_;
+    }
+}
+
+std::string UserDBManager::approveUser(std::shared_ptr<DBConnection> connection_, const int userId_) const
+{
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Trying to approve user...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Connection problem.";
+        }
+
+        pqxx::work check_if_rejected_(connection_->getConnection());
+        pqxx::result result_check_if_rejected_ = DatabaseQueries::checkIfUserRejected(check_if_rejected_, userId_);
+        check_if_rejected_.commit();
+
+        if(result_check_if_rejected_.empty())
+        {
+            pqxx::work check_access_(connection_->getConnection());
+            pqxx::result result_check_access_ = DatabaseQueries::checkAccess(check_access_, userId_);
+
+            bool access_ = result_check_access_[0][0].as<bool>();
+
+            check_access_.commit();
+
+            if(access_)
+            {
+                return "ALREADY_APPROVED";
+            }
+            else
+            {
+                pqxx::work approve_user_(connection_->getConnection());
+                pqxx::result result_approve_user_ = DatabaseQueries::approveUser(approve_user_, userId_);
+                approve_user_.commit();
+
+                BOOST_LOG_TRIVIAL(info) << "User approved...";
+
+                return "APPROVED";
+            }
+        }
+        else
+        {
+            return "ALREADY_REJECTED";
+        }
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+
+        return "ERROR";
+    }
+}
+
+std::string UserDBManager::rejectUser(std::shared_ptr<DBConnection> connection_, const int userId_) const
+{
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Trying to reject user...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Connection problem.";
+        }
+
+        pqxx::work check_if_rejected_(connection_->getConnection());
+        pqxx::result result_check_if_rejected_ = DatabaseQueries::checkIfUserRejected(check_if_rejected_, userId_);
+        check_if_rejected_.commit();
+
+        if(result_check_if_rejected_.empty())
+        {
+            pqxx::work check_access_(connection_->getConnection());
+            pqxx::result result_check_access_ = DatabaseQueries::checkAccess(check_access_, userId_);
+
+            bool access_ = result_check_access_[0][0].as<bool>();
+
+            check_access_.commit();
+
+            if(access_)
+            {
+                return "ALREADY_APPROVED";
+            }
+            else
+            {
+                pqxx::work reject_user_(connection_->getConnection());
+                pqxx::result result_reject_user_ = DatabaseQueries::rejectUser(reject_user_, userId_);
+                reject_user_.commit();
+
+                BOOST_LOG_TRIVIAL(info) << "User rejected...";
+
+                return "REJECTED";
+            }
+        }
+        else
+        {
+            return "ALREADY_REJECTED";
+        }
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+
+        return "ERROR";
+    }
+}

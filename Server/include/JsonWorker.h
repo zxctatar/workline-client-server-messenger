@@ -3,6 +3,8 @@
 
 #include <nlohmann/json.hpp>
 #include "struct/ServerStruct.h"
+#include "struct/ServerDeleteStruct.h"
+#include "struct/UnverUserStruct.h"
 
 class JsonWorker
 {
@@ -17,7 +19,12 @@ public:
     std::string createLoginUnsuccessJson(const std::string& code_);
     std::string createAddingServerSuccessJson(const std::string& code_, const int serverID_, const std::string& serverName_, const std::string& serverDescription);
     std::string createAddingServerUnsuccessJson(const std::string& code_);
-    std::string createGetServersJson(const std::vector<ServerStruct> servers_);
+    std::string createGetServersJson(const std::vector<ServerStruct>& servers_);
+    std::string createDeleteServerJson(const ServerDeleteStruct& serverDeleteStruct_);
+    std::string createGetUnverUsersJson(const std::vector<UnverUserStruct>& unverUsers_);
+    std::string createApproveUserJson(const std::string& response_, const int userId_);
+    std::string createRejectUserJson(const std::string& response_, const int userId_);
+    std::string createDeleteFromUnverUserJson(const int userId_);
 
     ~JsonWorker();
 

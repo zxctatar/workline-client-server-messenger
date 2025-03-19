@@ -92,7 +92,7 @@ std::vector<ServerStruct> ServerDBManager::getServers(std::shared_ptr<DBConnecti
         }
         else
         {
-            result_get_servers_ = DatabaseQueries::getUserServres(get_servers_, userID_);
+            result_get_servers_ = DatabaseQueries::getUserServers(get_servers_, userID_);
         }
 
         get_servers_.commit();
@@ -117,3 +117,44 @@ std::vector<ServerStruct> ServerDBManager::getServers(std::shared_ptr<DBConnecti
         return servers_;
     }
 }
+
+ServerDeleteStruct ServerDBManager::deleteServer(std::shared_ptr<DBConnection> connection_, const int serverId_) const
+{
+    ServerDeleteStruct serverDeleteStruct_;
+    serverDeleteStruct_.serverId_ = serverId_;
+
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Delete the server...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Сonnection problem.";
+        }
+
+        pqxx::work delete_server_(connection_->getConnection());
+        pqxx::result result_delete_server_ = DatabaseQueries::deleteServer(delete_server_, serverId_);
+        delete_server_.commit();
+
+        if(result_delete_server_.affected_rows() > 0)
+        {
+            serverDeleteStruct_.code_ = "SERVER_DELETED";
+            return serverDeleteStruct_;
+        }
+        else
+        {
+            serverDeleteStruct_.code_ = "NOTHING WAS DELETED";
+            return serverDeleteStruct_;
+        }
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        serverDeleteStruct_.code_ = "ERROR";
+        return serverDeleteStruct_;
+    }
+}
+
+
+
+

@@ -41,3 +41,8 @@ std::unordered_map<int, std::weak_ptr<Session>> ConnectedUsers::getAuthorizeAdmi
     return authorized_admins;
 }
 
+std::weak_ptr<Session> ConnectedUsers::getUser(const int id_) const
+{
+    return authorized_users.at(id_);
+}
+

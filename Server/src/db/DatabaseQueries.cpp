@@ -54,7 +54,7 @@ pqxx::result DatabaseQueries::addNewServer(pqxx::transaction_base& conn_, const 
                              VALUES($1, $2) RETURNING server_id)", serverName_, serverDescription_);
 }
 
-pqxx::result DatabaseQueries::getUserServres(pqxx::transaction_base& conn_, const int userID_)
+pqxx::result DatabaseQueries::getUserServers(pqxx::transaction_base& conn_, const int userID_)
 {
     return conn_.exec_params(R"(SELECT s.server_id, s.server_name FROM servers s
                      JOIN users_on_servers uos ON s.server_id = uos.server_id
@@ -63,10 +63,47 @@ pqxx::result DatabaseQueries::getUserServres(pqxx::transaction_base& conn_, cons
 
 pqxx::result DatabaseQueries::getAllServers(pqxx::transaction_base& conn_)
 {
-    return conn_.exec_params(R"(SELECT server_id, server_name, server_description FROM servers)");
+    return conn_.exec_params("SELECT server_id, server_name, server_description FROM servers");
 }
 
 pqxx::result DatabaseQueries::getUserData(pqxx::transaction_base& conn_, const std::string& login_)
 {
-    return conn_.exec_params(R"(SELECT firstname, lastname, middlename, email, phone_number FROM users WHERE login = $1)", login_);
+    return conn_.exec_params("SELECT firstname, lastname, middlename, email, phone_number FROM users WHERE login = $1", login_);
+}
+
+pqxx::result DatabaseQueries::deleteServer(pqxx::transaction_base& conn_, const int serverId_)
+{
+    return conn_.exec_params("DELETE FROM servers WHERE server_id = $1", serverId_);
+}
+
+pqxx::result DatabaseQueries::getUsersIdOnServers(pqxx::transaction_base& conn_, const int serverId_)
+{
+    return conn_.exec_params("SELECT user_id FROM users_on_servers WHERE server_id = $1", serverId_);
+}
+
+pqxx::result DatabaseQueries::getUnverUsers(pqxx::transaction_base& conn_)
+{
+    return conn_.exec_params(R"(SELECT user_id, firstname, lastname, middlename
+                        FROM users
+                        WHERE verified_user = false
+                          AND NOT EXISTS (
+                          SELECT 1
+                          FROM rejected_users
+                          WHERE rejected_users.user_id = users.user_id
+                          ))");
+}
+
+pqxx::result DatabaseQueries::approveUser(pqxx::transaction_base& conn_, const int userId_)
+{
+    return conn_.exec_params("UPDATE users SET verified_user = true WHERE user_id = $1", userId_);
+}
+
+pqxx::result DatabaseQueries::rejectUser(pqxx::transaction_base& conn_, const int userId_)
+{
+    return conn_.exec_params("INSERT INTO rejected_users(user_id) VALUES($1)", userId_);
+}
+
+pqxx::result DatabaseQueries::checkIfUserRejected(pqxx::transaction_base& conn_, const int userId_)
+{
+    return conn_.exec_params("SELECT 1 FROM rejected_users WHERE user_id = $1", userId_);
 }

@@ -55,7 +55,7 @@ void Database::initializing()
             case 4:
                 createTrigger(connection_to_worklinedatabase_.getConnection());
                 stage_++;
-                //break;
+                break;
                 // no break: intentionally falling through
             case 5:
                 insertAdmin(connection_to_worklinedatabase_.getConnection());
@@ -211,6 +211,13 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                 AND table_name = 'users_on_servers'
             )");
 
+        pqxx::result result_check_rejected_users_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'rejected_users'
+            )");
+
         check_tables_.commit();
 
         if(result_check_users_table_.empty())
@@ -306,6 +313,27 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
         {
             BOOST_LOG_TRIVIAL(info) << "Users_on_servers table already exists.";
         }
+
+        if(result_check_rejected_users_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Rejected_users table not found. Creating table...";
+
+            pqxx::work create_rejected_users_table_(connection_to_worklinedatabase_);
+
+            create_rejected_users_table_.exec(R"(
+                CREATE TABLE rejected_users(
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+                    ))");
+
+            create_rejected_users_table_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the rejected_users table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Rejected_users table already exists.";
+        }
     }
     catch (const pqxx::broken_connection& e)
     {
@@ -327,6 +355,7 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
     {
         BOOST_LOG_TRIVIAL(info) << "Checking if the user has rights...";
 
+        // Проверка текущих прав пользователя
         pqxx::work check_user_roles_(connection_to_worklinedatabase_);
 
         pqxx::result result_check_privileges_ = check_user_roles_.exec(R"(
@@ -340,42 +369,54 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
 
         bool has_select_ = false;
         bool has_insert_ = false;
+        bool has_update_ = false;
+        bool has_delete_ = false;
 
         for(const auto& row : result_check_privileges_)
         {
             const std::string privilege_ = row["privilege_type"].c_str();
             if(privilege_ == "SELECT") has_select_ = true;
             if(privilege_ == "INSERT") has_insert_ = true;
+            if(privilege_ == "UPDATE") has_update_ = true;
+            if(privilege_ == "DELETE") has_delete_ = true;
         }
+
+        // Предоставление прав, если они отсутствуют
+        pqxx::nontransaction set_privileges_(connection_to_worklinedatabase_);
 
         if(!has_select_)
         {
             BOOST_LOG_TRIVIAL(info) << "SELECT privilege does not exist. Setting privilege...";
-
-            pqxx::nontransaction add_select_privilege_(connection_to_worklinedatabase_);
-            add_select_privilege_.exec("GRANT SELECT ON ALL TABLES IN SCHEMA public TO wluser;");
-            add_select_privilege_.exec("GRANT USAGE ON SEQUENCE users_user_id_seq TO wluser;");
-            add_select_privilege_.exec("GRANT USAGE ON SEQUENCE servers_server_id_seq TO wluser;");
-
-            add_select_privilege_.commit();
-        }
-        else
-        {
-            BOOST_LOG_TRIVIAL(info) << "SELECT privilege already set.";
+            set_privileges_.exec("GRANT SELECT ON ALL TABLES IN SCHEMA public TO wluser;");
         }
 
         if(!has_insert_)
         {
             BOOST_LOG_TRIVIAL(info) << "INSERT privilege does not exist. Setting privilege...";
+            set_privileges_.exec("GRANT INSERT ON ALL TABLES IN SCHEMA public TO wluser;");
+        }
 
-            pqxx::nontransaction add_insert_privilege_(connection_to_worklinedatabase_);
-            add_insert_privilege_.exec("GRANT INSERT ON ALL TABLES IN SCHEMA public TO wluser;");
-            add_insert_privilege_.commit();
-        }
-        else
+        if(!has_update_)
         {
-            BOOST_LOG_TRIVIAL(info) << "INSERT privilege already set.";
+            BOOST_LOG_TRIVIAL(info) << "UPDATE privilege does not exist. Setting privilege...";
+            set_privileges_.exec("GRANT UPDATE ON ALL TABLES IN SCHEMA public TO wluser;");
         }
+
+        if(!has_delete_)
+        {
+            BOOST_LOG_TRIVIAL(info) << "DELETE privilege does not exist. Setting privilege...";
+            set_privileges_.exec("GRANT DELETE ON ALL TABLES IN SCHEMA public TO wluser;");
+        }
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE servers_server_id_seq TO wluser;");
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE users_user_id_seq TO wluser;");
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE rejected_users_id_seq TO wluser;");
+
+        set_privileges_.commit();
+
+        BOOST_LOG_TRIVIAL(info) << "Privileges have been set successfully.";
     }
     catch (const pqxx::broken_connection& e)
     {
@@ -402,7 +443,7 @@ void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
         create_trigger.exec("DROP TRIGGER IF EXISTS trigger_set_verified ON admins;");
         create_trigger.exec("DROP FUNCTION IF EXISTS set_verified_on_admin_insert;");
 
-        // SQL-команда для создания функции триггера
+        // тригер обноваить verifed_user = true если стал админом
         create_trigger.exec(R"(
             CREATE OR REPLACE FUNCTION set_verified_on_admin_insert()
             RETURNS TRIGGER AS $$
@@ -415,13 +456,55 @@ void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
             $$ LANGUAGE plpgsql;
         )");
 
-        // SQL-команда для создания триггера
         create_trigger.exec(R"(
             CREATE TRIGGER trigger_set_verified
             AFTER INSERT ON admins
             FOR EACH ROW
             EXECUTE FUNCTION set_verified_on_admin_insert();
         )");
+
+        // обновить verified_user = false, если добавили в rejected_users
+        create_trigger.exec(R"(
+            CREATE OR REPLACE FUNCTION set_verified_on_rejected_users_insert()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                UPDATE users
+                SET verified_user = FALSE
+                WHERE user_id = NEW.user_id;
+                RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql;
+        )");
+
+        create_trigger.exec(R"(
+            CREATE TRIGGER trigger_set_verified_on_rejected
+            AFTER INSERT ON rejected_users
+            FOR EACH ROW
+            EXECUTE FUNCTION set_verified_on_rejected_users_insert();
+        )");
+
+        // удаляем из rejected_users если verified_user стал true
+        create_trigger.exec(R"(
+    CREATE OR REPLACE FUNCTION user_verified_update()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        IF NEW.verified_user = true AND OLD.verified_user = false THEN
+            -- Удаляем запись из rejected_users
+            DELETE FROM rejected_users
+            WHERE user_id = NEW.user_id;
+        END IF;
+
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+)");
+
+        create_trigger.exec(R"(
+    CREATE TRIGGER trigger_set_verified
+    AFTER UPDATE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION user_verified_update();
+)");
 
         create_trigger.commit();
         BOOST_LOG_TRIVIAL(info) << "Trigger created successfully.";
