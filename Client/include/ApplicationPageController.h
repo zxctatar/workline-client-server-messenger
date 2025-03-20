@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <qqml.h>
+#include <memory>
 #include "UnverifiedUserModel.h"
 #include "JsonWorker.h"
 
@@ -20,6 +21,7 @@ public:
     Q_INVOKABLE void refreshUnverUsers();
     Q_INVOKABLE void approveUser(const int userId_);
     Q_INVOKABLE void rejectUser(const int userId_);
+    Q_INVOKABLE void deleteUnverUserModel();
 
 signals:
     void getUnverUsersSignal(const QString& info_);
@@ -40,8 +42,7 @@ public slots:
     void slotDeleteUnverUser(const int userId_) const;
 
 private:
-    bool dataLoaded_;
-    UnverifiedUserModel* unverUserModel_;
+    std::shared_ptr<UnverifiedUserModel> unverUserModel_;
     JsonWorker jsonWorker_;
 };
 

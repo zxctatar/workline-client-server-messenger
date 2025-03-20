@@ -15,6 +15,8 @@ Popup {
     modal: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
+    signal deleteAll()
+
     property var controller // topBarController topBar.qml
 
     property var notificationManager // topBar notificationManager
@@ -45,6 +47,10 @@ Popup {
 
     Component.onCompleted: {
         menuWindow.controller.getUserRole()
+    }
+
+    Component.onDestruction: {
+        menuWindow.deleteAll()
     }
 
     onClosed: {
@@ -98,67 +104,52 @@ Popup {
                     menuWindow.width = Sizes.maxMenuProfilePageWidth // 300
                     menuWindow.height = Sizes.maxMenuProfilePageHeight // 550
 
-                    stackView.push(menuProfilePage)
+                    var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menuprofilepage/MenuProfilePage.qml"), {
+                        width: parent.width,
+                        height: parent.height,
+
+                        firstName: menuWindow.firstName,
+                        lastName: menuWindow.lastName,
+                        middleName: menuWindow.middleName,
+                        email: menuWindow.email,
+                        phoneNumber: menuWindow.phoneNumber,
+                    })
+
+                    if(page) {
+                        page.backButtonClicked.connect(function(){
+                            stackView.pop()
+                            menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                            menuWindow.height = Sizes.maxMenuWindowHeight // 550
+                        })
+                    }
                 }
 
                 onApplicationButtonClicked: {
                     menuWindow.width = Sizes.maxMenuApplicationPageWidth // 475
                     menuWindow.height = Sizes.maxMenuApplicationPageHeight // 550
 
-                    stackView.push(menuApplicationPage)
+                    var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menuapplicationpage/MenuApplicationPage.qml"),{
+                        width: parent.width,
+                        height: parent.height,
+                        notificationManager: menuWindow.notificationManager,
+                        controller: menuWindow.controller.applicationPageController,
+                    })
+
+                    if(page) {
+                        page.backButtonClicked.connect(function(){
+                            stackView.pop()
+                            menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                            menuWindow.height = Sizes.maxMenuWindowHeight // 550
+                        })
+
+                        page.deleteController.connect(function(){
+                            if(menuWindow) {
+                                menuWindow.controller.deleteApplicationPageController()
+                            }
+                        })
+                    }
                 }
             }
-        }
-    }
-
-    Component {
-        id: menuProfilePage
-
-        Item {
-            width: stackView.width
-            height: stackView.height
-
-            MenuProfilePage {
-                width: parent.width
-                height: parent.height
-
-                firstName: menuWindow.firstName
-                lastName: menuWindow.lastName
-                middleName: menuWindow.middleName
-                email: menuWindow.email
-                phoneNumber: menuWindow.phoneNumber
-
-                onBackButtonClicked: {
-                    stackView.pop()
-                    menuWindow.width = Sizes.maxMenuWindowWidth // 230
-                    menuWindow.height = Sizes.maxMenuWindowHeight // 550
-                }
-            }
-
-        }
-    }
-
-    Component {
-        id: menuApplicationPage
-
-        Item {
-            width: stackView.width
-            height: stackView.height
-
-            MenuApplicationPage {
-                width: parent.width
-                height: parent.height
-
-                notificationManager: menuWindow.notificationManager
-                controller: menuWindow.controller.applicationPageController
-
-                onBackButtonClicked: {
-                    stackView.pop()
-                    menuWindow.width = Sizes.maxMenuWindowWidth // 230
-                    menuWindow.height = Sizes.maxMenuWindowHeight // 550
-                }
-            }
-
         }
     }
 }

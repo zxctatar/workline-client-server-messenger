@@ -8,9 +8,14 @@ TopBarController::TopBarController(QObject* parent)
 
 TopBarController::~TopBarController()
 {
+    deleteApplicationPageController();
+}
+
+void TopBarController::deleteApplicationPageController()
+{
     if(applicationPageController_)
     {
-        delete applicationPageController_;
+        applicationPageController_.reset();
     }
 }
 
@@ -39,21 +44,22 @@ ApplicationPageController* TopBarController::getApplicationPageController()
     if(!applicationPageController_)
     {
         createApplicationPageController();
-        connect(applicationPageController_, &ApplicationPageController::getUnverUsersSignal, this, &TopBarController::handOverGetUnverUsersSignal);
-        connect(this, &TopBarController::handOverReceivedUnverUsersSignal, applicationPageController_, &ApplicationPageController::slotUnverUsersProcessing);
-        connect(applicationPageController_, &ApplicationPageController::approveUserSignal, this, &TopBarController::handOverApproveUserSignal);
-        connect(applicationPageController_, &ApplicationPageController::rejectUserSignal, this, &TopBarController::handOverRejectUserSignal);
-        connect(this, &TopBarController::handOverReceivedApproveUserSignal, applicationPageController_, &ApplicationPageController::slotApproveUserProcessing);
-        connect(this, &TopBarController::handOverReceivedRejectUserSignal, applicationPageController_, &ApplicationPageController::slotRejectUserProcessing);
-        connect(this, &TopBarController::handOverDeleteUnverUserSignal, applicationPageController_, &ApplicationPageController::slotDeleteUnverUser);
     }
-    return applicationPageController_;
+    return applicationPageController_.get();
 }
 
 void TopBarController::createApplicationPageController()
 {
     if(!applicationPageController_)
     {
-        applicationPageController_ = new ApplicationPageController(this);
+        applicationPageController_ = std::make_shared<ApplicationPageController>();
+
+        connect(applicationPageController_.get(), &ApplicationPageController::getUnverUsersSignal, this, &TopBarController::handOverGetUnverUsersSignal);
+        connect(this, &TopBarController::handOverReceivedUnverUsersSignal, applicationPageController_.get(), &ApplicationPageController::slotUnverUsersProcessing);
+        connect(applicationPageController_.get(), &ApplicationPageController::approveUserSignal, this, &TopBarController::handOverApproveUserSignal);
+        connect(applicationPageController_.get(), &ApplicationPageController::rejectUserSignal, this, &TopBarController::handOverRejectUserSignal);
+        connect(this, &TopBarController::handOverReceivedApproveUserSignal, applicationPageController_.get(), &ApplicationPageController::slotApproveUserProcessing);
+        connect(this, &TopBarController::handOverReceivedRejectUserSignal, applicationPageController_.get(), &ApplicationPageController::slotRejectUserProcessing);
+        connect(this, &TopBarController::handOverDeleteUnverUserSignal, applicationPageController_.get(), &ApplicationPageController::slotDeleteUnverUser);
     }
 }

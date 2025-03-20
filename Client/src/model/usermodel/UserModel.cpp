@@ -23,8 +23,6 @@ void UserModel::setUserData(const QString& receivedUserFirstName_, const QString
     id_ = receivedUserId_;
     userRole_ = receivedUserRole_;
 
-    qDebug() << receivedUserPhoneNumber_ << receivedUserPhoneNumber_;
-
     isAuthorized = true;
 }
 

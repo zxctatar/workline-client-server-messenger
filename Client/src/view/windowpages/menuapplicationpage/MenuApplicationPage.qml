@@ -12,6 +12,7 @@ Page {
     property var notificationManager // menuWindow notificationManager
 
     signal backButtonClicked()
+    signal deleteController()
 
     background: Rectangle {
         color: Colors.menuWindowBackgroundColor
@@ -19,6 +20,10 @@ Page {
 
     Component.onCompleted: {
         menuApplicationPage.controller.getUnverUsers()
+    }
+
+    Component.onDestruction: {
+        menuApplicationPage.deleteController()
     }
 
     Connections {
@@ -78,7 +83,7 @@ Page {
         anchors.left: parent.left
         anchors.right: parent.right
         spacing: Sizes.serverTableSpacing // 10
-        model: menuApplicationPage.controller.getUnverUserModel() // UnverifiedUserModel
+        model: menuApplicationPage.controller ? menuApplicationPage.controller.getUnverUserModel() : null // UnverifiedUserModel
         interactive: true
         clip: true
 

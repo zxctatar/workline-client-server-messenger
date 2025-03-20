@@ -4,6 +4,7 @@
 #include <QObject>
 #include <qqml.h>
 #include <ApplicationPageController.h>
+#include <memory>
 
 class TopBarController : public QObject
 {
@@ -19,6 +20,7 @@ public:
     Q_INVOKABLE void getUserRole() const;
     Q_INVOKABLE void getUserData() const;
     Q_INVOKABLE ApplicationPageController* getApplicationPageController();
+    Q_INVOKABLE void deleteApplicationPageController();
 
 signals:
     void applicationPageControllerChanged();
@@ -42,7 +44,7 @@ public slots:
 private:
     void createApplicationPageController();
 
-    ApplicationPageController* applicationPageController_;
+    std::shared_ptr<ApplicationPageController> applicationPageController_;
 };
 
 #endif // TOPBARCONTROLLER_H

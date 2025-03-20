@@ -2,34 +2,33 @@
 
 ApplicationPageController::ApplicationPageController(QObject* parent)
     : QObject(parent)
-    , dataLoaded_(false)
-    , unverUserModel_(new UnverifiedUserModel(this))
+    , unverUserModel_(std::make_shared<UnverifiedUserModel>())
 {
-
 }
 
 ApplicationPageController::~ApplicationPageController()
 {
+    deleteUnverUserModel();
+}
 
+void ApplicationPageController::deleteUnverUserModel()
+{
+    if(unverUserModel_)
+    {
+        unverUserModel_.reset();
+    }
 }
 
 UnverifiedUserModel* ApplicationPageController::getUnverUserModel() const
 {
-    return unverUserModel_;
+    return unverUserModel_.get();
 }
 
 void ApplicationPageController::getUnverUsers()
 {
-    if(dataLoaded_)
-    {
-        return;
-    }
-
     QString request_ = jsonWorker_.createJsonGetUnverUsers();
 
     emit getUnverUsersSignal(request_);
-
-    dataLoaded_ = true;
 }
 
 void ApplicationPageController::refreshUnverUsers()
@@ -117,8 +116,6 @@ void ApplicationPageController::slotDeleteUnverUser(const int userId_) const
 
 void ApplicationPageController::approveUser(const int userId_)
 {
-    qDebug() << userId_;
-
     QString request_ = jsonWorker_.createJsonApproveUser(userId_);
 
     emit approveUserSignal(request_);

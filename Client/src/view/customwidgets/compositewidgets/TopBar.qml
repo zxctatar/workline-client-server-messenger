@@ -25,15 +25,28 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
 
         onClicked: {
-            menuWindow.open()
-        }
-    }
+            var component = Qt.createComponent("qrc:/view/windows/MenuWindow.qml");
+            if(component.status === Component.Ready)
+            {
+                var menuWindow = component.createObject(topBar, {
+                    "parent": Overlay.overlay,
+                    "anchors.centerIn": Overlay.overlay,
+                    "controller": topBar.controller,
+                    "notificationManager": topBar.notificationManager
+                });
 
-    MenuWindow {
-        id: menuWindow
-        parent: Overlay.overlay
-        anchors.centerIn: parent
-        controller: topBar.controller
-        notificationManager: topBar.notificationManager
+                if(menuWindow) {
+                    menuWindow.onClosed.connect(function() {
+                        menuWindow.destroy();
+                    });
+
+                    menuWindow.deleteAll.connect(function() {
+                        topBar.controller.deleteApplicationPageController()
+                    });
+                }
+
+                menuWindow.open();
+            }
+        }
     }
 }
