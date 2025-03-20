@@ -3,6 +3,7 @@
 
 #include <QTcpSocket>
 #include "JsonWorker.h"
+#include "UserAccountManager.h"
 #include <QTimer>
 
 class ServerConnector : public QObject
@@ -31,7 +32,6 @@ signals:
     void sendApproveUser(const QJsonObject& jsonObj_);
     void sendRejectUser(const QJsonObject& jsonObj_);
     void sendDeleteUnverUser(const int userId_);
-    void checkAuthorizationSignal();
 
 private:
     void connectToServer();

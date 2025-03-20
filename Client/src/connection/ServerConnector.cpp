@@ -127,7 +127,15 @@ void ServerConnector::slotConnected()
 {
     qDebug() << "Connected to the server";
 
-    emit checkAuthorizationSignal();
+    if(UserAccountManager::instance().getAuthorized())
+    {
+        QString login_ = UserAccountManager::instance().getUserLogin();
+        QString password_ = UserAccountManager::instance().getUserPassword();
+
+        QString request_ = jsonWorker_.createJsonReconnect(login_, password_);
+
+        slotSendToServer(request_);
+    }
 }
 
 void ServerConnector::slotError(QAbstractSocket::SocketError err)

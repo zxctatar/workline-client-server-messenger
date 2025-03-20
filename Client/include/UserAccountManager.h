@@ -1,18 +1,17 @@
-#ifndef USERMODEL_H
-#define USERMODEL_H
+#ifndef USERMANAGER_H
+#define USERMANAGER_H
 
 #include <QObject>
 #include <qqml.h>
 #include "JsonWorker.h"
 
-class UserModel : public QObject
+class UserAccountManager : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
 
 public:
-    explicit UserModel(QObject* parent = nullptr);
-    ~UserModel();
+    static UserAccountManager& instance();
 
     void setUserData(const QString& receivedUserFirstName_, const QString& receivedUserLastName_, const QString& receivedUserMiddleName_, const QString& receivedUserEmail_, const QString& receivedUserPhoneNumber_, const QString& receivedUserLogin_, const QString& receivedUserPassword_, const int receivedUserId_, const QString& receivedUserRole_);
     QString getUserRole() const;
@@ -26,6 +25,9 @@ public:
     QString getUserPhoneNumber() const;
 
 private:
+    explicit UserAccountManager(QObject* parent = nullptr);
+    ~UserAccountManager();
+
     int id_;
     QString userRole_;    
     QString userLogin_;
@@ -40,4 +42,4 @@ private:
     JsonWorker jsonWorker_;
 };
 
-#endif // USERMODEL_H
+#endif // USERMANAGER_H

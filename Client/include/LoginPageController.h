@@ -2,9 +2,9 @@
 #define LOGINPAGECONTROLLER_H
 
 #include <QObject>
-#include "qqml.h"
-#include "ServerConnector.h"
+#include <qqml.h>
 #include "JsonWorker.h"
+#include "UserAccountManager.h"
 
 class LoginPageController : public QObject
 {
@@ -24,8 +24,6 @@ signals:
     void accessAllowedSignal() const;
     void accessDeniedSignal() const;
     void errorLoginSignal() const;
-
-    void sendUserDataSignal(const QString& receivedUserFirstName_, const QString& receivedUserLastName_, const QString& receivedUserMiddleName_, const QString& receivedUserEmail_, const QString& receivedUserPhoneNumber_, const QString& receivedUserLogin_, const QString& receivedUserPassword_, const int receivedUserId_, const QString& receivedUserRole_) const;
 
 public slots:
     void slotResponseProcessing(const QJsonObject& jsonObj_) const;

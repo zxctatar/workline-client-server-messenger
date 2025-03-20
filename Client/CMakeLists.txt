@@ -98,8 +98,8 @@ qt_add_qml_module(appClient
     SOURCES src/controller/registrationpagecontroller/RegistrationPageController.cpp
     SOURCES include/RegistrationPageController.h
 
-    SOURCES src/model/usermodel/UserModel.cpp
-    SOURCES include/UserModel.h
+    SOURCES src/manager/usermanager/UserAccountManager.cpp
+    SOURCES include/UserAccountManager.h
 
     SOURCES src/controller/servertablecontroller/ServerTableController.cpp
     SOURCES include/ServerTableController.h
@@ -107,16 +107,17 @@ qt_add_qml_module(appClient
     SOURCES src/model/servermodel/ServerModel.cpp
     SOURCES include/ServerModel.h
 
-    SOURCES src/controller/useraccountcontroller/UserAccountController.cpp
-    SOURCES include/UserAccountController.h
-
     SOURCES src/controller/topbarcontroller/TopBarController.cpp
     SOURCES include/TopBarController.h
 
     SOURCES src/controller/applicationpagecontroller/ApplicationPageController.cpp
     SOURCES include/ApplicationPageController.h
+
     SOURCES src/model/unverifiedusermodel/UnverifiedUserModel.cpp
     SOURCES include/UnverifiedUserModel.h
+
+    SOURCES include/SelectedServerManager.h
+    SOURCES src/manager/selectedservermanager/SelectedServerManager.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -5,6 +5,7 @@
 #include <qqml.h>
 #include "ServerModel.h"
 #include "JsonWorker.h"
+#include "UserAccountManager.h"
 
 class ServerTableController : public QObject
 {
@@ -34,7 +35,6 @@ signals:
     void errorCreateServerSignal() const;
 
 public slots:
-    void slotSetUserRole(const QString& userRole_) const;
     void slotCodeProcessing(const QJsonObject& jsonObj_) const;
     void slotServerProcessing(const QJsonObject& jsonObj_) const;
     void slotDeleteServer(const int serverId_);

@@ -21,11 +21,8 @@ ServerModel* ServerTableController::getServerModel() const
 
 void ServerTableController::getUserRole() const
 {
-    emit needUserRoleSignal();
-}
+    QString userRole_ = UserAccountManager::instance().getUserRole();
 
-void ServerTableController::slotSetUserRole(const QString& userRole_) const
-{
     emit setUserRoleSignal(userRole_);
 }
 

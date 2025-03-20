@@ -25,7 +25,17 @@ void LoginPageController::slotResponseProcessing(const QJsonObject& jsonObj_) co
     }
     else if(jsonObj_["Code"].toString() == "ACCESS_ALLOWED_ADMIN" || jsonObj_["Code"].toString() == "ACCESS_ALLOWED_USER")
     {
-        emit sendUserDataSignal(jsonObj_["UserFirstName"].toString(), jsonObj_["UserLastName"].toString(), jsonObj_["UserMiddleName"].toString(), jsonObj_["UserEmail"].toString(), jsonObj_["UserPhoneNumber"].toString(), jsonObj_["UserLogin"].toString(), jsonObj_["UserPassword"].toString(), jsonObj_["UserId"].toInt(), jsonObj_["UserRole"].toString());
+        QString firstName_ = jsonObj_["UserFirstName"].toString();
+        QString lastName_ = jsonObj_["UserLastName"].toString();
+        QString middleName_ = jsonObj_["UserMiddleName"].toString();
+        QString email_ = jsonObj_["UserEmail"].toString();
+        QString phoneNumber_ = jsonObj_["UserPhoneNumber"].toString();
+        QString login_ = jsonObj_["UserLogin"].toString();
+        QString password_ = jsonObj_["UserPassword"].toString();
+        int userId_ = jsonObj_["UserId"].toInt();
+        QString userRole_ = jsonObj_["UserRole"].toString();
+
+        UserAccountManager::instance().setUserData(firstName_, lastName_, middleName_, email_, phoneNumber_, login_, password_, userId_, userRole_);
 
         emit accessAllowedSignal();
     }

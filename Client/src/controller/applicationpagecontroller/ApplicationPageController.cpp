@@ -8,10 +8,10 @@ ApplicationPageController::ApplicationPageController(QObject* parent)
 
 ApplicationPageController::~ApplicationPageController()
 {
-    deleteUnverUserModel();
+    deleteUnverUserManager();
 }
 
-void ApplicationPageController::deleteUnverUserModel()
+void ApplicationPageController::deleteUnverUserManager()
 {
     if(unverUserModel_)
     {

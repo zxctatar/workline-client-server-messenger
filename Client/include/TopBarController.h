@@ -5,6 +5,7 @@
 #include <qqml.h>
 #include <ApplicationPageController.h>
 #include <memory>
+#include "UserAccountManager.h"
 
 class TopBarController : public QObject
 {
@@ -24,8 +25,6 @@ public:
 
 signals:
     void applicationPageControllerChanged();
-    void needUserRoleSignal() const;
-    void needUserDataSignal() const;
     void setUserRoleSignal(const QString& userRole_) const;
     void setUserDataSignal(const QString& userFirstName_, const QString& userLastName_, const QString& userMiddleName_, const QString& userEmail_, const QString& userPhoneNumber_) const;
 
@@ -36,10 +35,6 @@ signals:
     void handOverReceivedApproveUserSignal(const QJsonObject& jsonObj_) const;
     void handOverReceivedRejectUserSignal(const QJsonObject& jsonObj_) const;
     void handOverDeleteUnverUserSignal(const int userId_) const;
-
-public slots:
-    void slotSetUserRole(const QString& userRole_) const;
-    void slotSetUserData(const QString& userFirstName_, const QString& userLastName_, const QString& userMiddleName_, const QString& userEmail_, const QString& userPhoneNumber_) const;
 
 private:
     void createApplicationPageController();

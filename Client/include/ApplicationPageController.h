@@ -21,7 +21,7 @@ public:
     Q_INVOKABLE void refreshUnverUsers();
     Q_INVOKABLE void approveUser(const int userId_);
     Q_INVOKABLE void rejectUser(const int userId_);
-    Q_INVOKABLE void deleteUnverUserModel();
+    Q_INVOKABLE void deleteUnverUserManager();
 
 signals:
     void getUnverUsersSignal(const QString& info_);

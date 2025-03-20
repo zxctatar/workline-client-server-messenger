@@ -2,7 +2,6 @@
 
 MainController::MainController(QObject* parent)
     : QObject(parent)
-    , userAccountController_(new UserAccountController(this))
     , loginPageController_(nullptr)
     , regPageController_(nullptr)
     , serverConnector_(nullptr)
@@ -10,9 +9,6 @@ MainController::MainController(QObject* parent)
     , topBarController_(nullptr)
 {
     serverConnector_ = (new ServerConnector("localhost", 8001, this));
-
-    connect(serverConnector_, &ServerConnector::checkAuthorizationSignal, userAccountController_, &UserAccountController::slotCheckAuthorization);
-    connect(userAccountController_, &UserAccountController::sendAuthorizationDataSignal, serverConnector_, &ServerConnector::slotSendToServer);
 }
 
 MainController::~MainController()
@@ -24,10 +20,6 @@ MainController::~MainController()
     if(regPageController_)
     {
         delete regPageController_;
-    }
-    if(userAccountController_)
-    {
-        delete userAccountController_;
     }
     if(serverConnector_)
     {
@@ -91,8 +83,6 @@ void MainController::createLoginPageController()
         loginPageController_ = new LoginPageController(this);
         connect(loginPageController_, &LoginPageController::loginRequestSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendLoginCodeSignal, loginPageController_, &LoginPageController::slotResponseProcessing);
-
-        connect(loginPageController_, &LoginPageController::sendUserDataSignal, userAccountController_, &UserAccountController::slotSetUserData);
     }
 }
 
@@ -111,9 +101,6 @@ void MainController::createServerTableController()
     if(!serverTableController_)
     {
         serverTableController_ = new ServerTableController(this);
-        connect(serverTableController_, &ServerTableController::needUserRoleSignal, userAccountController_, &UserAccountController::slotSendUserRole);
-        connect(userAccountController_, &UserAccountController::sendUserRoleSignal, serverTableController_, &ServerTableController::slotSetUserRole);
-
         connect(serverTableController_, &ServerTableController::addServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverTableController_, &ServerTableController::deleteServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendDeleteServerId, serverTableController_, &ServerTableController::slotDeleteServer);
@@ -128,11 +115,6 @@ void MainController::createTopBarController()
     if(!topBarController_)
     {
         topBarController_ = new TopBarController(this);
-        connect(topBarController_, &TopBarController::needUserRoleSignal, userAccountController_, &UserAccountController::slotSendUserRole);
-        connect(userAccountController_, &UserAccountController::sendUserRoleSignal, topBarController_, &TopBarController::slotSetUserRole);
-        connect(topBarController_, &TopBarController::needUserDataSignal, userAccountController_, &UserAccountController::slotSendUserData);
-        connect(userAccountController_, &UserAccountController::sendUserDataSignal, topBarController_, &TopBarController::slotSetUserData);
-
         connect(topBarController_, &TopBarController::handOverGetUnverUsersSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendUnverUsers, topBarController_, &TopBarController::handOverReceivedUnverUsersSignal);
         connect(topBarController_, &TopBarController::handOverApproveUserSignal, serverConnector_, &ServerConnector::slotSendToServer);

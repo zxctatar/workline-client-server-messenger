@@ -8,8 +8,8 @@
 #include "RegistrationPageController.h"
 #include "ServerConnector.h"
 #include "ServerTableController.h"
-#include "UserAccountController.h"
 #include "TopBarController.h"
+#include "UserAccountManager.h"
 
 class MainController : public QObject
 {
@@ -44,7 +44,6 @@ private:
     void createServerTableController();
     void createTopBarController();
 
-    UserAccountController* userAccountController_;
     ServerConnector* serverConnector_;
     LoginPageController* loginPageController_;
     RegistrationPageController* regPageController_;
