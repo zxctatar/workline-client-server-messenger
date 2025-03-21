@@ -3,8 +3,8 @@ import QtQuick.Layouts
 import "../../../resources"
 
 Item {
-    id: applicationWidget
-    height: Sizes.maxApplicationobjectHeight // 50
+    id: applicationObject
+    height: Sizes.maxApplicationObjectHeight // 50
 
     property string displayName
 
@@ -13,32 +13,29 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: 10 // Расстояние между элементами
+        spacing: 10
 
-        // Аватар
         Image {
             source: "qrc:/resources/img/avatar.svg"
             Layout.preferredWidth: Sizes.maxApplicationObjectImageWidth // 40
             Layout.preferredHeight: Sizes.maxApplicationObjectImageHeight // 40
         }
 
-        // Текст
         MenuText {
-            text: applicationWidget.displayName
+            text: applicationObject.displayName
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
         }
 
-        // Кнопки
         RowLayout {
-            spacing: 5 // Расстояние между кнопками
+            spacing: 5
 
             ApproveButton {
                 Layout.preferredWidth: Sizes.maxApproveButtonWidth //35
                 Layout.preferredHeight: Sizes.maxApproveButtonHeight // 35
 
                 onClicked: {
-                    applicationWidget.approveButtonClicked()
+                    applicationObject.approveButtonClicked()
                 }
             }
 
@@ -47,7 +44,7 @@ Item {
                 Layout.preferredHeight: Sizes.maxRejectButtonHeight // 35
 
                 onClicked: {
-                    applicationWidget.rejectButtonClicked()
+                    applicationObject.rejectButtonClicked()
                 }
             }
         }

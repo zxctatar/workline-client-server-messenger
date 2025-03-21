@@ -93,7 +93,7 @@ Page {
 
             displayName: name
             width: parent ? parent.width : undefined
-            height: Sizes.maxApplicationobjectHeight
+            height: Sizes.maxApplicationObjectHeight
 
             onApproveButtonClicked: {
                 menuApplicationPage.controller.approveUser(id)

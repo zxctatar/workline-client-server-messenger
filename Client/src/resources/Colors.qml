@@ -14,6 +14,10 @@ QtObject {
     readonly property color hoverButtonTextColor: "#292929" // цвет текста кнопки когда навелись
     readonly property color normalButtonTextColor: "#373737" // цвет обычной кнопки
 
+    //chat object
+    readonly property color selectedChatColor: "#1E88E5" // цвет выбранного чата
+    readonly property color normalChatColor: "transparent" // цвет не выбранного чата
+
     //separator
     readonly property color separatorColor: "#B0D5FF" // цвет разделителя
 

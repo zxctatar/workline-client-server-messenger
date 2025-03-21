@@ -29,19 +29,22 @@ Item {
             if(component.status === Component.Ready)
             {
                 var menuWindow = component.createObject(topBar, {
-                    "parent": Overlay.overlay,
-                    "anchors.centerIn": Overlay.overlay,
-                    "controller": topBar.controller,
-                    "notificationManager": topBar.notificationManager
+                    parent: Overlay.overlay,
+                    controller: topBar.controller,
+                    notificationManager: topBar.notificationManager
                 });
 
                 if(menuWindow) {
+                    menuWindow.anchors.centerIn = Overlay.overlay
+
                     menuWindow.onClosed.connect(function() {
                         menuWindow.destroy();
                     });
 
                     menuWindow.deleteAll.connect(function() {
+                        topBar.controller.deleteProfilePageController()
                         topBar.controller.deleteApplicationPageController()
+                        topBar.controller.deleteAddUserOnServerController()
                     });
                 }
 

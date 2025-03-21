@@ -9,12 +9,29 @@ Page {
 
     signal backButtonClicked()
 
+    property var controller // profilePageController MenuWindow.qml
+
     property string firstName
     property string lastName
     property string middleName
     property string email
     property string phoneNumber
 
+    Component.onCompleted: {
+        menuProfilePage.controller.getUserData()
+    }
+
+    Connections {
+        target: menuProfilePage.controller
+
+        function onSetUserDataSignal(firstname, lastname, middlename, email, phoneNumber) {
+            menuProfilePage.firstName = firstname
+            menuProfilePage.lastName = lastname
+            menuProfilePage.middleName = middlename
+            menuProfilePage.email = email
+            menuProfilePage.phoneNumber = phoneNumber
+        }
+    }
 
     background: Rectangle {
         color: Colors.menuWindowBackgroundColor

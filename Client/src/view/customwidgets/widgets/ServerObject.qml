@@ -5,6 +5,8 @@ import "../../../resources"
 Button {
     id: serverObject
 
+    property bool selected: false
+
     width: Sizes.maxServerObjectWidth // 55
     height: Sizes.maxServerObjectHeight // 55
 
@@ -19,6 +21,8 @@ Button {
     background: Rectangle {
         radius: Sizes.serverObjectRadius // 10
         color: "#93CCFF"
+        border.color: serverObject.selected ? "#00FF62" : "transparent"
+        border.width: serverObject.selected ? 6 : 0
     }
 
     Menu {

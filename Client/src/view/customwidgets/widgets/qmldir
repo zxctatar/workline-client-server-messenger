@@ -19,3 +19,5 @@ MenuPageLabel 1.0 MenuPageLabel.qml
 ApplicationObject 1.0 ApplicationObject.qml
 ApproveButton 1.0 ApproveButton.qml
 RejectButton 1.0 RejectButton.qml
+ChatObject 1.0 ChatObject.qml
+AddUserButton 1.0 AddUserButton.qml

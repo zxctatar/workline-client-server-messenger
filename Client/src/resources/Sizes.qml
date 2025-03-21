@@ -17,10 +17,16 @@ QtObject {
     readonly property int separatorHeight: 2 // высота разделителя
 
     //application object
-    readonly property int maxApplicationobjectHeight: 50 // высота объекта заявки
+    readonly property int maxApplicationObjectHeight: 50 // высота объекта заявки
 
     readonly property int maxApplicationObjectImageWidth: 40 // ширина иконки объекта заявок
     readonly property int maxApplicationObjectImageHeight: 40 // высота иконки объекта заявок
+
+    //candidate user object
+    readonly property int maxCandidateUserObjectHeight: 50 // высота объекта заявки
+
+    readonly property int maxCandidateUserObjectImageWidth: 40 // ширина иконки объекта заявок
+    readonly property int maxCandidateUserObjectImageHeight: 40 // высота иконки объекта заявок
 
     //menu window
     readonly property int maxMenuWindowWidth: 230 // ширина окна меню
@@ -43,6 +49,10 @@ QtObject {
     //menu application page
     readonly property int maxMenuApplicationPageWidth: 475 // ширина окна заявок меню
     readonly property int maxMenuApplicationPageHeight: 550 // высота окна профиля меню
+
+    //menu add user on server page
+    readonly property int maxMenuAddUserOnServerPageWidth: 475 // ширина окна добавления пользователя на сервер
+    readonly property int maxMenuAddUserOnServerPageHeight: 550 // высота окна добавления пользователя на сервер
 
     //menu widget (button)
     readonly property int maxMenuWidgetWidth: 200 // ширина виджета меню
@@ -67,6 +77,10 @@ QtObject {
     readonly property int radiusAddServerWindow: 5 // скругление углов окна добавления сервера
 
     readonly property int addServerWindowFontSize: 18 // размер шрифта у окна добавления сервера
+
+    //add user button
+    readonly property int maxAddUserButtonWidth: 35 // ширина кнопки отколнить
+    readonly property int maxAddUserButtonHeight: 35 // высота кнопки отклонить
 
     //buttons
     readonly property int maxButtonWidth: 410 // ширина кнопки

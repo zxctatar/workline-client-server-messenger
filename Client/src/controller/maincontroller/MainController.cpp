@@ -107,6 +107,8 @@ void MainController::createServerTableController()
         connect(serverConnector_, &ServerConnector::sendServerTableCodeSignal, serverTableController_, &ServerTableController::slotCodeProcessing);
         connect(serverTableController_, &ServerTableController::needServers, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendUserServers, serverTableController_, &ServerTableController::slotServerProcessing);
+
+        connect(serverTableController_, &ServerTableController::selectedServerDeleted, topBarController_, &TopBarController::selectedServerDeleted);
     }
 }
 

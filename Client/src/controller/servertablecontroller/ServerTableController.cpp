@@ -40,6 +40,11 @@ void ServerTableController::getServers() const
     emit needServers(request_);
 }
 
+void ServerTableController::setServerData(const int serverId_, const QString& serverName_, const QString& serverDescription_)
+{
+    SelectedServerManager::instance().setServerData(serverId_, serverName_, serverDescription_);
+}
+
 void ServerTableController::slotServerProcessing(const QJsonObject& jsonObj_) const
 {
     QJsonArray serversArray_ = jsonObj_["Servers"].toArray();
@@ -80,6 +85,14 @@ void ServerTableController::slotCodeProcessing(const QJsonObject& jsonObj_) cons
 
 void ServerTableController::slotDeleteServer(const int serverId_)
 {
+    int selectedServerId_ = SelectedServerManager::instance().getServerId();
+
+    if(selectedServerId_ == serverId_)
+    {
+        SelectedServerManager::instance().setServerData(-1, "","");
+        emit selectedServerDeleted();
+    }
+
     serverModel_->deleteServer(serverId_);
 }
 

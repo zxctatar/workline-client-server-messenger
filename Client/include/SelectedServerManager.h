@@ -10,12 +10,19 @@ class SelectedServerManager : public QObject
     QML_ELEMENT
 
 public:
+    static SelectedServerManager& instance();
+
+    void setServerData(const int receivedServerId_, const QString& receivedServerName_, const QString& receivedServerDescription_);
+    bool getServerSelected();
+    int getServerId();
+
+private:
     explicit SelectedServerManager(QObject* parent = nullptr);
     ~SelectedServerManager();
 
-private:
     int serverId_;
-    QString serverDescription;
+    QString serverName_;
+    QString serverDescription_;
 };
 
 #endif // SELECTEDSERVERMANAGER_H

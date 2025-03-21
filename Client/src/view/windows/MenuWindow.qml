@@ -22,12 +22,7 @@ Popup {
     property var notificationManager // topBar notificationManager
 
     property string userRole
-
-    property string firstName
-    property string lastName
-    property string middleName
-    property string email
-    property string phoneNumber
+    property bool serverSelected: false
 
     Connections {
         target: menuWindow.controller
@@ -36,17 +31,25 @@ Popup {
             menuWindow.userRole = message
         }
 
-        function onSetUserDataSignal(firstname, lastname, middlename, email, phoneNumber) {
-            menuWindow.firstName = firstname
-            menuWindow.lastName = lastname
-            menuWindow.middleName = middlename
-            menuWindow.email = email
-            menuWindow.phoneNumber = phoneNumber
+        function onServerSelectedSignal() {
+            menuWindow.serverSelected = true
+        }
+
+        function onSelectedServerDeleted() {
+            menuWindow.serverSelected = false
+
+            if(stackView.currentItem.objectName == "MenuAddUserOnServer")
+            {
+                stackView.pop()
+                menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                menuWindow.height = Sizes.maxMenuWindowHeight // 550
+            }
         }
     }
 
     Component.onCompleted: {
         menuWindow.controller.getUserRole()
+        menuWindow.controller.checkServerSelected()
     }
 
     Component.onDestruction: {
@@ -97,22 +100,16 @@ Popup {
                 height: parent.height
 
                 userRole: menuWindow.userRole
+                serverSelected: menuWindow.serverSelected
 
                 onProfileButtonClicked: {
-                    menuWindow.controller.getUserData()
-
                     menuWindow.width = Sizes.maxMenuProfilePageWidth // 300
                     menuWindow.height = Sizes.maxMenuProfilePageHeight // 550
 
                     var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menuprofilepage/MenuProfilePage.qml"), {
                         width: parent.width,
                         height: parent.height,
-
-                        firstName: menuWindow.firstName,
-                        lastName: menuWindow.lastName,
-                        middleName: menuWindow.middleName,
-                        email: menuWindow.email,
-                        phoneNumber: menuWindow.phoneNumber,
+                        controller: menuWindow.controller.profilePageController,
                     })
 
                     if(page) {
@@ -143,9 +140,28 @@ Popup {
                         })
 
                         page.deleteController.connect(function(){
-                            if(menuWindow) {
+                            if(typeof menuWindow !== 'undefined' && menuWindow) {
                                 menuWindow.controller.deleteApplicationPageController()
                             }
+                        })
+                    }
+                }
+
+                onAddUserOnServerButtonClicked: {
+                    menuWindow.width = Sizes.maxMenuAddUserOnServerPageWidth // 475
+                    menuWindow.height = Sizes.maxMenuAddUserOnServerPageHeight // 550
+
+                    var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menuadduseronserverpage/MenuAddUserOnServerPage.qml"), {
+                        width: parent.width,
+                        height: parent.height,
+                        controller: menuWindow.controller.addUserController
+                    })
+
+                    if(page) {
+                        page.backButtonClicked.connect(function(){
+                            stackView.pop()
+                            menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                            menuWindow.height = Sizes.maxMenuWindowHeight // 550
                         })
                     }
                 }

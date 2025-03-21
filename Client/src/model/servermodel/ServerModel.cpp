@@ -30,6 +30,10 @@ QVariant ServerModel::data(const QModelIndex& index_, int role_) const
         return server_.name_;
     case Qt::UserRole + 1:
         return server_.id_;
+    case Qt::UserRole + 2:
+        return server_.fullName_;
+    case Qt::UserRole + 3:
+        return server_.description_;
     default:
         return QVariant();
     }
@@ -39,8 +43,9 @@ QHash<int, QByteArray> ServerModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[Qt::DisplayRole] = "name";
-    roles[Qt::BackgroundRole] = "color";
     roles[Qt::UserRole + 1] = "id";
+    roles[Qt::UserRole + 2] = "fullName";
+    roles[Qt::UserRole + 3] = "description";
     return roles;
 }
 

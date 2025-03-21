@@ -59,6 +59,8 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/widgets/ApplicationObject.qml
     QML_FILES src/view/customwidgets/widgets/ApproveButton.qml
     QML_FILES src/view/customwidgets/widgets/RejectButton.qml
+    QML_FILES src/view/customwidgets/widgets/ChatObject.qml
+    QML_FILES src/view/customwidgets/widgets/AddUserButton.qml
     RESOURCES src/view/customwidgets/widgets/qmldir
 
     QML_FILES src/view/windowpages/menuprofilepage/MenuProfilePage.qml
@@ -69,6 +71,9 @@ qt_add_qml_module(appClient
 
     QML_FILES src/view/windowpages/menuapplicationpage/MenuApplicationPage.qml
     RESOURCES src/view/windowpages/menuapplicationpage/qmldir
+
+    QML_FILES src/view/windowpages/menuadduseronserverpage/MenuAddUserOnServerPage.qml
+    RESOURCES src/view/windowpages/menuadduseronserverpage/qmldir
 
     QML_FILES src/view/windows/AddServerWindow.qml
     QML_FILES src/view/windows/MenuWindow.qml
@@ -116,8 +121,17 @@ qt_add_qml_module(appClient
     SOURCES src/model/unverifiedusermodel/UnverifiedUserModel.cpp
     SOURCES include/UnverifiedUserModel.h
 
-    SOURCES include/SelectedServerManager.h
     SOURCES src/manager/selectedservermanager/SelectedServerManager.cpp
+    SOURCES include/SelectedServerManager.h
+
+    SOURCES src/controller/profilepagecontroller/ProfilePageController.cpp
+    SOURCES include/ProfilePageController.h
+
+    SOURCES src/controller/adduseronservercontroller/AddUserOnServerController.cpp
+    SOURCES include/AddUserOnServerController.h
+
+    SOURCES src/model/candidateusermodel/CandidateUserModel.cpp
+    SOURCES include/CandidateUserModel.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

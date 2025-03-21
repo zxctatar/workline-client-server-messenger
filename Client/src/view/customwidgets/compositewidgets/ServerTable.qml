@@ -14,6 +14,8 @@ Item {
 
     property var notificationManager // mainPage notificationManager
 
+    property var currentIndex: -1
+
     width: Sizes.maxServerTableWidth // 78
 
     Connections {
@@ -51,18 +53,29 @@ Item {
             id: listView
             anchors.fill: backList
             spacing: Sizes.serverTableSpacing // 10
-            model: serverTable.controller.getServerModel()
+            model: serverTable.controller.getServerModel() // serverModel
             interactive: true
             clip: true
 
             delegate: ServerObject {
+                id: serverObject
+
                 required property int id
                 required property string name
+                required property string fullName
+                required property string description
 
                 serverId: id
 
+                selected: serverTable.currentIndex == serverId ? true : false
+
                 anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
                 text: name
+
+                onClicked: {
+                    serverTable.currentIndex = id
+                    serverTable.controller.setServerData(id, fullName, description)
+                }
 
                 onDeleteServerClicked:(serverId) => {
                     serverTable.controller.deleteServer(serverId)

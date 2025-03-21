@@ -59,5 +59,11 @@
         <file>resources/img/yes.svg</file>
         <file>resources/img/no.svg</file>
         <file>resources/img/avatar.svg</file>
+        <file>view/customwidgets/widgets/ChatObject.qml</file>
+        <file>view/windowpages/menuadduseronserverpage/MenuAddUserOnServerPage.qml</file>
+        <file>view/windowpages/menuadduseronserverpage/qmldir</file>
+        <file>view/customwidgets/widgets/CandidateUserObject.qml</file>
+        <file>view/customwidgets/widgets/AddUserButton.qml</file>
+        <file>resources/img/add.svg</file>
     </qresource>
 </RCC>

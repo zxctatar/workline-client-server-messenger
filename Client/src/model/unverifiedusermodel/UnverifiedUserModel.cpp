@@ -62,26 +62,20 @@ void UnverifiedUserModel::deleteUnverifiedUser(const int userId_)
 {
     int index_ = -1;
 
-    // Поиск индекса пользователя
-    for (int i = 0; i < unverifiedUsers_.size(); ++i) {
-        if (userId_ == unverifiedUsers_[i].id_) {
+    for (int i = 0; i < unverifiedUsers_.size(); ++i)
+    {
+        if (userId_ == unverifiedUsers_[i].id_)
+        {
             index_ = i;
             break;
         }
     }
 
-    // Проверка, что индекс найден и корректен
-    if (index_ >= 0 && index_ < unverifiedUsers_.size()) {
-        // Уведомляем модель о начале удаления строки
+    if (index_ >= 0 && index_ < unverifiedUsers_.size())
+    {
         beginRemoveRows(QModelIndex(), index_, index_);
-
-        // Удаляем пользователя из контейнера
         unverifiedUsers_.remove(index_);
-
-        // Уведомляем модель о завершении удаления строки
         endRemoveRows();
-    } else {
-        qWarning() << "User with ID" << userId_ << "not found or invalid index:" << index_;
     }
 }
 

@@ -7,10 +7,12 @@ import "../../../resources"
 Page {
     id: menuMainPage
 
-    property string userRole
+    property string userRole: "none"
+    property bool serverSelected: false
 
     signal profileButtonClicked()
     signal applicationButtonClicked()
+    signal addUserOnServerButtonClicked()
 
     background: Rectangle {
         color: Colors.menuWindowBackgroundColor
@@ -49,6 +51,24 @@ Page {
 
             onClicked: {
                 menuMainPage.applicationButtonClicked()
+            }
+        }
+
+        Separator {
+            Layout.fillWidth: true
+            visible: menuMainPage.userRole == "admin" ? (menuMainPage.serverSelected ? true : false) : false
+        }
+
+        MenuWidget {
+            Layout.preferredWidth: menuMainPage.width
+            Layout.preferredHeight: Sizes.maxMenuWidgetHeight // 50
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            text: "Добавить пользователя"
+
+            visible: menuMainPage.userRole == "admin" ? (menuMainPage.serverSelected ? true : false) : false
+
+            onClicked: {
+                menuMainPage.addUserOnServerButtonClicked()
             }
         }
     }
