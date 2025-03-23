@@ -9,13 +9,13 @@ Button {
 
     Image {
         anchors.centerIn: parent
-        width: 19
-        height: 19
+        width: Sizes.maxAddUserButtonImageWidth // 19
+        height: Sizes.maxAddUserButtonImageHeight // 19
         source: "qrc:/resources/img/add.svg"
     }
 
     background: Rectangle {
-        color: "#9FCCF2"
+        color: addUserButton.hovered ? Colors.hoveredAddUserButtonColor : Colors.normalAddUserButtonColor
     }
 
     MouseArea {

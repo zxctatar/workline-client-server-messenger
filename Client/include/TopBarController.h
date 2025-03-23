@@ -46,6 +46,8 @@ signals:
     void handOverReceivedApproveUserSignal(const QJsonObject& jsonObj_) const;
     void handOverReceivedRejectUserSignal(const QJsonObject& jsonObj_) const;
     void handOverDeleteUnverUserSignal(const int userId_) const;
+    void handOverGetCandidateUsersSignal(const QString& info_) const;
+    void handOverReceivedCandidateUsersSignal(const QJsonObject& jsonObj_) const;
 
     void serverSelectedSignal();
     void selectedServerDeleted();

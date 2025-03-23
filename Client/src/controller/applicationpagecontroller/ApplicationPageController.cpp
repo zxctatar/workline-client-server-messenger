@@ -24,7 +24,7 @@ UnverifiedUserModel* ApplicationPageController::getUnverUserModel() const
     return unverUserModel_.get();
 }
 
-void ApplicationPageController::getUnverUsers()
+void ApplicationPageController::getUnverUsers() const
 {
     QString request_ = jsonWorker_.createJsonGetUnverUsers();
 
@@ -42,7 +42,6 @@ void ApplicationPageController::refreshUnverUsers()
 
 void ApplicationPageController::slotUnverUsersProcessing(const QJsonObject& jsonObj_) const
 {
-
     QJsonArray jsonArray_ = jsonObj_["UnverUsers"].toArray();
 
     for(const QJsonValue& value : jsonArray_)

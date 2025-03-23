@@ -127,4 +127,12 @@ QString JsonWorker::createJsonRejectUser(const int userId_) const
     return jsonString_;
 }
 
-
+QString JsonWorker::createJsonGetCandidateUsers(const int serverId_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Get_Candidate_Users");
+    jsonObject_.insert("serverId", serverId_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}

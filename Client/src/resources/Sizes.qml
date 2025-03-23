@@ -23,10 +23,21 @@ QtObject {
     readonly property int maxApplicationObjectImageHeight: 40 // высота иконки объекта заявок
 
     //candidate user object
-    readonly property int maxCandidateUserObjectHeight: 50 // высота объекта заявки
+    readonly property int maxCandidateUserObjectHeight: 50 // высота объекта кандидата на добавление
 
     readonly property int maxCandidateUserObjectImageWidth: 40 // ширина иконки объекта заявок
     readonly property int maxCandidateUserObjectImageHeight: 40 // высота иконки объекта заявок
+
+    readonly property int spacingCandidateUserObject: 10 // отступ в объекте кандидата на добавление
+
+    //add user button
+    readonly property int maxAddUserButtonWidth: 35 // ширина кнопки добавления пользователя
+    readonly property int maxAddUserButtonHeight: 35 // высота кнопки добавления пользователя
+
+    readonly property int maxAddUserButtonImageWidth: 19 // ширина иконки в кнопке добавления пользователя на сервер
+    readonly property int maxAddUserButtonImageHeight: 19 // высота иконки в кнопке добавления пользователя на сервер
+
+    readonly property int rightMargineAddUserButton: 5 // правый отступ в кнопке добавления пользователя на сервер
 
     //menu window
     readonly property int maxMenuWindowWidth: 230 // ширина окна меню
@@ -50,9 +61,15 @@ QtObject {
     readonly property int maxMenuApplicationPageWidth: 475 // ширина окна заявок меню
     readonly property int maxMenuApplicationPageHeight: 550 // высота окна профиля меню
 
+    readonly property int maxMenuApplicaionPageRefreshButtonWidth: 100 // ширина кнопки обновить в окне заявок
+    readonly property int maxMenuApplicaionPageRefreshButtonHeight: 50 // высота кнопки обновить в окне заявок
+
     //menu add user on server page
     readonly property int maxMenuAddUserOnServerPageWidth: 475 // ширина окна добавления пользователя на сервер
     readonly property int maxMenuAddUserOnServerPageHeight: 550 // высота окна добавления пользователя на сервер
+
+    readonly property int maxMenuAddUserOnServerPageRefreshButtonWidth: 100 // ширина кнопки обновить в добавления пользователя на сервер
+    readonly property int maxMenuAddUserOnServerPageRefreshButtonHeight: 50 // высота кнопки обновить в добавления пользователя на сервер
 
     //menu widget (button)
     readonly property int maxMenuWidgetWidth: 200 // ширина виджета меню
@@ -77,10 +94,6 @@ QtObject {
     readonly property int radiusAddServerWindow: 5 // скругление углов окна добавления сервера
 
     readonly property int addServerWindowFontSize: 18 // размер шрифта у окна добавления сервера
-
-    //add user button
-    readonly property int maxAddUserButtonWidth: 35 // ширина кнопки отколнить
-    readonly property int maxAddUserButtonHeight: 35 // высота кнопки отклонить
 
     //buttons
     readonly property int maxButtonWidth: 410 // ширина кнопки

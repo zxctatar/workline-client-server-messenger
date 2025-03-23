@@ -107,8 +107,8 @@ Page {
 
     MyButton {
         id: refreshbutton
-        width: 100
-        height: 50
+        width: Sizes.maxMenuApplicaionPageRefreshButtonWidth // 100
+        height: Sizes.maxMenuApplicaionPageRefreshButtonHeight // 50
         anchors.horizontalCenter: parent.horizontalCenter
         font.pixelSize: Sizes.menuTextSizeInWidgets // 16
         anchors.bottom: parent.bottom

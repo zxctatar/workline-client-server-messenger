@@ -112,5 +112,8 @@ void TopBarController::createAddUserOnServerController()
     if(!addUserController_)
     {
         addUserController_ = std::make_shared<AddUserOnServerController>();
+
+        connect(addUserController_.get(), &AddUserOnServerController::getCandidateUsersSignal, this, &TopBarController::handOverGetCandidateUsersSignal);
+        connect(this, &TopBarController::handOverReceivedCandidateUsersSignal, addUserController_.get(), &AddUserOnServerController::slotCandidateUsersProcessing);
     }
 }

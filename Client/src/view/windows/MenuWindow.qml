@@ -163,6 +163,12 @@ Popup {
                             menuWindow.width = Sizes.maxMenuWindowWidth // 230
                             menuWindow.height = Sizes.maxMenuWindowHeight // 550
                         })
+
+                        page.deleteController.connect(function(){
+                            if(typeof meniWindow !== 'undefined' && menuWindow) {
+                                menuWindow.controller.deleteAddUserOnServerController()
+                            }
+                        })
                     }
                 }
             }

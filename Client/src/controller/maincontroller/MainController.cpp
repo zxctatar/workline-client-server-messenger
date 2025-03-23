@@ -103,10 +103,10 @@ void MainController::createServerTableController()
         serverTableController_ = new ServerTableController(this);
         connect(serverTableController_, &ServerTableController::addServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverTableController_, &ServerTableController::deleteServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
-        connect(serverConnector_, &ServerConnector::sendDeleteServerId, serverTableController_, &ServerTableController::slotDeleteServer);
+        connect(serverConnector_, &ServerConnector::sendDeleteServerIdSignal, serverTableController_, &ServerTableController::slotDeleteServer);
         connect(serverConnector_, &ServerConnector::sendServerTableCodeSignal, serverTableController_, &ServerTableController::slotCodeProcessing);
         connect(serverTableController_, &ServerTableController::needServers, serverConnector_, &ServerConnector::slotSendToServer);
-        connect(serverConnector_, &ServerConnector::sendUserServers, serverTableController_, &ServerTableController::slotServerProcessing);
+        connect(serverConnector_, &ServerConnector::sendUserServersSignal, serverTableController_, &ServerTableController::slotServerProcessing);
 
         connect(serverTableController_, &ServerTableController::selectedServerDeleted, topBarController_, &TopBarController::selectedServerDeleted);
     }
@@ -118,11 +118,13 @@ void MainController::createTopBarController()
     {
         topBarController_ = new TopBarController(this);
         connect(topBarController_, &TopBarController::handOverGetUnverUsersSignal, serverConnector_, &ServerConnector::slotSendToServer);
-        connect(serverConnector_, &ServerConnector::sendUnverUsers, topBarController_, &TopBarController::handOverReceivedUnverUsersSignal);
+        connect(serverConnector_, &ServerConnector::sendUnverUsersSignal, topBarController_, &TopBarController::handOverReceivedUnverUsersSignal);
         connect(topBarController_, &TopBarController::handOverApproveUserSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(topBarController_, &TopBarController::handOverRejectUserSignal, serverConnector_, &ServerConnector::slotSendToServer);
-        connect(serverConnector_, &ServerConnector::sendApproveUser, topBarController_, &TopBarController::handOverReceivedApproveUserSignal);
-        connect(serverConnector_, &ServerConnector::sendRejectUser, topBarController_, &TopBarController::handOverReceivedRejectUserSignal);
-        connect(serverConnector_, &ServerConnector::sendDeleteUnverUser, topBarController_, &TopBarController::handOverDeleteUnverUserSignal);
+        connect(serverConnector_, &ServerConnector::sendApproveUserSignal, topBarController_, &TopBarController::handOverReceivedApproveUserSignal);
+        connect(serverConnector_, &ServerConnector::sendRejectUserSignal, topBarController_, &TopBarController::handOverReceivedRejectUserSignal);
+        connect(serverConnector_, &ServerConnector::sendDeleteUnverUserSignal, topBarController_, &TopBarController::handOverDeleteUnverUserSignal);
+        connect(topBarController_, &TopBarController::handOverGetCandidateUsersSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendCandidateUsersSignal, topBarController_, &TopBarController::handOverReceivedCandidateUsersSignal);
     }
 }

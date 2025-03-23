@@ -83,27 +83,31 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     }
     else if(jsonObj_["Info"] == "Get_Servers")
     {
-        emit sendUserServers(jsonObj_);
+        emit sendUserServersSignal(jsonObj_);
     }
     else if(jsonObj_["Info"] == "DeleteServer")
     {
-        emit sendDeleteServerId(jsonObj_["serverId"].toInt());
+        emit sendDeleteServerIdSignal(jsonObj_["serverId"].toInt());
     }
     else if(jsonObj_["Info"] == "Get_UnverUsers")
     {
-        emit sendUnverUsers(jsonObj_);
+        emit sendUnverUsersSignal(jsonObj_);
     }
     else if(jsonObj_["Info"] == "Approve_User")
     {
-        emit sendApproveUser(jsonObj_);
+        emit sendApproveUserSignal(jsonObj_);
     }
     else if(jsonObj_["Info"] == "Reject_User")
     {
-        emit sendRejectUser(jsonObj_);
+        emit sendRejectUserSignal(jsonObj_);
     }
     else if(jsonObj_["Info"] == "Delete_unver_user")
     {
-        emit sendDeleteUnverUser(jsonObj_["userId"].toInt());
+        emit sendDeleteUnverUserSignal(jsonObj_["userId"].toInt());
+    }
+    else if(jsonObj_["Info"] == "Get_Candidate_Users")
+    {
+        emit sendCandidateUsersSignal(jsonObj_);
     }
 }
 

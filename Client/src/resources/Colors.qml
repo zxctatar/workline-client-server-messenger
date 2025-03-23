@@ -21,13 +21,17 @@ QtObject {
     //separator
     readonly property color separatorColor: "#B0D5FF" // цвет разделителя
 
+    //add user button
+    readonly property color normalAddUserButtonColor: "#9FCCF2" // обычный цвет кнопки добавить пользователя
+    readonly property color hoveredAddUserButtonColor: "#52AAF6" // цвет кнопки добавить пользователя когда навелись
+
     //approve button
-    readonly property color hoverApproveButtonColor: Qt.rgba(85/255, 206/255, 94/255, 1)
-    readonly property color normalApproveButtonColor: Qt.rgba(85/255, 206/255, 94/255, 0.50)
+    readonly property color hoverApproveButtonColor: Qt.rgba(85/255, 206/255, 94/255, 1) // цвет кнопки одобрить когда навелись
+    readonly property color normalApproveButtonColor: Qt.rgba(85/255, 206/255, 94/255, 0.50) // обычный цвет кнопки одобрить
 
     //reject button
-    readonly property color hoverRejectButtonColor: Qt.rgba(255, 0, 0)
-    readonly property color normalRejectButtonColor: Qt.rgba(255, 0, 0, 0.5)
+    readonly property color hoverRejectButtonColor: Qt.rgba(255, 0, 0) // цвет кнопки отказать когда навелись
+    readonly property color normalRejectButtonColor: Qt.rgba(255, 0, 0, 0.5) // обычный цвет кнопки отказать
 
     //menu button
     readonly property color menuButtonBackgroundColor: "transparent" // цвет заднего фона кнопки меню

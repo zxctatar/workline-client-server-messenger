@@ -26,12 +26,13 @@ signals:
     void sendRegistrationCodeSignal(const QString& code_);
     void sendLoginCodeSignal(const QJsonObject& jsonObj_);
     void sendServerTableCodeSignal(const QJsonObject& jsonObj_);
-    void sendUserServers(const QJsonObject& jsonObj_);
-    void sendDeleteServerId(const int serverId_);
-    void sendUnverUsers(const QJsonObject& jsonObj_);
-    void sendApproveUser(const QJsonObject& jsonObj_);
-    void sendRejectUser(const QJsonObject& jsonObj_);
-    void sendDeleteUnverUser(const int userId_);
+    void sendUserServersSignal(const QJsonObject& jsonObj_);
+    void sendDeleteServerIdSignal(const int serverId_);
+    void sendUnverUsersSignal(const QJsonObject& jsonObj_);
+    void sendApproveUserSignal(const QJsonObject& jsonObj_);
+    void sendRejectUserSignal(const QJsonObject& jsonObj_);
+    void sendDeleteUnverUserSignal(const int userId_);
+    void sendCandidateUsersSignal(const QJsonObject& jsonObj_);
 
 private:
     void connectToServer();

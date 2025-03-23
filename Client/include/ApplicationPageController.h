@@ -17,14 +17,14 @@ public:
     ~ApplicationPageController();
 
     Q_INVOKABLE UnverifiedUserModel* getUnverUserModel() const;
-    Q_INVOKABLE void getUnverUsers();
+    Q_INVOKABLE void getUnverUsers() const;
     Q_INVOKABLE void refreshUnverUsers();
     Q_INVOKABLE void approveUser(const int userId_);
     Q_INVOKABLE void rejectUser(const int userId_);
     Q_INVOKABLE void deleteUnverUserManager();
 
 signals:
-    void getUnverUsersSignal(const QString& info_);
+    void getUnverUsersSignal(const QString& info_) const;
 
     void approveUserSignal(const QString& info_);
     void rejectUserSignal(const QString& info_);

@@ -12,24 +12,24 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: 10
+        spacing: Sizes.spacingCandidateUserObject // 1
 
         Image {
             source: "qrc:/resources/img/avatar.svg"
-            Layout.preferredWidth: 40
-            Layout.preferredHeight: 40
+            Layout.preferredWidth: Sizes.maxCandidateUserObjectImageWidth // 40
+            Layout.preferredHeight: Sizes.maxCandidateUserObjectImageHeight // 40
         }
 
         MenuText {
-            text: "123123123"
+            text: candidateUserObject.displayName
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
         }
 
         AddUserButton {
-            Layout.preferredWidth: 35
-            Layout.preferredHeight: 35
-            Layout.rightMargin: 5
+            Layout.preferredWidth: Sizes.maxAddUserButtonWidth // 35
+            Layout.preferredHeight: Sizes.maxAddUserButtonHeight // 35
+            Layout.rightMargin: Sizes.rightMargineAddUserButton // 5
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
 
             onClicked: {
