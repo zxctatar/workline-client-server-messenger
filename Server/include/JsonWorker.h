@@ -5,6 +5,7 @@
 #include "struct/ServerStruct.h"
 #include "struct/ServerDeleteStruct.h"
 #include "struct/UnverUserStruct.h"
+#include "struct/CandidateUserStruct.h"
 
 class JsonWorker
 {
@@ -25,6 +26,7 @@ public:
     std::string createApproveUserJson(const std::string& response_, const int userId_);
     std::string createRejectUserJson(const std::string& response_, const int userId_);
     std::string createDeleteFromUnverUserJson(const int userId_);
+    std::string createCandidateUsersJson(const std::vector<CandidateUserStruct>& candidateUsers_, const int serverId_);
 
     ~JsonWorker();
 

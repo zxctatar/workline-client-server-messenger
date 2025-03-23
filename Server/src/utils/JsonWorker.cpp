@@ -240,3 +240,27 @@ std::string JsonWorker::createDeleteFromUnverUserJson(const int userId_)
         return nullptr;
     }
 }
+
+std::string JsonWorker::createCandidateUsersJson(const std::vector<CandidateUserStruct>& candidateUsers_, const int serverId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Get_Candidate_Users";
+        json_["serverId"] = serverId_;
+
+        for(const auto& i : candidateUsers_)
+        {
+            nlohmann::json jsonCandidateUser_;
+            i.to_json(jsonCandidateUser_);
+            json_["CandidateUser"].push_back(jsonCandidateUser_);
+        }
+
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}

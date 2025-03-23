@@ -270,7 +270,25 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
                 }
             });
         }
+    }
+    else if(json_["Info"] == "Get_Candidate_Users")
+    {
+        if(!json_.contains("serverId"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
 
+        int serverId_ = json_["serverId"].get<int>();
+
+        auto connection_ = connectionPool_.getConnection();
+        std::vector<CandidateUserStruct> response_ = userManager_.getCandidateUsers(connection_, serverId_);
+        connectionPool_.returnConnection(connection_);
+
+        std::string responseJson_ = jsonWorker_.createCandidateUsersJson(response_, serverId_);
+
+        boost::asio::post(executor_, [this, responseJson_, session_](){
+            session_.lock()->do_write(responseJson_);
+        });
     }
 }
 

@@ -410,3 +410,44 @@ std::string UserDBManager::rejectUser(std::shared_ptr<DBConnection> connection_,
         return "ERROR";
     }
 }
+
+std::vector<CandidateUserStruct> UserDBManager::getCandidateUsers(std::shared_ptr<DBConnection> connection_, const int serverId_) const
+{
+    std::vector<CandidateUserStruct> candidateUsers_;
+
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Get candidate users...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Connection problem.";
+        }
+
+        pqxx::work get_candidate_users_(connection_->getConnection());
+        pqxx::result result_get_candidate_users_ = DatabaseQueries::getCandidateUsers(get_candidate_users_, serverId_);
+        get_candidate_users_.commit();
+
+        for(const auto& row : result_get_candidate_users_)
+        {
+            CandidateUserStruct candidateUser_;
+
+            candidateUser_.userId_ = row[0].as<int>();
+            candidateUser_.firstName_ = row[1].as<std::string>();
+            candidateUser_.lastName_ = row[2].as<std::string>();
+            candidateUser_.middleName_ = row[3].as<std::string>();
+
+            candidateUsers_.push_back(candidateUser_);
+        }
+
+        BOOST_LOG_TRIVIAL(info) << "Candidate users have been received.";
+
+        return candidateUsers_;
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+
+        return candidateUsers_;
+    }
+}

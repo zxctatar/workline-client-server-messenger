@@ -5,6 +5,7 @@
 #include "struct/LoginResult.h"
 #include "struct/ReconnectResult.h"
 #include "struct/UnverUserStruct.h"
+#include "struct/CandidateUserStruct.h"
 #include <string>
 #include <memory>
 
@@ -21,6 +22,7 @@ public:
     std::vector<UnverUserStruct> getUnverUsers(std::shared_ptr<DBConnection> connection_) const;
     std::string approveUser(std::shared_ptr<DBConnection> connection_, const int userId_) const;
     std::string rejectUser(std::shared_ptr<DBConnection> connection_, const int userId_) const;
+    std::vector<CandidateUserStruct> getCandidateUsers(std::shared_ptr<DBConnection> connection_, const int serverId_) const;
 
 private:
 };

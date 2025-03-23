@@ -51,6 +51,7 @@ add_executable(Server src/main.cpp
     include/struct/ReconnectResult.h
     include/struct/ServerDeleteStruct.h
     include/struct/UnverUserStruct.h
+    include/struct/CandidateUserStruct.h
 )
 
 if(Boost_FOUND)

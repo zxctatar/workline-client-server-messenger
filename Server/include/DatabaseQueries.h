@@ -44,6 +44,8 @@ public:
     static pqxx::result approveUser(pqxx::transaction_base& conn_, const int userId_);
 
     static pqxx::result rejectUser(pqxx::transaction_base& conn_, const int userId_);
+
+    static pqxx::result getCandidateUsers(pqxx::transaction_base& conn_, const int serverId_);
 };
 
 #endif // DATABASEQUERIES_H

@@ -63,7 +63,7 @@ pqxx::result DatabaseQueries::getUserServers(pqxx::transaction_base& conn_, cons
 
 pqxx::result DatabaseQueries::getAllServers(pqxx::transaction_base& conn_)
 {
-    return conn_.exec_params("SELECT server_id, server_name, server_description FROM servers");
+    return conn_.exec("SELECT server_id, server_name, server_description FROM servers");
 }
 
 pqxx::result DatabaseQueries::getUserData(pqxx::transaction_base& conn_, const std::string& login_)
@@ -83,7 +83,7 @@ pqxx::result DatabaseQueries::getUsersIdOnServers(pqxx::transaction_base& conn_,
 
 pqxx::result DatabaseQueries::getUnverUsers(pqxx::transaction_base& conn_)
 {
-    return conn_.exec_params(R"(SELECT user_id, firstname, lastname, middlename
+    return conn_.exec(R"(SELECT user_id, firstname, lastname, middlename
                         FROM users
                         WHERE verified_user = false
                           AND NOT EXISTS (
@@ -106,4 +106,14 @@ pqxx::result DatabaseQueries::rejectUser(pqxx::transaction_base& conn_, const in
 pqxx::result DatabaseQueries::checkIfUserRejected(pqxx::transaction_base& conn_, const int userId_)
 {
     return conn_.exec_params("SELECT 1 FROM rejected_users WHERE user_id = $1", userId_);
+}
+
+pqxx::result DatabaseQueries::getCandidateUsers(pqxx::transaction_base& conn_, const int serverId_)
+{
+    return conn_.exec_params(R"(SELECT user_id, firstname, lastname, middlename
+    FROM users
+    WHERE verified_user = TRUE
+    AND user_id NOT IN (SELECT user_id FROM users_on_servers WHERE server_id = $1)
+    AND user_id NOT IN (SELECT user_id FROM admins)
+    AND user_id NOT IN (SELECT user_id FROM rejected_users))", serverId_);
 }
