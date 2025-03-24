@@ -23,6 +23,7 @@ public:
     std::string approveUser(std::shared_ptr<DBConnection> connection_, const int userId_) const;
     std::string rejectUser(std::shared_ptr<DBConnection> connection_, const int userId_) const;
     std::vector<CandidateUserStruct> getCandidateUsers(std::shared_ptr<DBConnection> connection_, const int serverId_) const;
+    std::string addUserOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const;
 
 private:
 };

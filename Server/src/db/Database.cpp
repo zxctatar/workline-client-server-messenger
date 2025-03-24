@@ -414,6 +414,8 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
 
         set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE rejected_users_id_seq TO wluser;");
 
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE users_on_servers_id_seq TO wluser");
+
         set_privileges_.commit();
 
         BOOST_LOG_TRIVIAL(info) << "Privileges have been set successfully.";

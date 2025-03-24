@@ -27,6 +27,8 @@ public:
     std::string createRejectUserJson(const std::string& response_, const int userId_);
     std::string createDeleteFromUnverUserJson(const int userId_);
     std::string createCandidateUsersJson(const std::vector<CandidateUserStruct>& candidateUsers_, const int serverId_);
+    std::string createUserAddedOnServerJson(const std::string& response_, const int userId_, const int serverId_);
+    std::string createDeleteUserOnServerJson(const int userId_, const int serverId_);
 
     ~JsonWorker();
 

@@ -264,3 +264,38 @@ std::string JsonWorker::createCandidateUsersJson(const std::vector<CandidateUser
         return nullptr;
     }
 }
+
+std::string JsonWorker::createUserAddedOnServerJson(const std::string& response_, const int userId_, const int serverId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "User_On_Server";
+        json_["code"] = response_;
+        json_["userId"] = userId_;
+        json_["serverId"] = serverId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createDeleteUserOnServerJson(const int userId_, const int serverId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Delete_User_On_Server";
+        json_["userId"] = userId_;
+        json_["serverId"] = serverId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}

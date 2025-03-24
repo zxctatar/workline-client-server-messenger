@@ -451,3 +451,53 @@ std::vector<CandidateUserStruct> UserDBManager::getCandidateUsers(std::shared_pt
         return candidateUsers_;
     }
 }
+
+std::string UserDBManager::addUserOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const
+{
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Add user on server...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Connection problem.";
+        }
+
+        pqxx::work check_access_(connection_->getConnection());
+        pqxx::result result_check_access_ = DatabaseQueries::checkAccess(check_access_, userId_);
+        check_access_.commit();
+
+        bool access_ = result_check_access_[0][0].as<bool>();
+
+        if(access_)
+        {
+            pqxx::work check_if_added_(connection_->getConnection());
+            pqxx::result result_check_if_added_ = DatabaseQueries::checkUserOnServer(check_if_added_, userId_, serverId_);
+            check_if_added_.commit();
+
+            if(result_check_if_added_.empty())
+            {
+                pqxx::work add_user_on_server_(connection_->getConnection());
+                pqxx::result result_add_user_on_server_ = DatabaseQueries::addUserOnServer(add_user_on_server_, userId_, serverId_);
+                add_user_on_server_.commit();
+
+                BOOST_LOG_TRIVIAL(info) << "User added.";
+                return "USER_ADDED";
+            }
+            else
+            {
+                return "ALREADY_ADDED";
+            }
+        }
+        else
+        {
+            return "USER_NOT_VERIFIED";
+        }
+    }
+    catch(std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+
+        return "ERROR";
+    }
+}

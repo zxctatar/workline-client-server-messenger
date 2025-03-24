@@ -32,15 +32,15 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
 
         auto connection_ = connectionPool_.getConnection();
 
-        std::string lastname_ = json_["lastname"].get<std::string>();
-        std::string firstname_ = json_["firstname"].get<std::string>();
-        std::string middlename_ = json_["middlename"].get<std::string>();
-        std::string login_ = json_["login"].get<std::string>();
-        long long int phonenumber_ = std::stoll(json_["phonenumber"].get<std::string>());
-        std::string email_ = json_["email"].get<std::string>();
-        std::string password_ = json_["password"].get<std::string>();
+        std::string receivedLastname_ = json_["lastname"].get<std::string>();
+        std::string receivedFirstname_ = json_["firstname"].get<std::string>();
+        std::string receivedMiddlename_ = json_["middlename"].get<std::string>();
+        std::string receivedLogin_ = json_["login"].get<std::string>();
+        long long int receivedPhonenumber_ = std::stoll(json_["phonenumber"].get<std::string>());
+        std::string receivedEmail_ = json_["email"].get<std::string>();
+        std::string receivedPassword_ = json_["password"].get<std::string>();
 
-        std::string response_ = userManager_.regUser(connection_, lastname_, firstname_, middlename_, login_, phonenumber_, email_, password_);
+        std::string response_ = userManager_.regUser(connection_, receivedLastname_, receivedFirstname_, receivedMiddlename_, receivedLogin_, receivedPhonenumber_, receivedEmail_, receivedPassword_);
         connectionPool_.returnConnection(connection_);
 
         std::string responseJson_ = jsonWorker_.createRegistrationCodeJson(response_);
@@ -58,10 +58,10 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
 
         auto connection_ = connectionPool_.getConnection();
 
-        std::string login_ = json_["login"].get<std::string>();
-        std::string password_ = json_["password"].get<std::string>();
+        std::string receivedLogin_ = json_["login"].get<std::string>();
+        std::string receivedPassword_ = json_["password"].get<std::string>();
 
-        LoginResult response_ = userManager_.loginUser(connection_, login_, password_);
+        LoginResult response_ = userManager_.loginUser(connection_, receivedLogin_, receivedPassword_);
         connectionPool_.returnConnection(connection_);
 
         std::string responseJson_;
@@ -96,10 +96,10 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
 
         auto connection_ = connectionPool_.getConnection();
 
-        std::string serverName_ = json_["serverName"].get<std::string>();
-        std::string serverDescription_ = json_["serverDescription"].get<std::string>();
+        std::string receivedServerName_ = json_["serverName"].get<std::string>();
+        std::string receivedServerDescription_ = json_["serverDescription"].get<std::string>();
 
-        AddResult response_ = serverManager_.addServer(connection_, serverName_, serverDescription_);
+        AddResult response_ = serverManager_.addServer(connection_, receivedServerName_, receivedServerDescription_);
         connectionPool_.returnConnection(connection_);
 
         std::string responseJson_;
@@ -142,11 +142,11 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             throw std::runtime_error("Lost the value in the json document");
         }
 
-        std::string login_ = json_["login"].get<std::string>();
-        std::string password_ = json_["password"].get<std::string>();
+        std::string receivedLogin_ = json_["login"].get<std::string>();
+        std::string receivedPassword_ = json_["password"].get<std::string>();
 
         auto connection_ = connectionPool_.getConnection();
-        ReconnectResult response_ = userManager_.reconnectUser(connection_, login_, password_);
+        ReconnectResult response_ = userManager_.reconnectUser(connection_, receivedLogin_, receivedPassword_);
         connectionPool_.returnConnection(connection_);
 
         if(response_.userRole_ == "user")
@@ -165,15 +165,15 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             throw std::runtime_error("Lost the value in the json document");
         }
 
-        int serverId_ = json_["serverId"].get<int>();
+        int receivedServerId_ = json_["serverId"].get<int>();
 
         auto connection_ = connectionPool_.getConnection();
-        ServerDeleteStruct serverDeleteStruct_ = serverManager_.deleteServer(connection_, serverId_);
+        ServerDeleteStruct serverDeleteStruct_ = serverManager_.deleteServer(connection_, receivedServerId_);
         std::string responseJson_ = jsonWorker_.createDeleteServerJson(serverDeleteStruct_);
 
         if(serverDeleteStruct_.code_ == "SERVER_DELETED")
         {
-            std::vector<int> usersId_ = userManager_.getUsersOnServers(connection_, serverId_);
+            std::vector<int> usersId_ = userManager_.getUsersOnServers(connection_, receivedServerId_);
 
             boost::asio::post(executor_, [this, &connUsers_, responseJson_, usersId_](){
                 for(const auto& i : usersId_)
@@ -223,7 +223,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             session_.lock()->do_write(responseJsonForSender_);
         });
 
-        if(response_ != "ERROR")
+        if(response_ == "APPROVED")
         {
             boost::asio::post(executor_, [this, session_, reponseJsonForOther_, &connUsers_](){
                 for(const auto& i : connUsers_.getAuthorizeAdmin())
@@ -251,22 +251,22 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         connectionPool_.returnConnection(connection_);
 
         std::string responseJsonForSender_ = jsonWorker_.createRejectUserJson(response_, receivedUserId_);
-        std::string reponseJsonForOther_ = jsonWorker_.createDeleteFromUnverUserJson(receivedUserId_);
+        std::string responseJsonForOther_ = jsonWorker_.createDeleteFromUnverUserJson(receivedUserId_);
 
         boost::asio::post(executor_, [this, session_, responseJsonForSender_](){
             session_.lock()->do_write(responseJsonForSender_);
         });
 
-        if(response_ != "ERROR")
+        if(response_ == "REJECTED")
         {
-            boost::asio::post(executor_, [this, session_, reponseJsonForOther_, &connUsers_](){
+            boost::asio::post(executor_, [this, session_, responseJsonForOther_, &connUsers_](){
                 for(const auto& i : connUsers_.getAuthorizeAdmin())
                 {
                     if(!(i.second.owner_before(session_)) && !(session_.owner_before(i.second)))
                     {
                         continue;
                     }
-                    i.second.lock()->do_write(reponseJsonForOther_);
+                    i.second.lock()->do_write(responseJsonForOther_);
                 }
             });
         }
@@ -278,17 +278,52 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             throw std::runtime_error("Lost the value in the json document");
         }
 
-        int serverId_ = json_["serverId"].get<int>();
+        int receivedServerId_ = json_["serverId"].get<int>();
 
         auto connection_ = connectionPool_.getConnection();
-        std::vector<CandidateUserStruct> response_ = userManager_.getCandidateUsers(connection_, serverId_);
+        std::vector<CandidateUserStruct> response_ = userManager_.getCandidateUsers(connection_, receivedServerId_);
         connectionPool_.returnConnection(connection_);
 
-        std::string responseJson_ = jsonWorker_.createCandidateUsersJson(response_, serverId_);
+        std::string responseJson_ = jsonWorker_.createCandidateUsersJson(response_, receivedServerId_);
 
         boost::asio::post(executor_, [this, responseJson_, session_](){
             session_.lock()->do_write(responseJson_);
         });
+    }
+    else if(json_["Info"] == "Add_User_On_Server")
+    {
+        if(!json_.contains("serverId") || !json_.contains("userId"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedUserId_ = json_["userId"].get<int>();
+        int receivedServerId_ = json_["serverId"].get<int>();
+
+        auto connection_ = connectionPool_.getConnection();
+        std::string response_ = userManager_.addUserOnServer(connection_, receivedUserId_, receivedServerId_);
+        connectionPool_.returnConnection(connection_);
+
+        std::string responseJsonForSender_ = jsonWorker_.createUserAddedOnServerJson(response_, receivedUserId_, receivedServerId_);
+        std::string responseJsonForOther_ = jsonWorker_.createDeleteUserOnServerJson(receivedUserId_, receivedServerId_);
+
+        boost::asio::post(executor_, [this, session_, responseJsonForSender_](){
+            session_.lock()->do_write(responseJsonForSender_);
+        });
+
+        if(response_ == "USER_ADDED")
+        {
+            boost::asio::post(executor_, [this, session_, responseJsonForOther_, &connUsers_](){
+                for(const auto& i : connUsers_.getAuthorizeAdmin())
+                {
+                    if(!(i.second.owner_before(session_)) && !(session_.owner_before(i.second)))
+                    {
+                        continue;
+                    }
+                    i.second.lock()->do_write(responseJsonForOther_);
+                }
+            });
+        }
     }
 }
 

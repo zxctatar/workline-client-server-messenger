@@ -117,3 +117,13 @@ pqxx::result DatabaseQueries::getCandidateUsers(pqxx::transaction_base& conn_, c
     AND user_id NOT IN (SELECT user_id FROM admins)
     AND user_id NOT IN (SELECT user_id FROM rejected_users))", serverId_);
 }
+
+pqxx::result DatabaseQueries::checkUserOnServer(pqxx::transaction_base& conn_, const int userId_, const int serverId_)
+{
+    return conn_.exec_params("SELECT 1 FROM users_on_servers WHERE user_id = $1 AND server_id = $2", userId_, serverId_);
+}
+
+pqxx::result DatabaseQueries::addUserOnServer(pqxx::transaction_base& conn_, const int userId_, const int serverId_)
+{
+    return conn_.exec_params("INSERT INTO users_on_servers(user_id, server_id) VALUES($1,$2)", userId_, serverId_);
+}
