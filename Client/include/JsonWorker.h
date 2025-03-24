@@ -24,6 +24,7 @@ public:
     QString createJsonApproveUser(const int userId_) const;
     QString createJsonRejectUser(const int userId_) const;
     QString createJsonGetCandidateUsers(const int serverId_) const;
+    QString createJsonAddUserOnServer(const int userId_, const int serverId_) const;
 
 private:
 };

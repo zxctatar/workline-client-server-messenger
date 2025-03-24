@@ -115,5 +115,8 @@ void TopBarController::createAddUserOnServerController()
 
         connect(addUserController_.get(), &AddUserOnServerController::getCandidateUsersSignal, this, &TopBarController::handOverGetCandidateUsersSignal);
         connect(this, &TopBarController::handOverReceivedCandidateUsersSignal, addUserController_.get(), &AddUserOnServerController::slotCandidateUsersProcessing);
+        connect(addUserController_.get(), &AddUserOnServerController::requestAddUserSignal, this, &TopBarController::handOverRequestAddUserSignal);
+        connect(this, &TopBarController::handOverAddUserOnServerSignal, addUserController_.get(), &AddUserOnServerController::slotAddUserOnServerProccessing);
+        connect(this, &TopBarController::handOverDeleteUserOnServerSignal, addUserController_.get(), &AddUserOnServerController::slotDeleteUserOnServer);
     }
 }

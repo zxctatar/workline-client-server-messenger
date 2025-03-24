@@ -2,7 +2,7 @@
 
 AddUserOnServerController::AddUserOnServerController(QObject* parent)
     : QObject(parent)
-    , candidateUserModel_(std::make_shared<CandidateUserModel>())
+    , candidateUserModel_(std::make_shared<CandidateUserModel>(SelectedServerManager::instance().getServerId()))
 {
 }
 
@@ -64,4 +64,55 @@ void AddUserOnServerController::refreshCandidateUsers() const
     QString request_ = jsonWorker_.createJsonGetCandidateUsers(serverId_);
 
     emit getCandidateUsersSignal(request_);
+}
+
+void AddUserOnServerController::requestAddUser(const int userId_, const int serverId_) const
+{
+    QString request_ = jsonWorker_.createJsonAddUserOnServer(userId_, serverId_);
+
+    emit requestAddUserSignal(request_);
+}
+
+void AddUserOnServerController::getServerId() const
+{
+    int serverId_ = SelectedServerManager::instance().getServerId();
+
+    emit setServerIdSignal(serverId_);
+}
+
+void AddUserOnServerController::slotAddUserOnServerProccessing(const QJsonObject& jsonObj_) const
+{
+    int serverId_ = SelectedServerManager::instance().getServerId();
+
+    int receivedServerId_ = jsonObj_["serverId"].toInt();
+    int receivedUserId_ = jsonObj_["userId"].toInt();
+
+    if(serverId_ == receivedServerId_)
+    {
+        if(jsonObj_["code"] == "USER_NOT_VERIFIED")
+        {
+            emit userNotVerifiedSignal();
+            candidateUserModel_->deleteCandidateUser(receivedUserId_, receivedServerId_);
+        }
+        else if(jsonObj_["code"] == "ALREADY_ADDED")
+        {
+            emit userAlreadyAddedSignal();
+            candidateUserModel_->deleteCandidateUser(receivedUserId_, receivedServerId_);
+        }
+        else if(jsonObj_["code"] == "USER_ADDED")
+        {
+            emit userAddedOnServerSignal();
+            candidateUserModel_->deleteCandidateUser(receivedUserId_, receivedServerId_);
+        }
+        else if(jsonObj_["code"] == "ERROR")
+        {
+            emit errorSignal();
+        }
+    }
+}
+
+void AddUserOnServerController::slotDeleteUserOnServer(const int userId_, const int serverId_) const
+{
+    qDebug() << "2";
+    candidateUserModel_->deleteCandidateUser(userId_, serverId_);
 }

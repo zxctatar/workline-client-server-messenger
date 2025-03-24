@@ -154,7 +154,8 @@ Popup {
                     var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menuadduseronserverpage/MenuAddUserOnServerPage.qml"), {
                         width: parent.width,
                         height: parent.height,
-                        controller: menuWindow.controller.addUserController
+                        controller: menuWindow.controller.addUserController,
+                        notificationManager: menuWindow.notificationManager,
                     })
 
                     if(page) {

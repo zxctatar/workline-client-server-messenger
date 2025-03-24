@@ -136,3 +136,14 @@ QString JsonWorker::createJsonGetCandidateUsers(const int serverId_) const
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;
 }
+
+QString JsonWorker::createJsonAddUserOnServer(const int userId_, const int serverId_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Add_User_On_Server");
+    jsonObject_.insert("userId", userId_);
+    jsonObject_.insert("serverId", serverId_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}

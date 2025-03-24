@@ -109,6 +109,15 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     {
         emit sendCandidateUsersSignal(jsonObj_);
     }
+    else if(jsonObj_["Info"] == "User_On_Server")
+    {
+        emit sendAddUserOnServerSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Delete_User_On_Server")
+    {
+        qDebug() << "1";
+        emit sendDeleteUserOnServerSignal(jsonObj_["userId"].toInt(), jsonObj_["serverId"].toInt());
+    }
 }
 
 void ServerConnector::slotSendToServer(const QString& request_)

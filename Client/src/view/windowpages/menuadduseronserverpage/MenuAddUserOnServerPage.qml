@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -10,6 +11,9 @@ Page {
     objectName: "MenuAddUserOnServer"
 
     property var controller // AddUserOnServerController MenuWindow.qml
+    property var notificationManager // notificationManager MenuWindow.qml
+
+    property int serverId
 
     signal backButtonClicked()
 
@@ -20,11 +24,36 @@ Page {
     }
 
     Component.onCompleted: {
+        addUserOnServerPage.controller.getServerId()
         addUserOnServerPage.controller.getCandidateUsers()
     }
 
     Component.onDestruction: {
         addUserOnServerPage.deleteController()
+    }
+
+    Connections {
+        target: addUserOnServerPage.controller
+
+        function onSetServerIdSignal(serverId) {
+            addUserOnServerPage.serverId = serverId
+        }
+
+        function onUserNotVerifiedSignal() {
+            addUserOnServerPage.notificationManager.showNotificationManager("Пользователь не подтверждён")
+        }
+
+        function onUserAlreadyAddedSignal() {
+            addUserOnServerPage.notificationManager.showNotificationManager("Пользователь уже добавлен")
+        }
+
+        function onUserAddedOnServerSignal() {
+            addUserOnServerPage.notificationManager.showNotificationManager("Пользователь добавлен")
+        }
+
+        function onErrorSignal() {
+            addUserOnServerPage.notificationManager.showNotificationManager("Ошибка на сервере")
+        }
     }
 
     BackButton {
@@ -69,6 +98,10 @@ Page {
             displayName: name
             width: parent ? parent.width : undefined
             height: Sizes.maxCandidateUserObjectHeight // 50
+
+            onAddUserClicked: {
+                addUserOnServerPage.controller.requestAddUser(id, addUserOnServerPage.serverId)
+            }
         }
     }
 

@@ -1,8 +1,9 @@
 #include "../../../include/CandidateUserModel.h"
 #include <algorithm>
 
-CandidateUserModel::CandidateUserModel(QObject* parent)
+CandidateUserModel::CandidateUserModel(const int serverId_, QObject* parent)
     : QAbstractListModel(parent)
+    , serverId_(serverId_)
 {
 }
 
@@ -77,4 +78,30 @@ void CandidateUserModel::clearCandidateUsers()
     beginRemoveRows(QModelIndex(), 0, candidateUsers_.size() - 1);
     candidateUsers_.clear();
     endRemoveRows();
+}
+
+void CandidateUserModel::deleteCandidateUser(const int receivedUserId_, const int receivedServerId_)
+{
+    qDebug() << 3;
+    if(receivedServerId_ == serverId_)
+    {
+        int index_ = -1;
+
+        for(int i = 0; i < candidateUsers_.size(); ++i)
+        {
+            if(receivedUserId_ == candidateUsers_[i].id_)
+            {
+                index_ = i;
+                break;
+            }
+        }
+
+        if(index_ != -1)
+        {
+            qDebug() << "4";
+            beginRemoveRows(QModelIndex(), index_, index_);
+            candidateUsers_.remove(index_);
+            endRemoveRows();
+        }
+    }
 }

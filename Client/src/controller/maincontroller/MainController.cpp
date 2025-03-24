@@ -126,5 +126,8 @@ void MainController::createTopBarController()
         connect(serverConnector_, &ServerConnector::sendDeleteUnverUserSignal, topBarController_, &TopBarController::handOverDeleteUnverUserSignal);
         connect(topBarController_, &TopBarController::handOverGetCandidateUsersSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendCandidateUsersSignal, topBarController_, &TopBarController::handOverReceivedCandidateUsersSignal);
+        connect(topBarController_, &TopBarController::handOverRequestAddUserSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendAddUserOnServerSignal, topBarController_, &TopBarController::handOverAddUserOnServerSignal);
+        connect(serverConnector_, &ServerConnector::sendDeleteUserOnServerSignal, topBarController_, &TopBarController::handOverDeleteUserOnServerSignal);
     }
 }

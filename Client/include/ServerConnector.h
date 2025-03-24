@@ -33,6 +33,8 @@ signals:
     void sendRejectUserSignal(const QJsonObject& jsonObj_);
     void sendDeleteUnverUserSignal(const int userId_);
     void sendCandidateUsersSignal(const QJsonObject& jsonObj_);
+    void sendAddUserOnServerSignal(const QJsonObject& jsonObj_);
+    void sendDeleteUserOnServerSignal(const int userId_, const int serverId_);
 
 private:
     void connectToServer();
