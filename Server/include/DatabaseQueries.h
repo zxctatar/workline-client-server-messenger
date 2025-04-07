@@ -50,6 +50,12 @@ public:
     static pqxx::result checkUserOnServer(pqxx::transaction_base& conn_, const int userId_, const int serverId_);
 
     static pqxx::result addUserOnServer(pqxx::transaction_base& conn_, const int userId_, const int serverId_);
+
+    static pqxx::result getChats(pqxx::transaction_base& conn_, const int userId_, const int serverId_);
+
+    static pqxx::result createChat(pqxx::transaction_base& conn_, const int serverId_, const int userId_, const int companionId_);
+
+    static pqxx::result getUsersOnServer(pqxx::transaction_base& conn_, const int serverId_);
 };
 
 #endif // DATABASEQUERIES_H

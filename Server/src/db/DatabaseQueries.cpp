@@ -56,7 +56,7 @@ pqxx::result DatabaseQueries::addNewServer(pqxx::transaction_base& conn_, const 
 
 pqxx::result DatabaseQueries::getUserServers(pqxx::transaction_base& conn_, const int userID_)
 {
-    return conn_.exec_params(R"(SELECT s.server_id, s.server_name FROM servers s
+    return conn_.exec_params(R"(SELECT s.server_id, s.server_name, s.server_description FROM servers s
                      JOIN users_on_servers uos ON s.server_id = uos.server_id
                      WHERE uos.user_id = $1)", userID_);
 }
@@ -125,5 +125,92 @@ pqxx::result DatabaseQueries::checkUserOnServer(pqxx::transaction_base& conn_, c
 
 pqxx::result DatabaseQueries::addUserOnServer(pqxx::transaction_base& conn_, const int userId_, const int serverId_)
 {
-    return conn_.exec_params("INSERT INTO users_on_servers(user_id, server_id) VALUES($1,$2)", userId_, serverId_);
+    return conn_.exec_params(R"(
+        WITH ins AS (
+            INSERT INTO users_on_servers(user_id, server_id)
+            VALUES($1, $2)
+            RETURNING user_id, server_id
+        )
+        SELECT
+            u.lastname,
+            u.firstname,
+            u.middlename,
+            s.server_name,
+            s.server_description
+        FROM ins
+        JOIN users u ON u.user_id = ins.user_id
+        JOIN servers s ON s.server_id = ins.server_id
+    )", userId_, serverId_);
+}
+
+pqxx::result DatabaseQueries::getChats(pqxx::transaction_base& conn_, const int userId_, const int serverId_)
+{
+    return conn_.exec_params(R"(
+    SELECT
+        u.user_id AS user_id,
+        u.firstname,
+        u.lastname,
+        u.middlename,
+        COALESCE(m.content, '') AS last_message,
+        COALESCE(m.sent_at, '1970-01-01 00:00:00') AS last_message_time,
+        COALESCE(p.id, 0) AS private_chat_id,
+        CASE
+            WHEN p.id IS NOT NULL THEN TRUE
+            ELSE FALSE
+        END AS has_chat
+    FROM users u
+    LEFT JOIN private_chats p
+        ON (
+            (p.user1_id = $1 AND p.user2_id = u.user_id) OR
+            (p.user2_id = $1 AND p.user1_id = u.user_id)
+        )
+        AND p.server_id = $2
+    LEFT JOIN LATERAL (
+        SELECT content, sent_at
+        FROM messages
+        WHERE private_chat_id = p.id
+        ORDER BY sent_at DESC
+        LIMIT 1
+    ) m ON TRUE
+    WHERE u.user_id != $1
+    AND u.user_id IN (
+        SELECT user_id FROM users_on_servers WHERE server_id = $2
+    )
+    ORDER BY u.firstname, u.lastname;)", userId_, serverId_);
+}
+
+pqxx::result DatabaseQueries::createChat(pqxx::transaction_base& conn_, const int serverId_, const int userId_, const int companionId_)
+{
+    return conn_.exec_params(R"( INSERT INTO private_chats(server_id, user1_id, user2_id)
+                                 VALUES($1,$2,$3)
+                                 RETURNING id)", serverId_, userId_, companionId_);
+}
+
+pqxx::result DatabaseQueries::getUsersOnServer(pqxx::transaction_base& conn_, const int serverId_)
+{
+    return conn_.exec_params(R"(
+        SELECT
+            u.user_id,
+            u.firstname,
+            u.lastname,
+            u.middlename,
+            CASE
+                WHEN aos.user_id IS NOT NULL THEN TRUE
+                ELSE FALSE
+            END AS is_server_admin,
+            CASE
+                WHEN EXISTS (SELECT 1 FROM admins a WHERE a.user_id = u.user_id) THEN TRUE
+                ELSE FALSE
+            END AS is_global_admin
+        FROM
+            users_on_servers uos
+        JOIN
+            users u ON uos.user_id = u.user_id
+        LEFT JOIN
+            admins_on_servers aos ON uos.user_id = aos.user_id AND uos.server_id = aos.server_id
+        WHERE
+            uos.server_id = $1
+        ORDER BY
+            u.lastname, u.firstname;
+    )", serverId_);
 }

@@ -6,6 +6,8 @@
 #include "struct/ServerDeleteStruct.h"
 #include "struct/UnverUserStruct.h"
 #include "struct/CandidateUserStruct.h"
+#include "struct/PrivateChatStruct.h"
+#include "struct/UsersOnServerStruct.h"
 
 class JsonWorker
 {
@@ -29,6 +31,12 @@ public:
     std::string createCandidateUsersJson(const std::vector<CandidateUserStruct>& candidateUsers_, const int serverId_);
     std::string createUserAddedOnServerJson(const std::string& response_, const int userId_, const int serverId_);
     std::string createDeleteUserOnServerJson(const int userId_, const int serverId_);
+    std::string createGetChatsJson(const int serverId_, std::vector<PrivateChatStruct>& chats);
+    std::string createChatCreateForSenderJson(const int serverId_, const int userId_, const int companionId_, const int chatId_);
+    std::string createChatCreateForCompanionJson(const int serverId_, const int userId_, const int companionId_, const int chatId_);
+    std::string createGetUsersOnServerJson(const int serverId_, const std::vector<UsersOnServerStruct>& users_);
+    std::string createAddInChatJson(const int serverId_, const int userId_, const std::string lastName_, const std::string firstName_, const std::string middleName_);
+    std::string createForAddedUserJson(const int serverId_, std::string serverName_, std::string serverDescription_);
 
     ~JsonWorker();
 

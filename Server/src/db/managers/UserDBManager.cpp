@@ -452,8 +452,10 @@ std::vector<CandidateUserStruct> UserDBManager::getCandidateUsers(std::shared_pt
     }
 }
 
-std::string UserDBManager::addUserOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const
+AddUserOnServerResult UserDBManager::addUserOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const
 {
+    AddUserOnServerResult result_;
+
     try
     {
         BOOST_LOG_TRIVIAL(info) << "Add user on server...";
@@ -482,22 +484,75 @@ std::string UserDBManager::addUserOnServer(std::shared_ptr<DBConnection> connect
                 add_user_on_server_.commit();
 
                 BOOST_LOG_TRIVIAL(info) << "User added.";
-                return "USER_ADDED";
+
+                auto row = result_add_user_on_server_[0];
+                result_.lastName_ = row[0].as<std::string>();
+                result_.firstName_ = row[1].as<std::string>();
+                result_.middleName_ = row[2].as<std::string>();
+                result_.serverName_ = row[3].as<std::string>();
+                result_.serverDescription_ = row[4].as<std::string>();
+                result_.code_ = "USER_ADDED";
+
+                return result_;
             }
             else
             {
-                return "ALREADY_ADDED";
+                result_.code_ = "ALREADY_ADDED";
+                return result_;
             }
         }
         else
         {
-            return "USER_NOT_VERIFIED";
+            result_.code_ = "USER_NOT_VERIFIED";
+            return result_;
         }
     }
     catch(std::exception& e)
     {
         BOOST_LOG_TRIVIAL(error) << e.what();
 
-        return "ERROR";
+        result_.code_ = "ERROR";
+        return result_;
+    }
+}
+
+std::vector<UsersOnServerStruct> UserDBManager::getUsersOnServer(std::shared_ptr<DBConnection> connection_, const int serverId_) const
+{
+    std::vector<UsersOnServerStruct> users_;
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Get users on the server...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Connection problem.";
+        }
+
+        pqxx::work get_users_(connection_->getConnection());
+        pqxx::result result_get_users_ = DatabaseQueries::getUsersOnServer(get_users_, serverId_);
+        get_users_.commit();
+
+        for(const auto& row : result_get_users_)
+        {
+            UsersOnServerStruct user_;
+            user_.userId_ = row[0].as<int>();
+            user_.firstName_ = row[1].as<std::string>();
+            user_.lastName_ = row[2].as<std::string>();
+            user_.middleName_ = row[3].as<std::string>();
+            user_.isServerAdmin_ = row[4].as<bool>();
+            user_.isGlobalAdmin_ = row[5].as<bool>();
+
+            users_.push_back(user_);
+        }
+
+        BOOST_LOG_TRIVIAL(info) << "Users received.";
+
+        return users_;
+    }
+    catch(std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+
+        return users_;
     }
 }

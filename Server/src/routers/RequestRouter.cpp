@@ -109,9 +109,12 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             responseJson_ = jsonWorker_.createAddingServerSuccessJson(response_.code_, response_.serverID_, response_.serverName_, response_.serverDescription_);
 
             boost::asio::post(executor_, [this, session_, &connUsers_, responseJson_](){
-                for(const auto& i : connUsers_.getAuthorizeAdmin())
+                for(const auto& i : connUsers_.getAuthorizeAdmins())
                 {
-                    i.second.lock()->do_write(responseJson_);
+                    if(auto s_ = i.second.lock())
+                    {
+                        s_->do_write(responseJson_);
+                    }
                 }
             });
         }
@@ -168,23 +171,20 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         int receivedServerId_ = json_["serverId"].get<int>();
 
         auto connection_ = connectionPool_.getConnection();
+        std::vector<int> usersId_ = userManager_.getUsersOnServers(connection_, receivedServerId_);
         ServerDeleteStruct serverDeleteStruct_ = serverManager_.deleteServer(connection_, receivedServerId_);
         std::string responseJson_ = jsonWorker_.createDeleteServerJson(serverDeleteStruct_);
 
         if(serverDeleteStruct_.code_ == "SERVER_DELETED")
         {
-            std::vector<int> usersId_ = userManager_.getUsersOnServers(connection_, receivedServerId_);
-
             boost::asio::post(executor_, [this, &connUsers_, responseJson_, usersId_](){
                 for(const auto& i : usersId_)
                 {
-                    connUsers_.getUser(i).lock()->do_write(responseJson_);
-                }
-            });
-            boost::asio::post(executor_, [this, session_, &connUsers_, responseJson_](){
-                for(const auto& i : connUsers_.getAuthorizeAdmin())
-                {
-                    i.second.lock()->do_write(responseJson_);
+                    auto session_ = connUsers_.getUser(i).lock();
+                    if(session_)
+                    {
+                        session_->do_write(responseJson_);
+                    }
                 }
             });
         }
@@ -217,7 +217,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         connectionPool_.returnConnection(connection_);
 
         std::string responseJsonForSender_ = jsonWorker_.createApproveUserJson(response_, receivedUserId_);
-        std::string reponseJsonForOther_ = jsonWorker_.createDeleteFromUnverUserJson(receivedUserId_);
+        std::string responseJsonForOther_ = jsonWorker_.createDeleteFromUnverUserJson(receivedUserId_);
 
         boost::asio::post(executor_, [this, session_, responseJsonForSender_](){
             session_.lock()->do_write(responseJsonForSender_);
@@ -225,14 +225,17 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
 
         if(response_ == "APPROVED")
         {
-            boost::asio::post(executor_, [this, session_, reponseJsonForOther_, &connUsers_](){
-                for(const auto& i : connUsers_.getAuthorizeAdmin())
+            boost::asio::post(executor_, [this, session_, responseJsonForOther_, &connUsers_](){
+                for(const auto& i : connUsers_.getAuthorizeAdmins())
                 {
                     if(!(i.second.owner_before(session_)) && !(session_.owner_before(i.second)))
                     {
                         continue;
                     }
-                    i.second.lock()->do_write(reponseJsonForOther_);
+                    if(auto s_ = i.second.lock())
+                    {
+                        s_->do_write(responseJsonForOther_);
+                    }
                 }
             });
         }
@@ -260,13 +263,16 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         if(response_ == "REJECTED")
         {
             boost::asio::post(executor_, [this, session_, responseJsonForOther_, &connUsers_](){
-                for(const auto& i : connUsers_.getAuthorizeAdmin())
+                for(const auto& i : connUsers_.getAuthorizeAdmins())
                 {
                     if(!(i.second.owner_before(session_)) && !(session_.owner_before(i.second)))
                     {
                         continue;
                     }
-                    i.second.lock()->do_write(responseJsonForOther_);
+                    if(auto s_ = i.second.lock())
+                    {
+                        s_->do_write(responseJsonForOther_);
+                    }
                 }
             });
         }
@@ -301,29 +307,126 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         int receivedServerId_ = json_["serverId"].get<int>();
 
         auto connection_ = connectionPool_.getConnection();
-        std::string response_ = userManager_.addUserOnServer(connection_, receivedUserId_, receivedServerId_);
+        AddUserOnServerResult response_ = userManager_.addUserOnServer(connection_, receivedUserId_, receivedServerId_);
         connectionPool_.returnConnection(connection_);
 
-        std::string responseJsonForSender_ = jsonWorker_.createUserAddedOnServerJson(response_, receivedUserId_, receivedServerId_);
+        std::string responseJsonForSender_ = jsonWorker_.createUserAddedOnServerJson(response_.code_, receivedUserId_, receivedServerId_);
         std::string responseJsonForOther_ = jsonWorker_.createDeleteUserOnServerJson(receivedUserId_, receivedServerId_);
 
         boost::asio::post(executor_, [this, session_, responseJsonForSender_](){
             session_.lock()->do_write(responseJsonForSender_);
         });
 
-        if(response_ == "USER_ADDED")
+        if(response_.code_ == "USER_ADDED")
         {
-            boost::asio::post(executor_, [this, session_, responseJsonForOther_, &connUsers_](){
-                for(const auto& i : connUsers_.getAuthorizeAdmin())
+            std::string responseJsonAddInChat_ = jsonWorker_.createAddInChatJson(receivedServerId_, receivedUserId_, response_.lastName_, response_.firstName_, response_.middleName_);
+            std::string responseJsonForAddedUser_ = jsonWorker_.createForAddedUserJson(receivedServerId_, response_.serverName_, response_.serverDescription_);
+
+            std::weak_ptr<Session> user_ = connUsers_.getUser(receivedUserId_);
+
+            boost::asio::post(executor_, [this, user_, session_, responseJsonForOther_, responseJsonForAddedUser_, responseJsonAddInChat_, &connUsers_](){
+                for(const auto& i : connUsers_.getAuthorizeAdmins())
                 {
                     if(!(i.second.owner_before(session_)) && !(session_.owner_before(i.second)))
                     {
+                        if(auto s_ = i.second.lock())
+                        {
+                            s_->do_write(responseJsonAddInChat_);
+                        }
                         continue;
                     }
-                    i.second.lock()->do_write(responseJsonForOther_);
+                    if(auto s_ = i.second.lock())
+                    {
+                        s_->do_write(responseJsonAddInChat_);
+                        s_->do_write(responseJsonForOther_);
+                    }
+                }
+                for(const auto& i : connUsers_.getAuthorizeUsers())
+                {
+                    if(auto s_ = i.second.lock())
+                    {
+                        s_->do_write(responseJsonAddInChat_);
+                    }
+                }
+                if(auto s_ = user_.lock())
+                {
+                    s_->do_write(responseJsonForAddedUser_);
                 }
             });
         }
+    }
+    else if(json_["Info"] == "Get_Chats")
+    {
+        if(!json_.contains("serverId") || !json_.contains("userId"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedUserId_ = json_["userId"].get<int>();
+        int receivedServerId_ = json_["serverId"].get<int>();
+
+        auto connection_ = connectionPool_.getConnection();
+        std::vector<PrivateChatStruct> response_ = chatManager_.getPrivateChats(connection_, receivedServerId_, receivedUserId_);
+        connectionPool_.returnConnection(connection_);
+
+        std::string responseJson_ = jsonWorker_.createGetChatsJson(receivedServerId_, response_);
+
+        boost::asio::post(executor_, [this, session_, responseJson_](){
+            session_.lock()->do_write(responseJson_);
+        });
+    }
+    else if(json_["Info"] == "Create_Chat")
+    {
+        if(!json_.contains("serverId") || !json_.contains("userId") || !json_.contains("companionId"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedServerId_ = json_["serverId"].get<int>();
+        int receivedUserId_ = json_["userId"].get<int>();
+        int receivedCompanionId_ = json_["companionId"].get<int>();
+
+        auto connection_ = connectionPool_.getConnection();
+        int response_ = chatManager_.createChat(connection_, receivedServerId_, receivedUserId_, receivedCompanionId_);
+        connectionPool_.returnConnection(connection_);
+
+        if(response_ > 0)
+        {
+            std::string responseJsonForSender_ = jsonWorker_.createChatCreateForSenderJson(receivedServerId_, receivedUserId_, receivedCompanionId_, response_);
+            std::string responseJsonForCompanion_ = jsonWorker_.createChatCreateForCompanionJson(receivedServerId_, receivedCompanionId_, receivedUserId_, response_);
+
+            boost::asio::post(executor_, [this, session_, responseJsonForSender_](){
+                session_.lock()->do_write(responseJsonForSender_);
+            });
+
+            std::weak_ptr<Session> companionUser_ = connUsers_.getUser(receivedCompanionId_);
+
+            boost::asio::post(executor_, [this, companionUser_, responseJsonForCompanion_](){
+                    if(auto s_ = companionUser_.lock())
+                    {
+                        s_->do_write(responseJsonForCompanion_);
+                    }
+            });
+        }
+    }
+    else if(json_["Info"] == "Get_Users_On_Server")
+    {
+        if(!json_.contains("serverId"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedServerId_ = json_["serverId"].get<int>();
+
+        auto connection_ = connectionPool_.getConnection();
+        std::vector<UsersOnServerStruct> response_ = userManager_.getUsersOnServer(connection_, receivedServerId_);
+        connectionPool_.returnConnection(connection_);
+
+        std::string responseJson_ = jsonWorker_.createGetUsersOnServerJson(receivedServerId_, response_);
+
+        boost::asio::post(executor_, [this, session_, responseJson_](){
+            session_.lock()->do_write(responseJson_);
+        });
     }
 }
 

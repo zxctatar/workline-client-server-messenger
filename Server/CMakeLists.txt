@@ -13,8 +13,6 @@ find_package(nlohmann_json REQUIRED)
 pkg_check_modules(PQXX REQUIRED IMPORTED_TARGET libpqxx)
 
 add_executable(Server src/main.cpp
-
-
     src/db/Database.cpp
     include/Database.h
 
@@ -52,6 +50,13 @@ add_executable(Server src/main.cpp
     include/struct/ServerDeleteStruct.h
     include/struct/UnverUserStruct.h
     include/struct/CandidateUserStruct.h
+    include/struct/PrivateChatStruct.h
+    src/db/managers/ChatsDBManager.cpp
+    include/ChatsDBManager.h
+    include/struct/UsersOnServerStruct.h
+    include/struct/UserDataStruct.h
+
+
 )
 
 if(Boost_FOUND)

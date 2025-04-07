@@ -36,13 +36,32 @@ void ConnectedUsers::removeAuthorize(const int id_)
     authorized_admins.erase(id_);
 }
 
-std::unordered_map<int, std::weak_ptr<Session>> ConnectedUsers::getAuthorizeAdmin() const
+std::unordered_map<int, std::weak_ptr<Session>> ConnectedUsers::getAuthorizeUsers() const
+{
+    return authorized_users;
+}
+
+std::unordered_map<int, std::weak_ptr<Session>> ConnectedUsers::getAuthorizeAdmins() const
 {
     return authorized_admins;
 }
 
 std::weak_ptr<Session> ConnectedUsers::getUser(const int id_) const
 {
-    return authorized_users.at(id_);
+    auto itUser_ = authorized_users.find(id_);
+
+    if(itUser_ != authorized_users.end())
+    {
+        return authorized_users.at(id_);
+    }
+
+    auto itAdmin_ = authorized_admins.find(id_);
+
+    if(itAdmin_ != authorized_admins.end())
+    {
+        return authorized_admins.at(id_);
+    }
+
+    return {};
 }
 

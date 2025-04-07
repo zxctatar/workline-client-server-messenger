@@ -218,6 +218,27 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                 AND table_name = 'rejected_users'
             )");
 
+        pqxx::result result_check_private_chats_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'private_chats'
+            )");
+
+        pqxx::result result_check_messages_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'messages'
+            )");
+
+        pqxx::result result_check_admins_on_servers = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'admins_on_servers'
+            )");
+
         check_tables_.commit();
 
         if(result_check_users_table_.empty())
@@ -334,6 +355,77 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
         {
             BOOST_LOG_TRIVIAL(info) << "Rejected_users table already exists.";
         }
+
+        if(result_check_private_chats_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Private_chats table not found. Creating table...";
+
+            pqxx::work create_private_chats_table_(connection_to_worklinedatabase_);
+
+            create_private_chats_table_.exec(R"(
+                CREATE TABLE private_chats(
+                    id SERIAL PRIMARY KEY,
+                    server_id INTEGER NOT NULL REFERENCES servers(server_id) ON DELETE CASCADE,
+                    user1_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    user2_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    CONSTRAINT unique_chat_per_server UNIQUE (server_id, user1_id, user2_id)
+                    ))");
+
+            create_private_chats_table_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the private_chats table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Private_chats table already exists.";
+        }
+
+        if(result_check_messages_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Messages table not found. Creating table...";
+
+            pqxx::work create_messages_table_(connection_to_worklinedatabase_);
+
+            create_messages_table_.exec(R"(
+                CREATE TABLE messages(
+                    id SERIAL PRIMARY KEY,
+                    sender_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    private_chat_id INTEGER NOT NULL REFERENCES private_chats(id) ON DELETE CASCADE,
+                    server_id INTEGER NOT NULL REFERENCES servers(server_id) ON DELETE CASCADE,
+                    content TEXT NOT NULL,
+                    sent_at TIMESTAMP DEFAULT NOW()
+                    ))");
+
+            create_messages_table_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the messages table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Messages table already exists.";
+        }
+
+        if(result_check_admins_on_servers.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Admins_on_servers table not found. Creating table...";
+
+            pqxx::work create_admins_on_servers_table_(connection_to_worklinedatabase_);
+
+            create_admins_on_servers_table_.exec(R"(
+                CREATE TABLE admins_on_servers(
+                    id SERIAL PRIMARY KEY,
+                    server_id INTEGER NOT NULL REFERENCES servers(server_id) ON DELETE CASCADE,
+                    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+                ))");
+
+            create_admins_on_servers_table_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the admins_on_servers table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Admins_on_servers table already exists.";
+        }
     }
     catch (const pqxx::broken_connection& e)
     {
@@ -414,7 +506,11 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
 
         set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE rejected_users_id_seq TO wluser;");
 
-        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE users_on_servers_id_seq TO wluser");
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE users_on_servers_id_seq TO wluser;");
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE private_chats_id_seq TO wluser;");
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE admins_on_servers_id_seq TO wluser;");
 
         set_privileges_.commit();
 
@@ -491,7 +587,6 @@ void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
     RETURNS TRIGGER AS $$
     BEGIN
         IF NEW.verified_user = true AND OLD.verified_user = false THEN
-            -- Удаляем запись из rejected_users
             DELETE FROM rejected_users
             WHERE user_id = NEW.user_id;
         END IF;
@@ -499,14 +594,54 @@ void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
         RETURN NEW;
     END;
     $$ LANGUAGE plpgsql;
-)");
+    )");
 
         create_trigger.exec(R"(
     CREATE TRIGGER trigger_set_verified
     AFTER UPDATE ON users
     FOR EACH ROW
     EXECUTE FUNCTION user_verified_update();
-)");
+    )");
+
+        // Функция для добавления всех администраторов на новый сервер
+        create_trigger.exec(R"(
+    CREATE OR REPLACE FUNCTION add_admins_to_new_server()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        INSERT INTO users_on_servers (user_id, server_id)
+        SELECT a.user_id, NEW.server_id
+        FROM admins a;
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+    )");
+
+        create_trigger.exec(R"(
+    CREATE TRIGGER trigger_add_admins_to_new_server
+    AFTER INSERT ON servers
+    FOR EACH ROW
+    EXECUTE FUNCTION add_admins_to_new_server();
+    )");
+
+        // Функция для добавления нового администратора на все серверы
+        create_trigger.exec(R"(
+    CREATE OR REPLACE FUNCTION add_admin_to_all_servers()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        INSERT INTO users_on_servers (user_id, server_id)
+        SELECT NEW.user_id, s.server_id
+        FROM servers s;
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+    )");
+
+        create_trigger.exec(R"(
+    CREATE TRIGGER trigger_add_admin_to_all_servers
+    AFTER INSERT ON admins
+    FOR EACH ROW
+    EXECUTE FUNCTION add_admin_to_all_servers();
+    )");
 
         create_trigger.commit();
         BOOST_LOG_TRIVIAL(info) << "Trigger created successfully.";

@@ -6,6 +6,7 @@
 #include "UserDBManager.h"
 #include "ConnectedUsers.h"
 #include "ServerDBManager.h"
+#include "ChatsDBManager.h"
 #include <nlohmann/json.hpp>
 
 class Session;
@@ -22,6 +23,7 @@ private:
     JsonWorker jsonWorker_;
     UserDBManager userManager_;
     ServerDBManager serverManager_;
+    ChatsDBManager chatManager_;
 };
 
 #endif // REQUESTROUTER_H

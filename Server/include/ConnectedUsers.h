@@ -19,7 +19,8 @@ public:
     void removeAuthorize(const int id_);
     std::weak_ptr<Session> getUser(const int id_) const;
 
-    std::unordered_map<int, std::weak_ptr<Session>> getAuthorizeAdmin() const;
+    std::unordered_map<int, std::weak_ptr<Session>> getAuthorizeUsers() const;
+    std::unordered_map<int, std::weak_ptr<Session>> getAuthorizeAdmins() const;
 
 private:
     std::unordered_map<int, std::weak_ptr<Session>> authorized_users;

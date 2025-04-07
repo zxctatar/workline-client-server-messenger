@@ -270,7 +270,7 @@ std::string JsonWorker::createUserAddedOnServerJson(const std::string& response_
     try
     {
         nlohmann::json json_;
-        json_["Info"] = "User_On_Server";
+        json_["Info"] = "Add_User_On_Server";
         json_["code"] = response_;
         json_["userId"] = userId_;
         json_["serverId"] = serverId_;
@@ -291,6 +291,130 @@ std::string JsonWorker::createDeleteUserOnServerJson(const int userId_, const in
         json_["Info"] = "Delete_User_On_Server";
         json_["userId"] = userId_;
         json_["serverId"] = serverId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createGetChatsJson(const int serverId_, std::vector<PrivateChatStruct>& chats_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Get_Chats";
+        json_["serverId"] = serverId_;
+
+        for(const auto& i : chats_)
+        {
+            nlohmann::json jsonChat_;
+            i.to_json(jsonChat_);
+            json_["PrivateChats"].push_back(jsonChat_);
+        }
+
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createChatCreateForSenderJson(const int serverId_, const int userId_, const int companionId_, const int chatId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Create_Chat";
+        json_["userId"] = userId_;
+        json_["companionId"] = companionId_;
+        json_["serverId"] = serverId_;
+        json_["chatId"] = chatId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createChatCreateForCompanionJson(const int serverId_, const int userId_, const int companionId_, const int chatId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Create_Chat";
+        json_["userId"] = userId_;
+        json_["companionId"] = companionId_;
+        json_["serverId"] = serverId_;
+        json_["chatId"] = chatId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createGetUsersOnServerJson(const int serverId_, const std::vector<UsersOnServerStruct>& users_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Get_Users_On_Server";
+        json_["serverId"] = serverId_;
+
+        for(const auto& i : users_)
+        {
+            nlohmann::json user_;
+            i.to_json(user_);
+            json_["users"].push_back(user_);
+        }
+
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createAddInChatJson(const int serverId_, const int userId_, const std::string lastName_, const std::string firstName_, const std::string middleName_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Add_User_In_Chat";
+        json_["serverId"] = serverId_;
+        json_["userId"] = userId_;
+        json_["lastName"] = lastName_;
+        json_["firstName"] = firstName_;
+        json_["middleName"] = middleName_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createForAddedUserJson(const int serverId_, std::string serverName_, std::string serverDescription_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Add_New_Server";
+        json_["serverId"] = serverId_;
+        json_["serverName"] = serverName_;
+        json_["serverDescription"] = serverDescription_;
         return json_.dump();
     }
     catch (const std::exception& e)
