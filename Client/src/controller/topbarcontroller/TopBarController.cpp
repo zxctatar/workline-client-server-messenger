@@ -5,6 +5,7 @@ TopBarController::TopBarController(QObject* parent)
     , profilePageController_(nullptr)
     , applicationPageController_(nullptr)
     , addUserController_(nullptr)
+    , configureAdminController_(nullptr)
 {
 }
 
@@ -13,6 +14,7 @@ TopBarController::~TopBarController()
     deleteProfilePageController();
     deleteApplicationPageController();
     deleteAddUserOnServerController();
+    deleteConfigureAdminController();
 }
 
 void TopBarController::deleteProfilePageController()
@@ -36,6 +38,14 @@ void TopBarController::deleteAddUserOnServerController()
     if(addUserController_)
     {
         addUserController_.reset();
+    }
+}
+
+void TopBarController::deleteConfigureAdminController()
+{
+    if(configureAdminController_)
+    {
+        configureAdminController_.reset();
     }
 }
 
@@ -83,11 +93,20 @@ AddUserOnServerController* TopBarController::getAddUserController()
     return addUserController_.get();
 }
 
+ConfigureAdminController* TopBarController::getConfigureAdminController()
+{
+    if(!configureAdminController_)
+    {
+        createConfigureAdminController();
+    }
+    return configureAdminController_.get();
+}
+
 void TopBarController::createProfilePageController()
 {
     if(!profilePageController_)
     {
-        profilePageController_ = std::make_shared<ProfilePageController>();
+        profilePageController_ = std::make_shared<ProfilePageController>(this);
     }
 }
 
@@ -95,7 +114,7 @@ void TopBarController::createApplicationPageController()
 {
     if(!applicationPageController_)
     {
-        applicationPageController_ = std::make_shared<ApplicationPageController>();
+        applicationPageController_ = std::make_shared<ApplicationPageController>(this);
 
         connect(applicationPageController_.get(), &ApplicationPageController::getUnverUsersSignal, this, &TopBarController::handOverGetUnverUsersSignal);
         connect(this, &TopBarController::handOverReceivedUnverUsersSignal, applicationPageController_.get(), &ApplicationPageController::slotUnverUsersProcessing);
@@ -111,12 +130,22 @@ void TopBarController::createAddUserOnServerController()
 {
     if(!addUserController_)
     {
-        addUserController_ = std::make_shared<AddUserOnServerController>();
+        addUserController_ = std::make_shared<AddUserOnServerController>(this);
 
         connect(addUserController_.get(), &AddUserOnServerController::getCandidateUsersSignal, this, &TopBarController::handOverGetCandidateUsersSignal);
         connect(this, &TopBarController::handOverReceivedCandidateUsersSignal, addUserController_.get(), &AddUserOnServerController::slotCandidateUsersProcessing);
         connect(addUserController_.get(), &AddUserOnServerController::requestAddUserSignal, this, &TopBarController::handOverRequestAddUserSignal);
         connect(this, &TopBarController::handOverAddUserOnServerSignal, addUserController_.get(), &AddUserOnServerController::slotAddUserOnServerProccessing);
         connect(this, &TopBarController::handOverDeleteUserOnServerSignal, addUserController_.get(), &AddUserOnServerController::slotDeleteUserOnServer);
+    }
+}
+
+void TopBarController::createConfigureAdminController()
+{
+    if(!configureAdminController_)
+    {
+        configureAdminController_ = std::make_shared<ConfigureAdminController>(this);
+        connect(configureAdminController_.get(), &ConfigureAdminController::getUsersOnServerSignal, this, &TopBarController::handOverGetUsersOnServerSignal);
+        connect(this, &TopBarController::handOverSendUsersOnServerSignal, configureAdminController_.get(), &ConfigureAdminController::slotSetUsersOnServerPreparing);
     }
 }

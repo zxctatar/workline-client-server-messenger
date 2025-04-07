@@ -45,6 +45,7 @@ Item {
                         topBar.controller.deleteProfilePageController()
                         topBar.controller.deleteApplicationPageController()
                         topBar.controller.deleteAddUserOnServerController()
+                        topBar.controller.deleteConfigureAdminController()
                     });
                 }
 

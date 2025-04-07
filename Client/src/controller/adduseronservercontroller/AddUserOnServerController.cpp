@@ -113,6 +113,5 @@ void AddUserOnServerController::slotAddUserOnServerProccessing(const QJsonObject
 
 void AddUserOnServerController::slotDeleteUserOnServer(const int userId_, const int serverId_) const
 {
-    qDebug() << "2";
     candidateUserModel_->deleteCandidateUser(userId_, serverId_);
 }

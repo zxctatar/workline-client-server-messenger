@@ -35,7 +35,7 @@ Popup {
             menuWindow.serverSelected = true
         }
 
-        function onSelectedServerDeleted() {
+        function onSelectedServerDeletedSignal() {
             menuWindow.serverSelected = false
 
             if(stackView.currentItem.objectName == "MenuAddUserOnServer")
@@ -168,6 +168,32 @@ Popup {
                         page.deleteController.connect(function(){
                             if(typeof meniWindow !== 'undefined' && menuWindow) {
                                 menuWindow.controller.deleteAddUserOnServerController()
+                            }
+                        })
+                    }
+                }
+
+                onConfigureAdminButtonClicked: {
+                    menuWindow.width = 475
+                    menuWindow.height = 550
+
+                    var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menuconfigureadminpage/MenuConfigureAdminPage.qml"), {
+                        width: parent.width,
+                        height: parent.height,
+                        controller: menuWindow.controller.configureAdminController,
+                        notificationManager: menuWindow.notificationManager,
+                    })
+
+                    if(page) {
+                        page.backButtonClicked.connect(function(){
+                            stackView.pop()
+                            menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                            menuWindow.height = Sizes.maxMenuWindowHeight // 550
+                        })
+
+                        page.deleteController.connect(function(){
+                            if(typeof menuWindow !== 'undefined' && menuWindow) {
+                                menuWindow.controller.deleteConfigureAdminController()
                             }
                         })
                     }

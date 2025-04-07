@@ -21,3 +21,8 @@ ApproveButton 1.0 ApproveButton.qml
 RejectButton 1.0 RejectButton.qml
 ChatObject 1.0 ChatObject.qml
 AddUserButton 1.0 AddUserButton.qml
+ChatNameText 1.0 ChatNameText.qml
+ChatMessageText 1.0 ChatMessageText.qml
+CreateChatButton 1.0 CreateChatButton.qml
+ConfigureAdminObject 1.0 ConfigureAdminObject.qml
+AdminSwitcherButton 1.0 AdminSwitcherButton.qml

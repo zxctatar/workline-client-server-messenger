@@ -11,6 +11,13 @@ QtObject {
     // login page
     readonly property int loginPageWidgetsSpacing: 18 // расстояние между виджетами в окне логина
 
+    // add admin object
+    readonly property int maxAddAdminObjectHeight: 50 // высота объекта добавления админа
+
+    // admin switcher button
+    readonly property int maxAdminSwitcherButtonWidth: 35 // ширина кнопки переключения админа
+    readonly property int maxAdminSwitcherButtonHeight: 35 // высота кнопки переключения админа
+
     //separator
     readonly property int radiusSeparator: 2 // скруглдение разделителя
 
@@ -30,6 +37,14 @@ QtObject {
 
     readonly property int spacingCandidateUserObject: 10 // отступ в объекте кандидата на добавление
 
+    //create Chat Button
+    readonly property int maxCreateChatButtonWidth: 75 // ширина кнопок в окне создании чата
+    readonly property int maxCreateChatButtonHeight: 30 // высота кнопко в окне создания чата
+
+    readonly property int createChatButtonRadius: 0 // радиус кнопок в окне создания чата
+
+    readonly property int fontPixelSizeCreateChatButton: 14 // размер текста кнопок в окне создания чата
+
     //add user button
     readonly property int maxAddUserButtonWidth: 35 // ширина кнопки добавления пользователя
     readonly property int maxAddUserButtonHeight: 35 // высота кнопки добавления пользователя
@@ -38,6 +53,26 @@ QtObject {
     readonly property int maxAddUserButtonImageHeight: 19 // высота иконки в кнопке добавления пользователя на сервер
 
     readonly property int rightMargineAddUserButton: 5 // правый отступ в кнопке добавления пользователя на сервер
+
+    //chat name text
+    readonly property int chatNameTextSize: 16 // размер текста названия чата
+
+    //chat message text
+    readonly property int chatMessageTextSizes: 14 // размер текста сообщения чата
+
+    //chat object
+    readonly property int maxChatObjectHeight: 70 // высота объекта чата
+
+    readonly property int maxChatObjectImageWidth: 50 // ширина иконки в объекте чата
+    readonly property int maxChatObjectImageHeight: 50 // высота иконки в объекте чата
+
+    readonly property int chatObjectTextSpacing: 8 // расстояние между текстом в объекте чата
+
+    readonly property int chatObjectWidgetSpacing: 10 // расстояние между виджетами в объекте чата
+    readonly property int chatObjectMargins: 7 // отступы в объекте чата
+
+    //chats bar
+    readonly property int maxChatBarHeight: 230 // ширина таблицы с чатами
 
     //menu window
     readonly property int maxMenuWindowWidth: 230 // ширина окна меню

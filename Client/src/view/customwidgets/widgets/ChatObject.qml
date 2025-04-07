@@ -6,21 +6,57 @@ import "../../../resources"
 Button {
     id: chatObject
 
+    property int chatId
+
     property bool selected: false
 
+    property string displayName
+
     background: Rectangle {
-        color: chatObject.selected ? Colors.selectedChatColor : Colors.normalChatColor
+        color: chatObject.selected ? Colors.selectedChatColor : (chatObject.hovered ? "#85B4DE" : Colors.normalChatColor)
     }
 
-    Image {
-        anchors.topMargin: 7
-        anchors.leftMargin: 7
-        anchors.bottomMargin: 7
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.left: parent.left
+    Row {
+        id: rowLayout
+        anchors.fill: parent
+        anchors.margins: Sizes.chatObjectMargins // 7
+        spacing: Sizes.chatObjectWidgetSpacing // 10
 
-        width: 63
-        height: 63
-        source: "qrc:/resources/img/avatar.svg"
+        Image {
+            id: avatar
+            width: Sizes.maxChatObjectImageWidth // 50
+            height: Sizes.maxChatObjectImageHeight // 50
+            anchors.verticalCenter: parent.verticalCenter
+            source: "qrc:/resources/img/avatar.svg"
+        }
+
+        Column {
+            spacing: Sizes.chatObjectTextSpacing // 8
+            anchors.verticalCenter: parent.verticalCenter
+            width: rowLayout.width - avatar.width - rowLayout.spacing
+
+            ChatNameText {
+                id: nameText
+                text: chatObject.displayName
+                width: parent.width
+            }
+
+            ChatMessageText {
+                id: messageText
+                text: "555777777"
+                width: parent.width
+            }
+        }
+    }
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+
+        cursorShape: Qt.PointingHandCursor
+
+        onClicked: {
+            parent.clicked()
+        }
     }
 }

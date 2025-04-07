@@ -45,6 +45,11 @@ void ServerTableController::setServerData(const int serverId_, const QString& se
     SelectedServerManager::instance().setServerData(serverId_, serverName_, serverDescription_);
 }
 
+void ServerTableController::serverSelected(const int serverId_)
+{
+    emit serverSelectedSignal(serverId_);
+}
+
 void ServerTableController::slotServerProcessing(const QJsonObject& jsonObj_) const
 {
     QJsonArray serversArray_ = jsonObj_["Servers"].toArray();
@@ -71,7 +76,7 @@ void ServerTableController::slotCodeProcessing(const QJsonObject& jsonObj_) cons
     if(jsonObj_["Code"].toString() == "SERVER_ADDED")
     {
         serverModel_->addServer(jsonObj_["ServerID"].toInt(), jsonObj_["ServerName"].toString()[0], jsonObj_["ServerName"].toString(), jsonObj_["ServerDescription"].toString());
-        emit serverAdded();
+        emit serverAddedSignal();
     }
     else if(jsonObj_["Code"].toString() == "SERVER_NAME_EXISTS")
     {
@@ -90,7 +95,7 @@ void ServerTableController::slotDeleteServer(const int serverId_)
     if(selectedServerId_ == serverId_)
     {
         SelectedServerManager::instance().setServerData(-1, "","");
-        emit selectedServerDeleted();
+        emit selectedServerDeletedSignal();
     }
 
     serverModel_->deleteServer(serverId_);
@@ -100,4 +105,9 @@ void ServerTableController::deleteServer(const int serverId_)
 {
     QString request_ = jsonWorker_.createJsonDeleteServer(serverId_);
     emit deleteServerSignal(request_);
+}
+
+void ServerTableController::slotAddNewServer(const int serverId_, const QString& serverName_, const QString& serverDescription_)
+{
+    serverModel_->addServer(serverId_, serverName_[0] ,serverName_, serverDescription_);
 }

@@ -109,14 +109,33 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     {
         emit sendCandidateUsersSignal(jsonObj_);
     }
-    else if(jsonObj_["Info"] == "User_On_Server")
+    else if(jsonObj_["Info"] == "Add_User_On_Server")
     {
         emit sendAddUserOnServerSignal(jsonObj_);
     }
     else if(jsonObj_["Info"] == "Delete_User_On_Server")
     {
-        qDebug() << "1";
         emit sendDeleteUserOnServerSignal(jsonObj_["userId"].toInt(), jsonObj_["serverId"].toInt());
+    }
+    else if(jsonObj_["Info"] == "Get_Chats")
+    {
+        emit sendChatsSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Create_Chat")
+    {
+        emit sendChatCreatedSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Get_Users_On_Server")
+    {
+        emit sendUsersOnServerSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Add_User_In_Chat")
+    {
+        emit sendUserAddInChatSignal(jsonObj_["userId"].toInt(), jsonObj_["serverId"].toInt(), jsonObj_["lastName"].toString(), jsonObj_["firstName"].toString(), jsonObj_["middleName"].toString());
+    }
+    else if(jsonObj_["Info"] == "Add_New_Server")
+    {
+        emit sendAddNewServerSignal(jsonObj_["serverId"].toInt(), jsonObj_["serverName"].toString(), jsonObj_["serverDescription"].toString());
     }
 }
 

@@ -7,6 +7,7 @@ MainController::MainController(QObject* parent)
     , serverConnector_(nullptr)
     , serverTableController_(nullptr)
     , topBarController_(nullptr)
+    , chatsBarController_(nullptr)
 {
     serverConnector_ = (new ServerConnector("localhost", 8001, this));
 }
@@ -15,23 +16,27 @@ MainController::~MainController()
 {
     if(loginPageController_)
     {
-        delete loginPageController_;
+        loginPageController_->deleteLater();
     }
     if(regPageController_)
     {
-        delete regPageController_;
+        regPageController_->deleteLater();
     }
     if(serverConnector_)
     {
-        delete serverConnector_;
+        serverConnector_->deleteLater();
     }
     if(serverTableController_)
     {
-        delete serverTableController_;
+        serverTableController_->deleteLater();
     }
     if(topBarController_)
     {
-        delete topBarController_;
+        topBarController_->deleteLater();
+    }
+    if(chatsBarController_)
+    {
+        chatsBarController_->deleteLater();
     }
 }
 
@@ -76,6 +81,15 @@ TopBarController* MainController::getTopBarController()
     return topBarController_;
 }
 
+ChatsBarController* MainController::getChatsBarController()
+{
+    if(!chatsBarController_)
+    {
+        createChatsBarController();
+    }
+    return chatsBarController_;
+}
+
 void MainController::createLoginPageController()
 {
     if(!loginPageController_)
@@ -107,8 +121,11 @@ void MainController::createServerTableController()
         connect(serverConnector_, &ServerConnector::sendServerTableCodeSignal, serverTableController_, &ServerTableController::slotCodeProcessing);
         connect(serverTableController_, &ServerTableController::needServers, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendUserServersSignal, serverTableController_, &ServerTableController::slotServerProcessing);
+        connect(serverConnector_, &ServerConnector::sendAddNewServerSignal, serverTableController_, &ServerTableController::slotAddNewServer);
 
-        connect(serverTableController_, &ServerTableController::selectedServerDeleted, topBarController_, &TopBarController::selectedServerDeleted);
+        connect(serverTableController_, &ServerTableController::selectedServerDeletedSignal, topBarController_, &TopBarController::selectedServerDeletedSignal);
+
+        connect(serverTableController_, &ServerTableController::serverSelectedSignal, chatsBarController_, &ChatsBarController::slotGetChats);
     }
 }
 
@@ -129,5 +146,20 @@ void MainController::createTopBarController()
         connect(topBarController_, &TopBarController::handOverRequestAddUserSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendAddUserOnServerSignal, topBarController_, &TopBarController::handOverAddUserOnServerSignal);
         connect(serverConnector_, &ServerConnector::sendDeleteUserOnServerSignal, topBarController_, &TopBarController::handOverDeleteUserOnServerSignal);
+        connect(topBarController_, &TopBarController::handOverGetUsersOnServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendUsersOnServerSignal, topBarController_, &TopBarController::handOverSendUsersOnServerSignal);
+    }
+}
+
+void MainController::createChatsBarController()
+{
+    if(!chatsBarController_)
+    {
+        chatsBarController_ = new ChatsBarController(this);
+        connect(chatsBarController_, &ChatsBarController::getChatsSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendChatsSignal, chatsBarController_, &ChatsBarController::slotChatsProcessing);
+        connect(chatsBarController_, &ChatsBarController::createChatSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendChatCreatedSignal, chatsBarController_, &ChatsBarController::slotChatCreatedProcessing);
+        connect(serverConnector_, &ServerConnector::sendUserAddInChatSignal, chatsBarController_, &ChatsBarController::slotAddUserInChatProcessing);
     }
 }

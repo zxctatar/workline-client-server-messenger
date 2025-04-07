@@ -9,6 +9,7 @@
 #include "ApplicationPageController.h"
 #include "AddUserOnServerController.h"
 #include "SelectedServerManager.h"
+#include "ConfigureAdminController.h"
 
 class TopBarController : public QObject
 {
@@ -18,6 +19,7 @@ class TopBarController : public QObject
     Q_PROPERTY(ApplicationPageController* applicationPageController READ getApplicationPageController NOTIFY applicationPageControllerChanged FINAL)
     Q_PROPERTY(ProfilePageController* profilePageController READ getProfilePageController NOTIFY profilePageControllerChanged FINAL)
     Q_PROPERTY(AddUserOnServerController* addUserController READ getAddUserController NOTIFY addUserControllerChanged FINAL)
+    Q_PROPERTY(ConfigureAdminController* configureAdminController READ getConfigureAdminController NOTIFY configureAdminControllerChanged FINAL)
 
 public:
     explicit TopBarController(QObject* parent = nullptr);
@@ -26,16 +28,19 @@ public:
     Q_INVOKABLE ProfilePageController* getProfilePageController();
     Q_INVOKABLE ApplicationPageController* getApplicationPageController();
     Q_INVOKABLE AddUserOnServerController* getAddUserController();
+    Q_INVOKABLE ConfigureAdminController* getConfigureAdminController();
     Q_INVOKABLE void getUserRole() const;
     Q_INVOKABLE void deleteApplicationPageController();
     Q_INVOKABLE void deleteProfilePageController();
     Q_INVOKABLE void deleteAddUserOnServerController();
+    Q_INVOKABLE void deleteConfigureAdminController();
     Q_INVOKABLE void checkServerSelected();
 
 signals:
     void profilePageControllerChanged();
     void applicationPageControllerChanged();
     void addUserControllerChanged();
+    void configureAdminControllerChanged();
 
     void setUserRoleSignal(const QString& userRole_) const;
 
@@ -51,18 +56,22 @@ signals:
     void handOverRequestAddUserSignal(const QString& info_) const;
     void handOverAddUserOnServerSignal(const QJsonObject& jsonObj_) const;
     void handOverDeleteUserOnServerSignal(const int userId_, const int serverId_) const;
+    void handOverGetUsersOnServerSignal(const QString& info_);
+    void handOverSendUsersOnServerSignal(const QJsonObject& jsonObj_);
 
     void serverSelectedSignal();
-    void selectedServerDeleted();
+    void selectedServerDeletedSignal();
 
 private:
     void createProfilePageController();
     void createApplicationPageController();
     void createAddUserOnServerController();
+    void createConfigureAdminController();
 
     std::shared_ptr<ProfilePageController> profilePageController_;
     std::shared_ptr<ApplicationPageController> applicationPageController_;
     std::shared_ptr<AddUserOnServerController> addUserController_;
+    std::shared_ptr<ConfigureAdminController> configureAdminController_;
 };
 
 #endif // TOPBARCONTROLLER_H

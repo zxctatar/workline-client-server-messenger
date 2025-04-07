@@ -5,6 +5,7 @@ import "../../../resources"
 Button {
     id: serverObject
 
+    property bool isAdmin: false
     property bool selected: false
 
     width: Sizes.maxServerObjectWidth // 55
@@ -45,11 +46,11 @@ Button {
         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         onClicked: (mouse) => {
-            if(mouse.button == Qt.LeftButton)
+            if(mouse.button == Qt.LeftButton && !serverObject.selected)
             {
                 parent.clicked()
             }
-            else if(mouse.button == Qt.RightButton)
+            else if(mouse.button == Qt.RightButton && serverObject.isAdmin)
             {
                 contextMenu.open()
             }

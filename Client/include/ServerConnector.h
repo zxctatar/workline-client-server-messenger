@@ -35,6 +35,11 @@ signals:
     void sendCandidateUsersSignal(const QJsonObject& jsonObj_);
     void sendAddUserOnServerSignal(const QJsonObject& jsonObj_);
     void sendDeleteUserOnServerSignal(const int userId_, const int serverId_);
+    void sendChatsSignal(const QJsonObject& jsonObj_);
+    void sendChatCreatedSignal(const QJsonObject& jsonObj_);
+    void sendUsersOnServerSignal(const QJsonObject& jsonObj_);
+    void sendUserAddInChatSignal(const int userId_, const int serverId_, const QString& lastName_, const QString& firstName_, const QString& middleName_);
+    void sendAddNewServerSignal(const int serverId_, const QString& serverName_, const QString& serverDescription_);
 
 private:
     void connectToServer();

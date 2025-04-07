@@ -37,6 +37,7 @@ qt_add_qml_module(appClient
 
     QML_FILES src/view/customwidgets/compositewidgets/TopBar.qml
     QML_FILES src/view/customwidgets/compositewidgets/ServerTable.qml
+    QML_FILES src/view/customwidgets/compositewidgets/ChatsBar.qml
     RESOURCES src/view/customwidgets/compositewidgets/qmldir
 
     QML_FILES src/view/customwidgets/widgets/ErrorText.qml
@@ -61,6 +62,11 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/widgets/RejectButton.qml
     QML_FILES src/view/customwidgets/widgets/ChatObject.qml
     QML_FILES src/view/customwidgets/widgets/AddUserButton.qml
+    QML_FILES src/view/customwidgets/widgets/ChatNameText.qml
+    QML_FILES src/view/customwidgets/widgets/ChatMessageText.qml
+    QML_FILES src/view/customwidgets/widgets/CreateChatButton.qml
+    QML_FILES src/view/customwidgets/widgets/ConfigureAdminObject.qml
+    QML_FILES src/view/customwidgets/widgets/AdminSwitcherButton.qml
     RESOURCES src/view/customwidgets/widgets/qmldir
 
     QML_FILES src/view/windowpages/menuprofilepage/MenuProfilePage.qml
@@ -77,7 +83,11 @@ qt_add_qml_module(appClient
 
     QML_FILES src/view/windows/AddServerWindow.qml
     QML_FILES src/view/windows/MenuWindow.qml
+    QML_FILES src/view/windows/CreateChatWindow.qml
     RESOURCES src/view/windows/qmldir
+
+    QML_FILES src/view/windowpages/menuconfigureadminpage/MenuConfigureAdminPage.qml
+    RESOURCES src/view/windowpages/menuconfigureadminpage/qmldir
 
     QML_FILES src/view/apppages/loginpage/LoginPage.qml
     RESOURCES src/view/apppages/loginpage/qmldir
@@ -132,6 +142,18 @@ qt_add_qml_module(appClient
 
     SOURCES src/model/candidateusermodel/CandidateUserModel.cpp
     SOURCES include/CandidateUserModel.h
+
+    SOURCES src/controller/chatsbarcontroller/ChatsBarController.cpp
+    SOURCES include/ChatsBarController.h
+
+    SOURCES src/model/chatmodel/ChatModel.cpp
+    SOURCES include/ChatModel.h
+
+    SOURCES src/controller/configureadmincontroller/ConfigureAdminController.cpp
+    SOURCES include/ConfigureAdminController.h
+
+    SOURCES include/UsersModel.h
+    SOURCES src/model/usersmodel/UsersModel.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

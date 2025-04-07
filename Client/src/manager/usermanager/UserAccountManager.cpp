@@ -76,3 +76,7 @@ QString UserAccountManager::getUserPhoneNumber() const
 {
     return userPhoneNumber_;
 }
+int UserAccountManager::getUserId() const
+{
+    return id_;
+}

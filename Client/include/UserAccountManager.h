@@ -23,6 +23,7 @@ public:
     QString getUserMiddleName() const;
     QString getUserEmail() const;
     QString getUserPhoneNumber() const;
+    int getUserId() const;
 
 private:
     explicit UserAccountManager(QObject* parent = nullptr);

@@ -25,7 +25,7 @@ Item {
             serverTable.userRole = message
         }
 
-        function onServerAdded() {
+        function onServerAddedSignal() {
             addServerWindow.clearInputFields()
             addServerWindow.close()
         }
@@ -67,6 +67,7 @@ Item {
 
                 serverId: id
 
+                isAdmin: serverTable.userRole == "admin" ? true : false
                 selected: serverTable.currentIndex == serverId ? true : false
 
                 anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
@@ -75,6 +76,7 @@ Item {
                 onClicked: {
                     serverTable.currentIndex = id
                     serverTable.controller.setServerData(id, fullName, description)
+                    serverTable.controller.serverSelected(id)
                 }
 
                 onDeleteServerClicked:(serverId) => {

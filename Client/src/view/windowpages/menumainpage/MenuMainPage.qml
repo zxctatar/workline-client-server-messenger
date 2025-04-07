@@ -13,6 +13,7 @@ Page {
     signal profileButtonClicked()
     signal applicationButtonClicked()
     signal addUserOnServerButtonClicked()
+    signal configureAdminButtonClicked()
 
     background: Rectangle {
         color: Colors.menuWindowBackgroundColor
@@ -69,6 +70,24 @@ Page {
 
             onClicked: {
                 menuMainPage.addUserOnServerButtonClicked()
+            }
+        }
+
+        Separator {
+            Layout.fillWidth: true
+            visible: menuMainPage.userRole == "admin" ? (menuMainPage.serverSelected ? true : false) : false
+        }
+
+        MenuWidget {
+            Layout.preferredWidth: menuMainPage.width
+            Layout.preferredHeight: Sizes.maxMenuWidgetHeight // 50
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            text: "Настроить администраторов"
+
+            visible: menuMainPage.userRole == "admin" ? (menuMainPage.serverSelected ? true : false) : false
+
+            onClicked: {
+                menuMainPage.configureAdminButtonClicked();
             }
         }
     }

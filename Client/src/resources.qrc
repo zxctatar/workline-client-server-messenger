@@ -65,5 +65,14 @@
         <file>view/customwidgets/widgets/CandidateUserObject.qml</file>
         <file>view/customwidgets/widgets/AddUserButton.qml</file>
         <file>resources/img/add.svg</file>
+        <file>view/customwidgets/compositewidgets/ChatsBar.qml</file>
+        <file>view/customwidgets/widgets/ChatNameText.qml</file>
+        <file>view/customwidgets/widgets/ChatMessageText.qml</file>
+        <file>view/windows/CreateChatWindow.qml</file>
+        <file>view/customwidgets/widgets/CreateChatButton.qml</file>
+        <file>view/customwidgets/widgets/ConfigureAdminObject.qml</file>
+        <file>view/customwidgets/widgets/AdminSwitcherButton.qml</file>
+        <file>view/windowpages/menuconfigureadminpage/qmldir</file>
+        <file>view/windowpages/menuconfigureadminpage/MenuConfigureAdminPage.qml</file>
     </qresource>
 </RCC>
