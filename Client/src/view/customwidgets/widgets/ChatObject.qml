@@ -11,6 +11,7 @@ Button {
     property bool selected: false
 
     property string displayName
+    property string lastMessage
 
     background: Rectangle {
         color: chatObject.selected ? Colors.selectedChatColor : (chatObject.hovered ? "#85B4DE" : Colors.normalChatColor)

@@ -2,3 +2,4 @@ module compositewidgets
 ServerTable 1.0 ServerTable.qml
 TopBar 1.0 TopBar.qml
 ChatsBar 1.0 ChatsBar.qml
+ChatHistory 1.0 ChatHistory.qml

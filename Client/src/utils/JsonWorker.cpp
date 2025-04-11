@@ -180,3 +180,36 @@ QString JsonWorker::createJsonGetUsersOnServer(const int serverId_) const
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;
 }
+
+QString JsonWorker::createJsonAddAdminOnServer(const int serverId_, const int userId_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Add_Admin_On_Server");
+    jsonObject_.insert("userId", userId_);
+    jsonObject_.insert("serverId", serverId_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}
+
+QString JsonWorker::createJsonRemoveAdminOnServer(const int serverId_, const int userId_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Remove_Admin_On_Server");
+    jsonObject_.insert("userId", userId_);
+    jsonObject_.insert("serverId", serverId_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}
+
+QString JsonWorker::createJsonGetServerRole(const int userId_, const int serverId_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Get_Server_Role");
+    jsonObject_.insert("userId", userId_);
+    jsonObject_.insert("serverId", serverId_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}

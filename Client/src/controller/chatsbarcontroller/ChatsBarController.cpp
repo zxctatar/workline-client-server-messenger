@@ -89,3 +89,8 @@ void ChatsBarController::slotAddUserInChatProcessing(const int userId_, const in
         chatModel_->addChat(userId_, 0, firstName_, lastName_, middleName_, "", "", false);
     }
 }
+
+void ChatsBarController::slotClearChat()
+{
+    chatModel_->clearChat();
+}

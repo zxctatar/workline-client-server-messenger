@@ -8,6 +8,7 @@ ServerConnector::ServerConnector(const QString& strHost, const int port, QObject
     , strHost_(strHost)
     , port_(port)
     , socket_(new QTcpSocket())
+    , messageSize_(0)
 {
     connectToServer();
     settingReconnectionTimer();
@@ -31,41 +32,40 @@ void ServerConnector::connectToServer()
 
 void ServerConnector::slotReadyRead()
 {
-    static uint32_t message_size_ = 0;
-    static QByteArray messageData_;
+    messageData_.append(socket_->readAll());
 
-    if (message_size_ == 0 && socket_->bytesAvailable() >= sizeof(message_size_))
+    while (true)
     {
-        socket_->read(reinterpret_cast<char*>(&message_size_), sizeof(message_size_));
-        message_size_ = ntohl(message_size_);
-
-        if (message_size_ > 1024 * 1024) // Ограничение на размер сообщения (1 МБ)
+        if (messageSize_ == 0)
         {
-            qWarning() << "Message too large, closing connection";
+            if (messageData_.size() < sizeof(uint32_t))
+                return;
+
+            memcpy(&messageSize_, messageData_.constData(), sizeof(uint32_t));
+            messageSize_ = ntohl(messageSize_);
+
+            if (messageSize_ > 1024 * 1024)
+            {
+                messageData_.clear();
+                messageSize_ = 0;
+                return;
+            }
+
+            messageData_.remove(0, sizeof(uint32_t));
+        }
+
+        if (messageData_.size() < messageSize_)
             return;
-        }
-    }
 
-    if (message_size_ > 0)
-    {
-        while (socket_->bytesAvailable() > 0 && messageData_.size() < message_size_)
-        {
-            QByteArray chunk_ = socket_->read(message_size_ - messageData_.size());
-            messageData_.append(chunk_);
-        }
+        QByteArray jsonData_ = messageData_.left(messageSize_);
+        messageData_.remove(0, messageSize_);
+        messageSize_ = 0;
 
-        if (messageData_.size() >= message_size_)
-        {
-            QByteArray jsonData = messageData_.left(message_size_);
-            QString str_ = QString::fromUtf8(jsonData);
-
-            messageData_.remove(0, message_size_);
-            message_size_ = 0;
-
-            workingWithResponse(jsonWorker_.JsonProcessing(str_));
-        }
+        QString str_ = QString::fromUtf8(jsonData_);
+        workingWithResponse(jsonWorker_.JsonProcessing(str_));
     }
 }
+
 
 void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
 {
@@ -136,6 +136,26 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     else if(jsonObj_["Info"] == "Add_New_Server")
     {
         emit sendAddNewServerSignal(jsonObj_["serverId"].toInt(), jsonObj_["serverName"].toString(), jsonObj_["serverDescription"].toString());
+    }
+    else if(jsonObj_["Info"] == "Add_Admin_On_Server")
+    {
+        emit sendAddAdminOnServerSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Remove_Admin_On_Server")
+    {
+        emit sendRemoveAdminOnServerSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Get_Server_Role")
+    {
+        emit sendServerRoleSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Server_Role_Add")
+    {
+        emit sendServerRoleAddSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Server_Role_Removed")
+    {
+        emit sendServerRoleRemovedSignal(jsonObj_);
     }
 }
 

@@ -19,13 +19,6 @@ UsersModel* ConfigureAdminController::getUsersModel()
     return usersModel_.get();
 }
 
-void ConfigureAdminController::getServerId() const
-{
-    int serverId_ = SelectedServerManager::instance().getServerId();
-
-    emit setServerIdSignal(serverId_);
-}
-
 void ConfigureAdminController::getUsersOnServer() const
 {
     int serverId_ = SelectedServerManager::instance().getServerId();
@@ -62,4 +55,44 @@ void ConfigureAdminController::slotSetUsersOnServerPreparing(const QJsonObject& 
             usersModel_->addUser(serverId_, userId_, firstName_, lastName_, middleName_, isServerAdmin_, isGlobalAdmin_);
         }
     }
+}
+
+void ConfigureAdminController::sendAddAdmin(const int serverId_, const int userId_) const
+{
+    QString request_ = jsonWorker_.createJsonAddAdminOnServer(serverId_, userId_);
+    emit sendAddAdminSignal(request_);
+}
+
+void ConfigureAdminController::sendRemoveAdmin(const int serverId_, const int userId_) const
+{
+    QString request_ = jsonWorker_.createJsonRemoveAdminOnServer(serverId_, userId_);
+    emit sendRemoveAdminSignal(request_);
+}
+
+void ConfigureAdminController::slotAddAdminOnServerPreparing(const QJsonObject& jsonObj_)
+{
+    int userId_ = jsonObj_["userId"].toInt();
+    int serverId_ = jsonObj_["serverId"].toInt();
+
+    if(SelectedServerManager::instance().getServerId() == serverId_)
+    {
+        usersModel_->addAdminRole(userId_, serverId_);
+    }
+}
+
+void ConfigureAdminController::slotRemoveAdminOnServerPreparing(const QJsonObject& jsonObj_)
+{
+    int userId_ = jsonObj_["userId"].toInt();
+    int serverId_ = jsonObj_["serverId"].toInt();
+
+    if(SelectedServerManager::instance().getServerId() == serverId_)
+    {
+        usersModel_->removeAdminRole(userId_, serverId_);
+    }
+}
+
+void ConfigureAdminController::refreshUsers() const
+{
+    usersModel_->clearUsers();
+    getUsersOnServer();
 }

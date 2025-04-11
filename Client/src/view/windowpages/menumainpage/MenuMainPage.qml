@@ -7,6 +7,7 @@ import "../../../resources"
 Page {
     id: menuMainPage
 
+    property int serverRole: -1
     property string userRole: "none"
     property bool serverSelected: false
 
@@ -66,7 +67,7 @@ Page {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             text: "Добавить пользователя"
 
-            visible: menuMainPage.userRole == "admin" ? (menuMainPage.serverSelected ? true : false) : false
+            visible: menuMainPage.userRole == "admin" ? (menuMainPage.serverSelected ? true : false) : menuMainPage.serverRole == 2 ? (menuMainPage.serverSelected ? true : false) : false
 
             onClicked: {
                 menuMainPage.addUserOnServerButtonClicked()

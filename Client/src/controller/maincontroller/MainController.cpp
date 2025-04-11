@@ -10,6 +10,10 @@ MainController::MainController(QObject* parent)
     , chatsBarController_(nullptr)
 {
     serverConnector_ = (new ServerConnector("localhost", 8001, this));
+
+    connect(serverConnector_, &ServerConnector::sendServerRoleSignal, &SelectedServerManager::instance(), &SelectedServerManager::slotSetServerRole);
+    connect(serverConnector_, &ServerConnector::sendServerRoleAddSignal, &SelectedServerManager::instance(), &SelectedServerManager::slotNewServerRoleProcessing);
+    connect(serverConnector_, &ServerConnector::sendServerRoleRemovedSignal, &SelectedServerManager::instance(), &SelectedServerManager::slotNewServerRoleProcessing);
 }
 
 MainController::~MainController()
@@ -122,10 +126,8 @@ void MainController::createServerTableController()
         connect(serverTableController_, &ServerTableController::needServers, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendUserServersSignal, serverTableController_, &ServerTableController::slotServerProcessing);
         connect(serverConnector_, &ServerConnector::sendAddNewServerSignal, serverTableController_, &ServerTableController::slotAddNewServer);
-
-        connect(serverTableController_, &ServerTableController::selectedServerDeletedSignal, topBarController_, &TopBarController::selectedServerDeletedSignal);
-
-        connect(serverTableController_, &ServerTableController::serverSelectedSignal, chatsBarController_, &ChatsBarController::slotGetChats);
+        connect(serverTableController_, &ServerTableController::getServerRoleSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(&SelectedServerManager::instance(), &SelectedServerManager::deleteServerSignal, serverTableController_, &ServerTableController::slotDeleteServer);
     }
 }
 
@@ -134,6 +136,7 @@ void MainController::createTopBarController()
     if(!topBarController_)
     {
         topBarController_ = new TopBarController(this);
+        connect(serverTableController_, &ServerTableController::selectedServerDeletedSignal, topBarController_, &TopBarController::selectedServerDeletedSignal);
         connect(topBarController_, &TopBarController::handOverGetUnverUsersSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendUnverUsersSignal, topBarController_, &TopBarController::handOverReceivedUnverUsersSignal);
         connect(topBarController_, &TopBarController::handOverApproveUserSignal, serverConnector_, &ServerConnector::slotSendToServer);
@@ -148,6 +151,12 @@ void MainController::createTopBarController()
         connect(serverConnector_, &ServerConnector::sendDeleteUserOnServerSignal, topBarController_, &TopBarController::handOverDeleteUserOnServerSignal);
         connect(topBarController_, &TopBarController::handOverGetUsersOnServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendUsersOnServerSignal, topBarController_, &TopBarController::handOverSendUsersOnServerSignal);
+        connect(topBarController_, &TopBarController::handOverAddAdminOnServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(topBarController_, &TopBarController::handOverRemoveAdminOnServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendAddAdminOnServerSignal, topBarController_, &TopBarController::handOverResponseAddAdminOnServerSignal);
+        connect(serverConnector_, &ServerConnector::sendRemoveAdminOnServerSignal, topBarController_, &TopBarController::handOverResponseRemoveAdminOnServerSignal);
+        connect(topBarController_, &TopBarController::accessToServerDeniedSignal, serverTableController_, &ServerTableController::slotDeleteServer);
+        connect(&SelectedServerManager::instance(), &SelectedServerManager::serverRoleChangedSignal, topBarController_, &TopBarController::slotSetNewServerRole);
     }
 }
 
@@ -155,11 +164,18 @@ void MainController::createChatsBarController()
 {
     if(!chatsBarController_)
     {
+        if(!serverTableController_)
+        {
+            createServerTableController();
+        }
+
         chatsBarController_ = new ChatsBarController(this);
         connect(chatsBarController_, &ChatsBarController::getChatsSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendChatsSignal, chatsBarController_, &ChatsBarController::slotChatsProcessing);
         connect(chatsBarController_, &ChatsBarController::createChatSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendChatCreatedSignal, chatsBarController_, &ChatsBarController::slotChatCreatedProcessing);
         connect(serverConnector_, &ServerConnector::sendUserAddInChatSignal, chatsBarController_, &ChatsBarController::slotAddUserInChatProcessing);
+        connect(serverTableController_, &ServerTableController::selectedServerDeletedSignal, chatsBarController_, &ChatsBarController::slotClearChat);
+        connect(serverTableController_, &ServerTableController::serverSelectedSignal, chatsBarController_, &ChatsBarController::slotGetChats);
     }
 }

@@ -33,10 +33,11 @@ signals:
     void deleteServerSignal(const QString& info_) const;
     void needServers(const QString& info_) const;
 
-    void serverAddedSignal() const;
+    void myServerAddedSignal() const;
     void serverNameExistsSignal() const;
     void errorCreateServerSignal() const;
 
+    void getServerRoleSignal(const QString& info_) const;
     void serverSelectedSignal(const int serverId_) const;
     void selectedServerDeletedSignal() const;
 

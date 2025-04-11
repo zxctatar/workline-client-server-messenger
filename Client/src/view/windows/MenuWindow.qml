@@ -21,6 +21,8 @@ Popup {
 
     property var notificationManager // topBar notificationManager
 
+    property int serverId: -1
+    property int serverRole: -1
     property string userRole
     property bool serverSelected: false
 
@@ -35,6 +37,10 @@ Popup {
             menuWindow.serverSelected = true
         }
 
+        function onSetServerId(serverId) {
+            menuWindow.serverId = serverId
+        }
+
         function onSelectedServerDeletedSignal() {
             menuWindow.serverSelected = false
 
@@ -44,12 +50,45 @@ Popup {
                 menuWindow.width = Sizes.maxMenuWindowWidth // 230
                 menuWindow.height = Sizes.maxMenuWindowHeight // 550
             }
+
+            if(stackView.currentItem.objectName == "MenuConfigureAdmin")
+            {
+                stackView.pop()
+                menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                menuWindow.height = Sizes.maxMenuWindowHeight // 550
+            }
+        }
+
+        function onSetServerRoleSignal(roleId) {
+            menuWindow.serverRole = roleId
+
+            console.log(roleId)
+
+            if(roleId == 0 && menuWindow.serverSelected == true) // none
+            {
+                menuWindow.controller.accessToServerDenied(menuWindow.serverId)
+            }
+            else if(roleId == 1) // user
+            {
+                if(stackView.currentItem.objectName == "MenuAddUserOnServer")
+                {
+                    stackView.pop()
+                    menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                    menuWindow.height = Sizes.maxMenuWindowHeight // 550
+                }
+            }
+            else if(roleId == 2) // admin
+            {
+
+            }
         }
     }
 
     Component.onCompleted: {
-        menuWindow.controller.getUserRole()
         menuWindow.controller.checkServerSelected()
+        menuWindow.controller.getServerId()
+        menuWindow.controller.getServerRole()
+        menuWindow.controller.getUserRole()
     }
 
     Component.onDestruction: {
@@ -99,6 +138,7 @@ Popup {
                 width: parent.width
                 height: parent.height
 
+                serverRole: menuWindow.serverRole
                 userRole: menuWindow.userRole
                 serverSelected: menuWindow.serverSelected
 
@@ -154,6 +194,7 @@ Popup {
                     var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menuadduseronserverpage/MenuAddUserOnServerPage.qml"), {
                         width: parent.width,
                         height: parent.height,
+                        serverId: menuWindow.serverId,
                         controller: menuWindow.controller.addUserController,
                         notificationManager: menuWindow.notificationManager,
                     })
@@ -180,6 +221,7 @@ Popup {
                     var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menuconfigureadminpage/MenuConfigureAdminPage.qml"), {
                         width: parent.width,
                         height: parent.height,
+                        serverId: menuWindow.serverId,
                         controller: menuWindow.controller.configureAdminController,
                         notificationManager: menuWindow.notificationManager,
                     })

@@ -82,7 +82,6 @@ void CandidateUserModel::clearCandidateUsers()
 
 void CandidateUserModel::deleteCandidateUser(const int receivedUserId_, const int receivedServerId_)
 {
-    qDebug() << 3;
     if(receivedServerId_ == serverId_)
     {
         int index_ = -1;
@@ -98,7 +97,6 @@ void CandidateUserModel::deleteCandidateUser(const int receivedUserId_, const in
 
         if(index_ != -1)
         {
-            qDebug() << "4";
             beginRemoveRows(QModelIndex(), index_, index_);
             candidateUsers_.remove(index_);
             endRemoveRows();

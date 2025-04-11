@@ -12,10 +12,10 @@ QtObject {
     readonly property color normalButtonColor: "#4EABFD" // обычный цвет кнопки
 
     readonly property color hoverButtonTextColor: "#292929" // цвет текста кнопки когда навелись
-    readonly property color normalButtonTextColor: "#373737" // цвет обычной кнопки
+    readonly property color normalButtonTextColor: "#373737" // цвет текста обычной кнопки
 
     //chat name text
-    readonly property color chatNameTextColor: "#F5F5F5" // цвет имени чата
+    readonly property color chatNameTextColor: "#373737" // цвет имени чата
 
     //admin switcher button
     readonly property color adminSwitcherYesButtonNormal: Qt.rgba(85/255, 206/255, 94/255, 0.50) // обычный цвет кнопки добавить
@@ -24,7 +24,7 @@ QtObject {
     readonly property color adminSwitcherNoButtonHovered: Qt.rgba(255, 0, 0) // цвет кнопки убрать когда навелись
 
     //chat message text
-    readonly property color chatMessageTextColor: "#F5F5F5" // цвет сообщения чата
+    readonly property color chatMessageTextColor: "#373737" // цвет сообщения чата
 
     //chat object
     readonly property color selectedChatColor: "#1E88E5" // цвет выбранного чата

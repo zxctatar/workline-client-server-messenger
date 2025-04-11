@@ -38,6 +38,7 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/compositewidgets/TopBar.qml
     QML_FILES src/view/customwidgets/compositewidgets/ServerTable.qml
     QML_FILES src/view/customwidgets/compositewidgets/ChatsBar.qml
+    QML_FILES src/view/customwidgets/compositewidgets/ChatHistory.qml
     RESOURCES src/view/customwidgets/compositewidgets/qmldir
 
     QML_FILES src/view/customwidgets/widgets/ErrorText.qml

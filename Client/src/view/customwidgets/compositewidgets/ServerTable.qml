@@ -25,7 +25,7 @@ Item {
             serverTable.userRole = message
         }
 
-        function onServerAddedSignal() {
+        function onMyServerAddedSignal() {
             addServerWindow.clearInputFields()
             addServerWindow.close()
         }

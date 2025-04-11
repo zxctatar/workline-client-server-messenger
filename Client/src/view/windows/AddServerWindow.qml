@@ -17,12 +17,12 @@ Popup {
 
     function serverNameExists() {
         errorText.visible = false
-        addServerWindow.notificationManager.showNotificationManager("Имя занято!!!")
+        addServerWindow.notificationManager.showNotificationManager("Имя занято!")
     }
 
     function errorCreateServer() {
         errorText.visible = false
-        addServerWindow.notificationManager.showNotificationManager("Ошибка на сервере!!!")
+        addServerWindow.notificationManager.showNotificationManager("Ошибка на сервере!")
     }
 
     function clearInputFields() {

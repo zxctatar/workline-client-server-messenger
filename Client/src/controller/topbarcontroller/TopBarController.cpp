@@ -17,6 +17,39 @@ TopBarController::~TopBarController()
     deleteConfigureAdminController();
 }
 
+void TopBarController::slotSetNewServerRole()
+{
+    if(UserAccountManager::instance().getUserRole() != "admin")
+    {
+        int serverRole_ = SelectedServerManager::instance().getServerRole();
+
+        emit setServerRoleSignal(serverRole_);
+    }
+}
+
+void TopBarController::getServerRole()
+{
+    if(UserAccountManager::instance().getUserRole() != "admin")
+    {
+        int serverRole_ = SelectedServerManager::instance().getServerRole();
+
+        emit setServerRoleSignal(serverRole_);
+    }
+}
+
+void TopBarController::accessToServerDenied(const int serverId_)
+{
+    emit accessToServerDeniedSignal(serverId_);
+}
+
+void TopBarController::getServerId()
+{
+    int serverId_ = SelectedServerManager::instance().getServerId();
+
+    emit setServerId(serverId_);
+}
+
+
 void TopBarController::deleteProfilePageController()
 {
     if(profilePageController_)
@@ -147,5 +180,9 @@ void TopBarController::createConfigureAdminController()
         configureAdminController_ = std::make_shared<ConfigureAdminController>(this);
         connect(configureAdminController_.get(), &ConfigureAdminController::getUsersOnServerSignal, this, &TopBarController::handOverGetUsersOnServerSignal);
         connect(this, &TopBarController::handOverSendUsersOnServerSignal, configureAdminController_.get(), &ConfigureAdminController::slotSetUsersOnServerPreparing);
+        connect(configureAdminController_.get(), &ConfigureAdminController::sendAddAdminSignal, this, &TopBarController::handOverAddAdminOnServerSignal);
+        connect(configureAdminController_.get(), &ConfigureAdminController::sendRemoveAdminSignal, this, &TopBarController::handOverRemoveAdminOnServerSignal);
+        connect(this, &TopBarController::handOverResponseAddAdminOnServerSignal, configureAdminController_.get(), &ConfigureAdminController::slotAddAdminOnServerPreparing);
+        connect(this, &TopBarController::handOverResponseRemoveAdminOnServerSignal, configureAdminController_.get(), &ConfigureAdminController::slotRemoveAdminOnServerPreparing);
     }
 }

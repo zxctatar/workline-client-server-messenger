@@ -30,6 +30,7 @@ public slots:
     void slotChatsProcessing(const QJsonObject& jsonObj_);
     void slotChatCreatedProcessing(const QJsonObject& jsonObj_);
     void slotAddUserInChatProcessing(const int userId_, const int serverId_, const QString& lastName_, const QString& firstName_, const QString& middleName_);
+    void slotClearChat();
 
 private:
     JsonWorker jsonWorker_;

@@ -35,6 +35,9 @@ public:
     Q_INVOKABLE void deleteAddUserOnServerController();
     Q_INVOKABLE void deleteConfigureAdminController();
     Q_INVOKABLE void checkServerSelected();
+    Q_INVOKABLE void accessToServerDenied(const int serverId_);
+    Q_INVOKABLE void getServerId();
+    Q_INVOKABLE void getServerRole();
 
 signals:
     void profilePageControllerChanged();
@@ -42,7 +45,9 @@ signals:
     void addUserControllerChanged();
     void configureAdminControllerChanged();
 
+    void setServerId(const int serverId_) const;
     void setUserRoleSignal(const QString& userRole_) const;
+    void setServerRoleSignal(const int serverRole_) const;
 
     void handOverGetUnverUsersSignal(const QString& info_) const;
     void handOverReceivedUnverUsersSignal(const QJsonObject& jsonObj_) const;
@@ -58,9 +63,17 @@ signals:
     void handOverDeleteUserOnServerSignal(const int userId_, const int serverId_) const;
     void handOverGetUsersOnServerSignal(const QString& info_);
     void handOverSendUsersOnServerSignal(const QJsonObject& jsonObj_);
+    void handOverAddAdminOnServerSignal(const QString& info_);
+    void handOverRemoveAdminOnServerSignal(const QString& info_);
+    void handOverResponseAddAdminOnServerSignal(const QJsonObject& jsonObj_);
+    void handOverResponseRemoveAdminOnServerSignal(const QJsonObject& jsonObj_);
 
     void serverSelectedSignal();
     void selectedServerDeletedSignal();
+    void accessToServerDeniedSignal(const int serverId_);
+
+public slots:
+    void slotSetNewServerRole();
 
 private:
     void createProfilePageController();

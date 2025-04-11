@@ -58,7 +58,7 @@ QtObject {
     readonly property int chatNameTextSize: 16 // размер текста названия чата
 
     //chat message text
-    readonly property int chatMessageTextSizes: 14 // размер текста сообщения чата
+    readonly property int chatMessageTextSizes: 15 // размер текста сообщения чата
 
     //chat object
     readonly property int maxChatObjectHeight: 70 // высота объекта чата

@@ -19,6 +19,9 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
     void addUser(const int serverId_, const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const bool isServerAdmin_, const bool isGlobalAdmin_);
+    void addAdminRole(const int userId_, const int serverId_);
+    void removeAdminRole(const int userId_, const int serverId_);
+    void clearUsers();
 
 private:
     struct User
@@ -29,7 +32,6 @@ private:
         QString lastName_;
         QString middleName_;
         bool isServerAdmin_;
-        bool isGlobalAdmin_;
     };
 
     QVector<User> users_;

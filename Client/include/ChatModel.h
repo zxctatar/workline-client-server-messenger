@@ -22,6 +22,7 @@ public:
     void deleteChats();
     int getSize();
     void chatCreated(const int serverId_, const int companionId_, const int chatId_);
+    void clearChat();
 
 private:
     struct PrivateChat {

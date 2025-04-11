@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -7,10 +8,12 @@ import "../../../resources"
 Page {
     id: configureAdminPage
 
-    property var controller // C MenuWindow.qml
+    objectName: "MenuConfigureAdmin"
+
+    property var controller // ConfigureAdminController MenuWindow.qml
     property var notificationManager // notificationManager MenuWindow.qml
 
-    property int serverId
+    property int serverId: -1
 
     signal backButtonClicked()
 
@@ -21,20 +24,11 @@ Page {
     }
 
     Component.onCompleted: {
-        configureAdminPage.controller.getServerId()
         configureAdminPage.controller.getUsersOnServer()
     }
 
     Component.onDestruction: {
         configureAdminPage.deleteController()
-    }
-
-    Connections {
-        target: configureAdminPage.controller
-
-        function onSetServerIdSignal(serverId) {
-            configureAdminPage.serverId = serverId
-        }
     }
 
     BackButton {
@@ -61,16 +55,6 @@ Page {
         text: "Настроить администратора"
     }
 
-    ListModel {
-        id: modell
-        ListElement {name: "123"}
-        ListElement {name: "123"}
-        ListElement {name: "123"}
-        ListElement {name: "123"}
-        ListElement {name: "123"}
-        ListElement {name: "123"}
-    }
-
     ListView {
         anchors.top: windowText.bottom
         anchors.left: parent.left
@@ -78,15 +62,28 @@ Page {
         anchors.bottom: refreshbutton.top
         anchors.topMargin: 10
         spacing: 10
-        model: modell //configureAdminPage.controller ? configureAdminPage.controller.getCandidateUserModel() : null // candidate user model
+        model: configureAdminPage.controller ? configureAdminPage.controller.getUsersModel() : null // users model
         interactive: true
         clip: true
 
         delegate: ConfigureAdminObject {
+            required property int id
+            required property string name
+            required property bool isServerAdmin
+
             width: parent ? parent.width : undefined
             height: 50
 
-            displayName: "Кнутов М.В."
+            displayName: name
+            isAdmin: isServerAdmin
+
+            onAddAdminSignal: {
+                configureAdminPage.controller.sendAddAdmin(configureAdminPage.serverId, id)
+            }
+
+            onRemoveAdminSignal: {
+                configureAdminPage.controller.sendRemoveAdmin(configureAdminPage.serverId, id)
+            }
         }
     }
 

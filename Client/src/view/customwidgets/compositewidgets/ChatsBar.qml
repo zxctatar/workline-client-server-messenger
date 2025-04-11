@@ -57,8 +57,6 @@ Item {
                     {
                         chatsBar.currentIndex = id
                     }
-
-                    console.log(id)
                 }
             }
         }

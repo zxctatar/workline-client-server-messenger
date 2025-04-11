@@ -52,6 +52,13 @@ Page {
         }
     }
 
+    ChatHistory {
+        anchors.left: layout.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+    }
+
     MouseArea {
         id: mouseArea
 

@@ -10,7 +10,8 @@ Item {
 
     property bool isAdmin
 
-    signal addUserClicked()
+    signal addAdminSignal()
+    signal removeAdminSignal()
 
     RowLayout {
         anchors.fill: parent
@@ -39,11 +40,11 @@ Item {
             onClicked: {
                 if(isAdmin)
                 {
-                    isAdmin = false
+                    configureAdminObject.removeAdminSignal()
                 }
                 else
                 {
-                    isAdmin = true
+                    configureAdminObject.addAdminSignal()
                 }
             }
         }

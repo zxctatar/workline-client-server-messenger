@@ -47,6 +47,13 @@ void ServerTableController::setServerData(const int serverId_, const QString& se
 
 void ServerTableController::serverSelected(const int serverId_)
 {
+    if(UserAccountManager::instance().getUserRole() != "admin")
+    {
+        int userId_ = UserAccountManager::instance().getUserId();
+        QString request_ = jsonWorker_.createJsonGetServerRole(userId_, serverId_);
+        emit getServerRoleSignal(request_);
+    }
+
     emit serverSelectedSignal(serverId_);
 }
 
@@ -73,10 +80,14 @@ void ServerTableController::slotServerProcessing(const QJsonObject& jsonObj_) co
 
 void ServerTableController::slotCodeProcessing(const QJsonObject& jsonObj_) const
 {
-    if(jsonObj_["Code"].toString() == "SERVER_ADDED")
+    if(jsonObj_["Code"].toString() == "MY_SERVER_ADDED")
     {
         serverModel_->addServer(jsonObj_["ServerID"].toInt(), jsonObj_["ServerName"].toString()[0], jsonObj_["ServerName"].toString(), jsonObj_["ServerDescription"].toString());
-        emit serverAddedSignal();
+        emit myServerAddedSignal();
+    }
+    else if(jsonObj_["Code"].toString() == "ADD_NEW_SERVER")
+    {
+        serverModel_->addServer(jsonObj_["ServerID"].toInt(), jsonObj_["ServerName"].toString()[0], jsonObj_["ServerName"].toString(), jsonObj_["ServerDescription"].toString());
     }
     else if(jsonObj_["Code"].toString() == "SERVER_NAME_EXISTS")
     {

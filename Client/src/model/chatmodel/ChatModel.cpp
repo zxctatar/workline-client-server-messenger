@@ -91,10 +91,22 @@ void ChatModel::chatCreated(const int serverId_, const int companionId_, const i
             it_->isChat_ = true;
             it_->chatId_ = chatId_;
 
-            QVector<int> roles;
-            roles << Qt::UserRole + 1 << Qt::UserRole + 3;
+            QVector<int> roles_;
+            roles_ << Qt::UserRole + 1 << Qt::UserRole + 3;
 
-            emit dataChanged(index(row), index(row), roles);
+            emit dataChanged(index(row), index(row), roles_);
         }
     }
+}
+
+void ChatModel::clearChat()
+{
+    if(chats_.isEmpty())
+    {
+        return;
+    }
+    beginRemoveRows(QModelIndex(), 0, chats_.size() - 1);
+    chats_.clear();
+    endRemoveRows();
+
 }

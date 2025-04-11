@@ -40,6 +40,11 @@ signals:
     void sendUsersOnServerSignal(const QJsonObject& jsonObj_);
     void sendUserAddInChatSignal(const int userId_, const int serverId_, const QString& lastName_, const QString& firstName_, const QString& middleName_);
     void sendAddNewServerSignal(const int serverId_, const QString& serverName_, const QString& serverDescription_);
+    void sendAddAdminOnServerSignal(const QJsonObject& jsonObj_);
+    void sendRemoveAdminOnServerSignal(const QJsonObject& jsonObj_);
+    void sendServerRoleSignal(const QJsonObject& jsonObj_);
+    void sendServerRoleAddSignal(const QJsonObject& jsonObj_);
+    void sendServerRoleRemovedSignal(const QJsonObject& jsonObj_);
 
 private:
     void connectToServer();
@@ -53,6 +58,8 @@ private:
     QTcpSocket* socket_;    
     JsonWorker jsonWorker_;
     QTimer timerReconnect_;
+    uint32_t messageSize_;
+    QByteArray messageData_;
 };
 
 #endif // SERVERCONNECTOR_H

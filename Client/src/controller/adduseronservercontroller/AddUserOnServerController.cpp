@@ -73,13 +73,6 @@ void AddUserOnServerController::requestAddUser(const int userId_, const int serv
     emit requestAddUserSignal(request_);
 }
 
-void AddUserOnServerController::getServerId() const
-{
-    int serverId_ = SelectedServerManager::instance().getServerId();
-
-    emit setServerIdSignal(serverId_);
-}
-
 void AddUserOnServerController::slotAddUserOnServerProccessing(const QJsonObject& jsonObj_) const
 {
     int serverId_ = SelectedServerManager::instance().getServerId();

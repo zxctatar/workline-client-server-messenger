@@ -28,6 +28,9 @@ public:
     QString createJsonGetChats(const int serverId_, const int userId_) const;
     QString createJsonCreateChat(const int serverId_, const int userId_, const int companionId_) const;
     QString createJsonGetUsersOnServer(const int serverId_) const;
+    QString createJsonAddAdminOnServer(const int serverId_, const int userId_) const;
+    QString createJsonRemoveAdminOnServer(const int serverId_, const int userId_) const;
+    QString createJsonGetServerRole(const int userId_, const int serverId_) const;
 
 private:
 };

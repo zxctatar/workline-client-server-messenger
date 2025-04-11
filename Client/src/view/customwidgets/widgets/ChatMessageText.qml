@@ -3,7 +3,7 @@ import "../../../resources"
 
 Text {
     font.family: Fonts.windowTextFont
-    font.pixelSize: Sizes.chatMessageTextSizes // 14
+    font.pixelSize: Sizes.chatMessageTextSizes // 15
     color: Colors.chatMessageTextColor
     elide: Text.ElideRight
     clip: true

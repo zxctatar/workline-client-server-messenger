@@ -13,7 +13,7 @@ Page {
     property var controller // AddUserOnServerController MenuWindow.qml
     property var notificationManager // notificationManager MenuWindow.qml
 
-    property int serverId
+    property int serverId: -1
 
     signal backButtonClicked()
 
@@ -24,7 +24,6 @@ Page {
     }
 
     Component.onCompleted: {
-        addUserOnServerPage.controller.getServerId()
         addUserOnServerPage.controller.getCandidateUsers()
     }
 
@@ -34,10 +33,6 @@ Page {
 
     Connections {
         target: addUserOnServerPage.controller
-
-        function onSetServerIdSignal(serverId) {
-            addUserOnServerPage.serverId = serverId
-        }
 
         function onUserNotVerifiedSignal() {
             addUserOnServerPage.notificationManager.showNotificationManager("Пользователь не подтверждён")
