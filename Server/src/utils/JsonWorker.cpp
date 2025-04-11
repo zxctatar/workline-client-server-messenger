@@ -423,3 +423,91 @@ std::string JsonWorker::createForAddedUserJson(const int serverId_, std::string 
         return nullptr;
     }
 }
+
+std::string JsonWorker::createAddAdminOnServerJson(std::string& code_ ,const int serverId_, const int userId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Add_Admin_On_Server";
+        json_["code"] = code_;
+        json_["userId"] = userId_;
+        json_["serverId"] = serverId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createRemoveAdminOnServerJson(std::string& code_, const int serverId_, const int userId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Remove_Admin_On_Server";
+        json_["code"] = code_;
+        json_["userId"] = userId_;
+        json_["serverId"] = serverId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createAddAdminOnServerForUserJson(std::string& code_, const int serverId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Server_Role_Add";
+        json_["code"] = code_;
+        json_["serverId"] = serverId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createRemoveAdminOnServerForUserJson(std::string& code_, const int serverId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Server_Role_Removed";
+        json_["code"] = code_;
+        json_["serverId"] = serverId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createGetServerRoleJson(std::string& code_, const int serverId_, const int userId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Get_Server_Role";
+        json_["code"] = code_;
+        json_["userId"] = userId_;
+        json_["serverId"] = serverId_;
+        return json_.dump();
+    }
+    catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}

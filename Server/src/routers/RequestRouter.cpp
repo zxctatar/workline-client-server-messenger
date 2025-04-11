@@ -102,28 +102,41 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         AddResult response_ = serverManager_.addServer(connection_, receivedServerName_, receivedServerDescription_);
         connectionPool_.returnConnection(connection_);
 
-        std::string responseJson_;
+        std::string responseJsonForSender_;
 
-        if(response_.code_ == "SERVER_ADDED")
+        if(response_.code_ == "MY_SERVER_ADDED")
         {
-            responseJson_ = jsonWorker_.createAddingServerSuccessJson(response_.code_, response_.serverID_, response_.serverName_, response_.serverDescription_);
+            responseJsonForSender_ = jsonWorker_.createAddingServerSuccessJson(response_.code_, response_.serverID_, response_.serverName_, response_.serverDescription_);
 
-            boost::asio::post(executor_, [this, session_, &connUsers_, responseJson_](){
+            boost::asio::post(executor_, [this, session_, responseJsonForSender_](){
+                session_.lock()->do_write(responseJsonForSender_);
+            });
+
+            response_.code_ = "ADD_NEW_SERVER";
+
+            std::string responseJsonForOther_ = jsonWorker_.createAddingServerSuccessJson(response_.code_, response_.serverID_, response_.serverName_, response_.serverDescription_);
+
+            boost::asio::post(executor_, [this, session_, &connUsers_, responseJsonForOther_](){
                 for(const auto& i : connUsers_.getAuthorizeAdmins())
                 {
+                    if(!(i.second.owner_before(session_)) && !(session_.owner_before(i.second)))
+                    {
+                        continue;
+                    }
+
                     if(auto s_ = i.second.lock())
                     {
-                        s_->do_write(responseJson_);
+                        s_->do_write(responseJsonForOther_);
                     }
                 }
             });
         }
         else
         {
-            responseJson_ = jsonWorker_.createAddingServerUnsuccessJson(response_.code_);
+            responseJsonForSender_ = jsonWorker_.createAddingServerUnsuccessJson(response_.code_);
 
-            boost::asio::post(executor_, [this, session_, responseJson_](){
-                session_.lock()->do_write(responseJson_);
+            boost::asio::post(executor_, [this, session_, responseJsonForSender_](){
+                session_.lock()->do_write(responseJsonForSender_);
             });
         }
     }
@@ -424,6 +437,123 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
 
         std::string responseJson_ = jsonWorker_.createGetUsersOnServerJson(receivedServerId_, response_);
 
+        boost::asio::post(executor_, [this, session_, responseJson_](){
+            session_.lock()->do_write(responseJson_);
+        });
+    }
+    else if(json_["Info"] == "Add_Admin_On_Server")
+    {
+        if(!json_.contains("userId") || !json_.contains("serverId"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedUserId_ = json_["userId"].get<int>();
+        int receivedServerId_ = json_["serverId"].get<int>();
+
+        auto connection_ = connectionPool_.getConnection();
+        std::string response_ = userManager_.addAdminOnServer(connection_, receivedUserId_, receivedServerId_);
+        connectionPool_.returnConnection(connection_);
+
+        std::string responseJson_ = jsonWorker_.createAddAdminOnServerJson(response_, receivedServerId_, receivedUserId_);
+
+        std::weak_ptr<Session> user_ = connUsers_.getUser(receivedUserId_);
+
+        if(response_ == "ADMIN_ADDED")
+        {
+            std::string responseJsonForUser_ = jsonWorker_.createAddAdminOnServerForUserJson(response_, receivedServerId_);
+
+            boost::asio::post(executor_, [this, responseJsonForUser_, user_](){
+                if(auto s_ = user_.lock())
+                {
+                    s_->do_write(responseJsonForUser_);
+                }
+            });
+        }
+
+        if(response_ != "ADMIN_ADDED")
+        {
+            boost::asio::post(executor_, [this, responseJson_, session_](){
+                session_.lock()->do_write(responseJson_);
+            });
+        }
+        else
+        {   
+            boost::asio::post(executor_, [this, responseJson_, &connUsers_](){
+                for(const auto& i : connUsers_.getAuthorizeAdmins())
+                {
+                    if(auto s_ = i.second.lock())
+                    {
+                        s_->do_write(responseJson_);
+                    }
+                }
+            });
+        }
+    }
+    else if(json_["Info"] == "Remove_Admin_On_Server")
+    {
+        if(!json_.contains("userId") || !json_.contains("serverId"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedUserId_ = json_["userId"].get<int>();
+        int receivedServerId_ = json_["serverId"].get<int>();
+
+        auto connection_ = connectionPool_.getConnection();
+        std::string response_ = userManager_.removeAdminOnServer(connection_, receivedUserId_, receivedServerId_);
+        connectionPool_.returnConnection(connection_);
+
+        std::string responseJson_ = jsonWorker_.createRemoveAdminOnServerJson(response_, receivedServerId_, receivedUserId_);
+
+        std::weak_ptr<Session> user_ = connUsers_.getUser(receivedUserId_);
+
+        if(response_ == "ADMIN_REMOVED")
+        {
+            std::string responseJsonForUser_ = jsonWorker_.createRemoveAdminOnServerForUserJson(response_, receivedServerId_);
+
+            boost::asio::post(executor_, [this, responseJsonForUser_, user_](){
+                if(auto s_ = user_.lock())
+                {
+                    s_->do_write(responseJsonForUser_);
+                }
+            });
+        }
+
+        if(response_ != "ADMIN_REMOVED")
+        {
+            boost::asio::post(executor_, [this, responseJson_, session_](){
+                session_.lock()->do_write(responseJson_);
+            });
+        }
+        else
+        {   
+            boost::asio::post(executor_, [this, responseJson_, &connUsers_](){
+                for(const auto& i : connUsers_.getAuthorizeAdmins())
+                {
+                    if(auto s_ = i.second.lock())
+                    {
+                        s_->do_write(responseJson_);
+                    }
+                }
+            });
+        }
+    }
+    else if(json_["Info"] == "Get_Server_Role")
+    {
+        if(!json_.contains("userId") || !json_.contains("serverId"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedUserId_ = json_["userId"].get<int>();
+        int receivedServerId_ = json_["serverId"].get<int>();
+
+        auto connection_ = connectionPool_.getConnection();
+        std::string response_ = userManager_.getServerRole(connection_, receivedUserId_, receivedServerId_);
+        connectionPool_.returnConnection(connection_);
+
+        std::string responseJson_ = jsonWorker_.createGetServerRoleJson(response_, receivedServerId_, receivedUserId_);
         boost::asio::post(executor_, [this, session_, responseJson_](){
             session_.lock()->do_write(responseJson_);
         });

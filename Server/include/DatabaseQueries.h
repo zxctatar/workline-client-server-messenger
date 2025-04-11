@@ -56,6 +56,14 @@ public:
     static pqxx::result createChat(pqxx::transaction_base& conn_, const int serverId_, const int userId_, const int companionId_);
 
     static pqxx::result getUsersOnServer(pqxx::transaction_base& conn_, const int serverId_);
+
+    static pqxx::result checkUserOnAdmin(pqxx::transaction_base& conn_, const int serverId_, const int userId_);
+
+    static pqxx::result addAdminOnServer(pqxx::transaction_base& conn_, const int serverId_, const int userId_);
+
+    static pqxx::result removeAdminOnServer(pqxx::transaction_base& conn_, const int serverId_, const int userId_);
+
+    static pqxx::result getServerRole(pqxx::transaction_base& conn_, const int serverId_, const int userId_);
 };
 
 #endif // DATABASEQUERIES_H

@@ -27,6 +27,9 @@ public:
     std::vector<CandidateUserStruct> getCandidateUsers(std::shared_ptr<DBConnection> connection_, const int serverId_) const;
     AddUserOnServerResult addUserOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const;
     std::vector<UsersOnServerStruct> getUsersOnServer(std::shared_ptr<DBConnection> connection_, const int serverId_) const;
+    std::string addAdminOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const;
+    std::string removeAdminOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const;
+    std::string getServerRole(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const;
 
 private:
 };

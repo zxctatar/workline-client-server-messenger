@@ -127,7 +127,9 @@ void Session::do_write(const std::string& jsonMessage_)
 void Session::write_next()
 {
     if (write_queue_.empty())
+    {
         return;
+    }
 
     std::weak_ptr self(shared_from_this());
     uint32_t length_ = htonl(write_queue_.front().size());

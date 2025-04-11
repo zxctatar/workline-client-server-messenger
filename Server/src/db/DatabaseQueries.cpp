@@ -214,3 +214,23 @@ pqxx::result DatabaseQueries::getUsersOnServer(pqxx::transaction_base& conn_, co
             u.lastname, u.firstname;
     )", serverId_);
 }
+
+pqxx::result DatabaseQueries::checkUserOnAdmin(pqxx::transaction_base& conn_, const int serverId_, const int userId_)
+{
+    return conn_.exec_params("SELECT 1 FROM admins_on_servers WHERE server_id = $1 AND user_id = $2", serverId_, userId_);
+}
+
+pqxx::result DatabaseQueries::addAdminOnServer(pqxx::transaction_base& conn_, const int serverId_, const int userId_)
+{
+    return conn_.exec_params("INSERT INTO admins_on_servers(server_id, user_id) VALUES($1,$2)", serverId_, userId_);
+}
+
+pqxx::result DatabaseQueries::removeAdminOnServer(pqxx::transaction_base& conn_, const int serverId_, const int userId_)
+{
+    return conn_.exec_params("DELETE FROM admins_on_servers WHERE server_id = $1 AND user_id = $2", serverId_, userId_);
+}
+
+pqxx::result DatabaseQueries::getServerRole(pqxx::transaction_base& conn_, const int serverId_, const int userId_)
+{
+    return conn_.exec_params("SELECT 1 FROM admins_on_servers WHERE server_id = $1 AND user_id = $2", serverId_, userId_);
+}

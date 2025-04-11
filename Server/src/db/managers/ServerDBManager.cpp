@@ -41,7 +41,7 @@ AddResult ServerDBManager::addServer(std::shared_ptr<DBConnection> connection_, 
             BOOST_LOG_TRIVIAL(info) << "Server addition completed.";
 
             addResult_.serverID_ = result_add_server_[0][0].as<int>();
-            addResult_.code_ = "SERVER_ADDED";
+            addResult_.code_ = "MY_SERVER_ADDED";
 
             return addResult_;
         }

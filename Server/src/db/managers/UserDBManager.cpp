@@ -556,3 +556,133 @@ std::vector<UsersOnServerStruct> UserDBManager::getUsersOnServer(std::shared_ptr
         return users_;
     }
 }
+
+std::string UserDBManager::addAdminOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const
+{
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Set the user to the admin role...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Connection problem.";
+        }
+
+        pqxx::work check_admin_(connection_->getConnection());
+        pqxx::result result_check_admin_ = DatabaseQueries::checkUserOnAdmin(check_admin_, serverId_, userId_);
+        check_admin_.commit();
+
+        if(result_check_admin_.empty())
+        {
+            pqxx::work add_admin_(connection_->getConnection());
+            pqxx::result result_add_admin_ = DatabaseQueries::addAdminOnServer(add_admin_, serverId_, userId_);
+            add_admin_.commit();
+
+            if(result_add_admin_.affected_rows() > 0)
+            {
+                BOOST_LOG_TRIVIAL(info) << "Admin role added.";
+                return "ADMIN_ADDED";
+            }
+            else
+            {
+                return "ALREADY_ADMIN";
+            }
+        }
+        else
+        {
+            return "ALREADY_ADMIN";
+        }
+    }
+    catch(std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return "ERROR";
+    }
+}
+
+std::string UserDBManager::removeAdminOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const
+{
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Remove the admin role from the user...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Connection problem.";
+        }
+
+        pqxx::work check_admin_(connection_->getConnection());
+        pqxx::result result_check_admin_ = DatabaseQueries::checkUserOnAdmin(check_admin_, serverId_, userId_);
+        check_admin_.commit();
+
+        if(!result_check_admin_.empty())
+        {
+            pqxx::work remove_admin_(connection_->getConnection());
+            pqxx::result result_remove_admin_ = DatabaseQueries::removeAdminOnServer(remove_admin_, serverId_, userId_);
+            remove_admin_.commit();
+
+            if(result_remove_admin_.affected_rows() > 0)
+            {
+                BOOST_LOG_TRIVIAL(info) << "Admin role removed.";
+                return "ADMIN_REMOVED";
+            }
+            else
+            {
+                return "USER_NOT_ADMIN";
+            }
+        }
+        else
+        {
+            return "USER_NOT_ADMIN";
+        }
+    }
+    catch(std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return "ERROR";
+    }
+}
+
+std::string UserDBManager::getServerRole(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const
+{
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Get the server role...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Connection problem.";
+        }
+
+        pqxx::work check_user_on_server_(connection_->getConnection());
+        pqxx::result result_check_user_on_server_ = DatabaseQueries::checkUserOnServer(check_user_on_server_, userId_, serverId_);
+        check_user_on_server_.commit();
+
+        if(!result_check_user_on_server_.empty())
+        {
+            pqxx::work get_server_role_(connection_->getConnection());
+            pqxx::result result_get_server_role_ = DatabaseQueries::getServerRole(get_server_role_, serverId_, userId_);
+            get_server_role_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Got the server role.";
+
+            if(result_get_server_role_.empty())
+            {
+                return "IS_USER";
+            }
+            else
+            {
+                return "IS_ADMIN";
+            }
+        }
+        else
+        {
+            return "ACCESS_DENIED";
+        }
+    }
+    catch(std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return "ERROR";
+    }
+}
