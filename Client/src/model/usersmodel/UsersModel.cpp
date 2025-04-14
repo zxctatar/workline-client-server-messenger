@@ -40,11 +40,11 @@ QVariant UsersModel::data(const QModelIndex& index_, int role_) const
 
 QHash<int, QByteArray> UsersModel::roleNames() const
 {
-    QHash<int, QByteArray> roles;
-    roles[Qt::DisplayRole] = "name";
-    roles[Qt::UserRole + 1] = "id";
-    roles[Qt::UserRole + 2] = "isServerAdmin";
-    return roles;
+    QHash<int, QByteArray> roles_;
+    roles_[Qt::DisplayRole] = "name";
+    roles_[Qt::UserRole + 1] = "id";
+    roles_[Qt::UserRole + 2] = "isServerAdmin";
+    return roles_;
 }
 
 void UsersModel::addUser(const int serverId_, const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const bool isServerAdmin_, const bool isGlobalAdmin_)

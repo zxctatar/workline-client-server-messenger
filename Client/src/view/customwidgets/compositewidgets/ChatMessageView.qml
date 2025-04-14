@@ -6,10 +6,15 @@ import "../widgets"
 ScrollView {
     id: chatMessageView
 
-    property var controller
-    property var notificationManger
+    property var controller // chatHistory chatHistoryController
+    property var notificationManager
+    property int selectedChat: -1
 
     clip: true
+
+    onSelectedChatChanged: {
+        chatMessageView.controller.getChatHistory(chatMessageView.selectedChat)
+    }
 
     contentItem: Flickable {
         id: flickable

@@ -94,3 +94,8 @@ void ChatsBarController::slotClearChat()
 {
     chatModel_->clearChat();
 }
+
+void ChatsBarController::sendChatId(const int chatId_) const
+{
+    SelectedChatManager::instance().setChatId(chatId_);
+}

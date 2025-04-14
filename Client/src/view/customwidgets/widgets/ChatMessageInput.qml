@@ -7,6 +7,9 @@ ScrollView {
     width: parent.width
     height: Math.min(200, Math.max(56, chatMessageInput.implicitHeight))
 
+    property var controller // chatHistory chatHistoryController
+    property int selectedChat: -1
+
     clip: true
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
     ScrollBar.vertical.policy: ScrollBar.AlwaysOff
@@ -41,6 +44,25 @@ ScrollView {
         font.family: Fonts.windowTextFont
         font.pixelSize: Sizes.chatMessageTextSizes
         color: Colors.chatMessageTextColor
+
+        Keys.onPressed: function(event) {
+            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter)
+            {
+                event.accepted = true
+                const trimmedText = chatMessageInput.text.trim()
+
+                if (event.modifiers & Qt.ShiftModifier)
+                {
+                    if (trimmedText.length > 0)
+                    {
+                        chatMessageInput.insert(chatMessageInput.cursorPosition, '\n');
+                    }
+                }
+                else if (trimmedText.length > 0)
+                {
+                    chatMessageInput.text = ""
+                }
+            }
+        }
     }
 }
-

@@ -8,6 +8,7 @@ MainController::MainController(QObject* parent)
     , serverTableController_(nullptr)
     , topBarController_(nullptr)
     , chatsBarController_(nullptr)
+    , chatHistoryController_(nullptr)
 {
     serverConnector_ = (new ServerConnector("localhost", 8001, this));
 
@@ -94,6 +95,15 @@ ChatsBarController* MainController::getChatsBarController()
     return chatsBarController_;
 }
 
+ChatHistoryController* MainController::getChatHistoryController()
+{
+    if(!chatHistoryController_)
+    {
+        createChatHistoryController();
+    }
+    return chatHistoryController_;
+}
+
 void MainController::createLoginPageController()
 {
     if(!loginPageController_)
@@ -177,5 +187,15 @@ void MainController::createChatsBarController()
         connect(serverConnector_, &ServerConnector::sendUserAddInChatSignal, chatsBarController_, &ChatsBarController::slotAddUserInChatProcessing);
         connect(serverTableController_, &ServerTableController::selectedServerDeletedSignal, chatsBarController_, &ChatsBarController::slotClearChat);
         connect(serverTableController_, &ServerTableController::serverSelectedSignal, chatsBarController_, &ChatsBarController::slotGetChats);
+    }
+}
+
+void MainController::createChatHistoryController()
+{
+    if(!chatHistoryController_)
+    {
+        chatHistoryController_ = new ChatHistoryController(this);
+        connect(&SelectedChatManager::instance(), &SelectedChatManager::setNewChatIdSignal, chatHistoryController_, &ChatHistoryController::slotSetChatId);
+        connect(chatHistoryController_, &ChatHistoryController::getChatHistorySignal, serverConnector_, &ServerConnector::slotSendToServer);
     }
 }

@@ -13,8 +13,8 @@ SelectedServerManager::~SelectedServerManager()
 
 SelectedServerManager& SelectedServerManager::instance()
 {
-    static SelectedServerManager instance;
-    return instance;
+    static SelectedServerManager instance_;
+    return instance_;
 }
 
 void SelectedServerManager::setServerData(const int receivedServerId_, const QString& receivedServerName_, const QString& receivedServerDescription_)

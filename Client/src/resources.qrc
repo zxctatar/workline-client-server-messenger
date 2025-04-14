@@ -78,5 +78,7 @@
         <file>view/customwidgets/widgets/ChatMessageInput.qml</file>
         <file>view/customwidgets/widgets/ChatMessageObject.qml</file>
         <file>view/customwidgets/compositewidgets/ChatMessageView.qml</file>
+        <file>resources/img/WindowIcon.ico</file>
+        <file>resources/img/WindowIcon.png</file>
     </qresource>
 </RCC>

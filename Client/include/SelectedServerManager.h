@@ -2,7 +2,6 @@
 #define SELECTEDSERVERMANAGER_H
 
 #include <QObject>
-#include <qqml.h>
 #include <QJsonObject>
 
 enum class serverRole{none = 0, user, admin};
@@ -10,7 +9,6 @@ enum class serverRole{none = 0, user, admin};
 class SelectedServerManager : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT
 
 public:
     static SelectedServerManager& instance();

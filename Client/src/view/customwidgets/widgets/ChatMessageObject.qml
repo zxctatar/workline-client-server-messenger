@@ -18,19 +18,19 @@ Item {
 
     Rectangle {
         id: backgroundRect
-        color: chatMessageObject.isCandidate ? "#729EC6" : "#D3E3F1"
+        color: chatMessageObject.isCandidate ? Colors.chatMessageCandidateColor : Colors.chatMessageUserColor
         radius: 5
         anchors.left: parent.left
         anchors.leftMargin: 10
 
-        width: Math.min(messageText.paintedWidth + 20, 400)
+        width: Math.min(messageText.paintedWidth + 20, Sizes.maxChatMessageObjectWidth) //400
         height: messageText.paintedHeight + 20
 
         Text {
             id: messageText
             text: chatMessageObject.processedMessage
             wrapMode: Text.WordWrap
-            width: Math.min(chatMessageObject.width - 40, 380)
+            width: Math.min(chatMessageObject.width - 40, Sizes.maxChatMessageObjectWidth - 20) // 380
 
             x: 10
             y: 10

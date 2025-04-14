@@ -6,6 +6,7 @@
 #include "JsonWorker.h"
 #include "UserAccountManager.h"
 #include "SelectedServerManager.h"
+#include "SelectedChatManager.h"
 #include "ChatModel.h"
 
 class ChatsBarController : public QObject
@@ -19,11 +20,13 @@ public:
 
     Q_INVOKABLE ChatModel* getChatModel();
     Q_INVOKABLE void createChat(const int companionId_) const;
+    Q_INVOKABLE void sendChatId(const int chatId_) const;
 
 signals:
     void getChatsSignal(const QString& info_);
     void createChatSignal(const QString& info_) const;
     void serverChangedSignal();
+    void sendChatIdSignal(const int chatId_) const;
 
 public slots:
     void slotGetChats(const int serverId_);

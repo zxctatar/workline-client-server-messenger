@@ -14,8 +14,8 @@ public:
     explicit CandidateUserModel(const int serverId_, QObject* parent = nullptr);
     ~CandidateUserModel();
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
     void addCandidateUser(const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_);
     void deleteCandidateUser(const int receivedUserId_, const int receivedServerId_);

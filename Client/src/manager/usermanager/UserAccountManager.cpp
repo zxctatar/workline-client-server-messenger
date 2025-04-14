@@ -9,8 +9,8 @@ UserAccountManager::UserAccountManager(QObject* parent)
 
 UserAccountManager& UserAccountManager::instance()
 {
-    static UserAccountManager instance;
-    return instance;
+    static UserAccountManager instance_;
+    return instance_;
 }
 
 UserAccountManager::~UserAccountManager()

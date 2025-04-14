@@ -39,10 +39,10 @@ QVariant CandidateUserModel::data(const QModelIndex& index_, int role_) const
 
 QHash<int, QByteArray> CandidateUserModel::roleNames() const
 {
-    QHash<int, QByteArray> roles;
-    roles[Qt::DisplayRole] = "name";
-    roles[Qt::UserRole + 1] = "id";
-    return roles;
+    QHash<int, QByteArray> roles_;
+    roles_[Qt::DisplayRole] = "name";
+    roles_[Qt::UserRole + 1] = "id";
+    return roles_;
 }
 
 void CandidateUserModel::addCandidateUser(const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_)

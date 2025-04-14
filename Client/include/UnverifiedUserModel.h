@@ -14,8 +14,8 @@ public:
     explicit UnverifiedUserModel(QObject* parent = nullptr);
     ~UnverifiedUserModel();
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
     void addUnverifiedUser(const int id_, const QString& firstName_, const QString& lastName_, const QString& middleName_);

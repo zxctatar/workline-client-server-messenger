@@ -21,7 +21,7 @@ QJsonObject JsonWorker::JsonProcessing(const QString& jsonStr_)
     return jsonDoc_.object();
 }
 
-QString JsonWorker::createJsonGET_ID() const
+QString JsonWorker::createJsonGetUserId() const
 {
     QJsonObject jsonObject_;
     jsonObject_.insert("Info", "GET_ID");
@@ -209,6 +209,18 @@ QString JsonWorker::createJsonGetServerRole(const int userId_, const int serverI
     jsonObject_.insert("Info", "Get_Server_Role");
     jsonObject_.insert("userId", userId_);
     jsonObject_.insert("serverId", serverId_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}
+
+QString JsonWorker::createJsonGetChatHistory(const int chatId_, const int serverId_, const int userId_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Get_Chat_History");
+    jsonObject_.insert("userId", userId_);
+    jsonObject_.insert("serverId", serverId_);
+    jsonObject_.insert("chatId", chatId_);
     QJsonDocument json_(jsonObject_);
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;

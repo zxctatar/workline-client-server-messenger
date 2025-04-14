@@ -12,6 +12,7 @@ import com.mainController 1.0
 ApplicationWindow {
     id: mainWindow
 
+
     onClosing: close => {
         close.accepted = false
         hide()

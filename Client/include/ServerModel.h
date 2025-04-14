@@ -14,8 +14,8 @@ public:
     explicit ServerModel(QObject* parent = nullptr);
     ~ServerModel();
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
     void addServer(const int id_, const QString& name, const QString& fullName_, const QString& description_);
     void deleteServer(const int serverId_);

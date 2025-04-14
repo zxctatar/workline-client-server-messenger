@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickItem>
+#include <QIcon>
 #include "include/MainController.h"
 
 int main(int argc, char *argv[])

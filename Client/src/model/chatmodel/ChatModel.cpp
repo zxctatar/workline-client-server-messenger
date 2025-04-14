@@ -44,13 +44,13 @@ QVariant ChatModel::data(const QModelIndex& index_, int role_) const
 
 QHash<int, QByteArray> ChatModel::roleNames() const
 {
-    QHash<int, QByteArray> roles;
-    roles[Qt::DisplayRole] = "name";
-    roles[Qt::UserRole + 1] = "isChat";
-    roles[Qt::UserRole + 2] = "lastMessage";
-    roles[Qt::UserRole + 3] = "id";
-    roles[Qt::UserRole + 4] = "companionId";
-    return roles;
+    QHash<int, QByteArray> roles_;
+    roles_[Qt::DisplayRole] = "name";
+    roles_[Qt::UserRole + 1] = "isChat";
+    roles_[Qt::UserRole + 2] = "lastMessage";
+    roles_[Qt::UserRole + 3] = "id";
+    roles_[Qt::UserRole + 4] = "companionId";
+    return roles_;
 }
 
 void ChatModel::addChat(const int companionId_, const int chatId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_)

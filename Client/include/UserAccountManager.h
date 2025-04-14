@@ -2,13 +2,11 @@
 #define USERMANAGER_H
 
 #include <QObject>
-#include <qqml.h>
 #include "JsonWorker.h"
 
 class UserAccountManager : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT
 
 public:
     static UserAccountManager& instance();

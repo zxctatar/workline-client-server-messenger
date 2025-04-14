@@ -53,6 +53,9 @@ Page {
     }
 
     ChatHistory {
+        controller: mainPage.mainController.chatHistoryController
+        notificationManager: mainPage.notificationManager
+
         anchors.left: layout.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom

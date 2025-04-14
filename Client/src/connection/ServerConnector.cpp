@@ -157,6 +157,11 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     {
         emit sendServerRoleRemovedSignal(jsonObj_);
     }
+    else if(jsonObj_["Info"] == "Get_Chat_History")
+    {
+        qDebug() << "1sdyhyhsdhsd";
+        emit sendSetChatHistorySignal(jsonObj_);
+    }
 }
 
 void ServerConnector::slotSendToServer(const QString& request_)

@@ -41,12 +41,12 @@ QVariant ServerModel::data(const QModelIndex& index_, int role_) const
 
 QHash<int, QByteArray> ServerModel::roleNames() const
 {
-    QHash<int, QByteArray> roles;
-    roles[Qt::DisplayRole] = "name";
-    roles[Qt::UserRole + 1] = "id";
-    roles[Qt::UserRole + 2] = "fullName";
-    roles[Qt::UserRole + 3] = "description";
-    return roles;
+    QHash<int, QByteArray> roles_;
+    roles_[Qt::DisplayRole] = "name";
+    roles_[Qt::UserRole + 1] = "id";
+    roles_[Qt::UserRole + 2] = "fullName";
+    roles_[Qt::UserRole + 3] = "description";
+    return roles_;
 }
 
 void ServerModel::addServer(const int id_, const QString& name_, const QString& fullName_, const QString& description_)

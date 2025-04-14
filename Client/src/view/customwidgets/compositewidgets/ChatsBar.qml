@@ -53,9 +53,10 @@ Item {
                         createChatWindow.companionId = companionId
                         createChatWindow.open()
                     }
-                    else
+                    else if(chatsBar.currentIndex != id)
                     {
                         chatsBar.currentIndex = id
+                        chatsBar.controller.sendChatId(id)
                     }
                 }
             }
