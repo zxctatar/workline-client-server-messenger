@@ -63,10 +63,10 @@ std::vector<PrivateChatStruct> ChatsDBManager::getPrivateChats(std::shared_ptr<D
         }
         return privateChats_;
     }
-    catch (std::exception& e)
+    catch (const std::exception& e)
     {
         BOOST_LOG_TRIVIAL(info) << e.what();
-        return privateChats_;
+        return std::vector<PrivateChatStruct>();
     }
 }
 
@@ -108,9 +108,67 @@ int ChatsDBManager::createChat(std::shared_ptr<DBConnection> connection_, const 
             }
         }
     }
-    catch (std::exception& e)
+    catch (const std::exception& e)
     {
         BOOST_LOG_TRIVIAL(info) << e.what();
         return -1;
+    }
+}
+
+std::vector<ChatHistoryResult> ChatsDBManager::getChatHistory(std::shared_ptr<DBConnection> connection_, const int serverId_, const int userId_, const int chatId_)
+{
+    std::vector<ChatHistoryResult> history_;
+
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Get chat history...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Сonnection problem.";
+        }
+
+        pqxx::work access_check_(connection_->getConnection());
+        pqxx::result result_access_check_ = DatabaseQueries::checkAccess(access_check_, userId_);
+
+        bool access_ = result_access_check_[0][0].as<bool>();
+
+        access_check_.commit();
+
+        if(access_)
+        {
+            pqxx::work check_chat_access_(connection_->getConnection());
+            pqxx::result result_check_chat_access_ = DatabaseQueries::checkChatAccess(check_chat_access_, chatId_, userId_);
+            check_chat_access_.commit();
+
+            if(!result_check_chat_access_.empty())
+            {
+                pqxx::work get_chat_history_(connection_->getConnection());
+                pqxx::result result_get_chat_history_ = DatabaseQueries::getChatHistory(get_chat_history_, chatId_, userId_);
+                get_chat_history_.commit();
+
+                for(const auto& row : result_get_chat_history_)
+                {
+                    ChatHistoryResult messageH_;
+
+                    std::string message_ = row[0].as<std::string>();
+                    std::string time_ = row[1].as<std::string>();
+                    bool isCandidate_ = row[2].as<bool>();
+
+                    history_.push_back(messageH_);
+                }
+
+                return history_;
+            }
+            else
+            {
+                return std::vector<ChatHistoryResult>();
+            }
+        }
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(info) << e.what();
+        return std::vector<ChatHistoryResult>();
     }
 }

@@ -113,9 +113,8 @@ std::vector<ServerStruct> ServerDBManager::getServers(std::shared_ptr<DBConnecti
     }
     catch (const std::exception& e)
     {
-        std::cout << "2" << std::endl;
         BOOST_LOG_TRIVIAL(error) << e.what();
-        return servers_;
+        return std::vector<ServerStruct>();
     }
 }
 

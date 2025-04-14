@@ -234,3 +234,18 @@ pqxx::result DatabaseQueries::getServerRole(pqxx::transaction_base& conn_, const
 {
     return conn_.exec_params("SELECT 1 FROM admins_on_servers WHERE server_id = $1 AND user_id = $2", serverId_, userId_);
 }
+
+pqxx::result DatabaseQueries::checkChatAccess(pqxx::transaction_base& conn_, const int chatId_, const int userId_)
+{
+    return conn_.exec_params("SELECT 1 FROM private_chats WHERE id = $1 AND (user1_id = $2 OR user2_id = $2)", chatId_, userId_);
+}
+
+pqxx::result DatabaseQueries::getChatHistory(pqxx::transaction_base& conn_, const int chatId_, const int userId_)
+{
+    return conn_.exec_params(
+        "SELECT content, sent_at, sender_id <> $2 AS is_incoming "
+        "FROM messages "
+        "WHERE private_chat_id = $1 "
+        "ORDER BY sent_at ASC",
+        chatId_, userId_);
+}

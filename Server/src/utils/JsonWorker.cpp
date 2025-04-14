@@ -424,7 +424,7 @@ std::string JsonWorker::createForAddedUserJson(const int serverId_, std::string 
     }
 }
 
-std::string JsonWorker::createAddAdminOnServerJson(std::string& code_ ,const int serverId_, const int userId_)
+std::string JsonWorker::createAddAdminOnServerJson(const std::string& code_ ,const int serverId_, const int userId_)
 {
     try
     {
@@ -442,7 +442,7 @@ std::string JsonWorker::createAddAdminOnServerJson(std::string& code_ ,const int
     }
 }
 
-std::string JsonWorker::createRemoveAdminOnServerJson(std::string& code_, const int serverId_, const int userId_)
+std::string JsonWorker::createRemoveAdminOnServerJson(const std::string& code_, const int serverId_, const int userId_)
 {
     try
     {
@@ -460,7 +460,7 @@ std::string JsonWorker::createRemoveAdminOnServerJson(std::string& code_, const 
     }
 }
 
-std::string JsonWorker::createAddAdminOnServerForUserJson(std::string& code_, const int serverId_)
+std::string JsonWorker::createAddAdminOnServerForUserJson(const std::string& code_, const int serverId_)
 {
     try
     {
@@ -477,7 +477,7 @@ std::string JsonWorker::createAddAdminOnServerForUserJson(std::string& code_, co
     }
 }
 
-std::string JsonWorker::createRemoveAdminOnServerForUserJson(std::string& code_, const int serverId_)
+std::string JsonWorker::createRemoveAdminOnServerForUserJson(const std::string& code_, const int serverId_)
 {
     try
     {
@@ -494,7 +494,7 @@ std::string JsonWorker::createRemoveAdminOnServerForUserJson(std::string& code_,
     }
 }
 
-std::string JsonWorker::createGetServerRoleJson(std::string& code_, const int serverId_, const int userId_)
+std::string JsonWorker::createGetServerRoleJson(const std::string& code_, const int serverId_, const int userId_)
 {
     try
     {
@@ -506,6 +506,32 @@ std::string JsonWorker::createGetServerRoleJson(std::string& code_, const int se
         return json_.dump();
     }
     catch (const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createGetChatHistoryJson(const std::vector<ChatHistoryResult> history_, const int userId_, const int serverId_, const int chatId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Get_Chat_History";
+        json_["userId"] = userId_;
+        json_["serverId"] = serverId_;
+        json_["chatId"] = chatId_;
+
+        for(const auto& i : history_)
+        {
+            nlohmann::json jsonMessage_;
+            i.to_json(jsonMessage_);
+            json_.push_back(jsonMessage_);
+        }
+
+        return json_.dump();
+    }
+    catch(const std::exception& e)
     {
         BOOST_LOG_TRIVIAL(error) << e.what();
         return nullptr;

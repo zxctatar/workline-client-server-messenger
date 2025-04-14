@@ -558,5 +558,26 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             session_.lock()->do_write(responseJson_);
         });
     }
+    else if(json_["Info"] == "Get_Chat_History")
+    {
+        if(!json_.contains("userId") || !json_.contains("serverId") || !json_.contains("chatId"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedUserId_ = json_["userId"].get<int>();
+        int receivedServerId_ = json_["serverId"].get<int>();
+        int receivedChatId_ = json_["chatId"].get<int>();
+
+        auto connection_ = connectionPool_.getConnection();
+        std::vector<ChatHistoryResult> response_ = chatManager_.getChatHistory(connection_, receivedServerId_, receivedUserId_, receivedChatId_);
+        connectionPool_.returnConnection(connection_);
+
+        std::string responseJson_ = jsonWorker_.createGetChatHistoryJson(response_, receivedUserId_, receivedServerId_, receivedChatId_);
+
+        boost::asio::post(executor_, [this, session_, responseJson_](){
+            session_.lock()->do_write(responseJson_);
+        });
+    }
 }
 

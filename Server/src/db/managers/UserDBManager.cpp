@@ -223,7 +223,6 @@ ReconnectResult UserDBManager::reconnectUser(std::shared_ptr<DBConnection> conne
             }
             else
             {
-                // result_.userRole_ = "admin";
                 return result_;
             }
         }
@@ -303,7 +302,7 @@ std::vector<UnverUserStruct> UserDBManager::getUnverUsers(std::shared_ptr<DBConn
     catch(const std::exception& e)
     {
         BOOST_LOG_TRIVIAL(error) << e.what();
-        return unverUsers_;
+        return std::vector<UnverUserStruct>();
     }
 }
 
@@ -448,7 +447,7 @@ std::vector<CandidateUserStruct> UserDBManager::getCandidateUsers(std::shared_pt
     {
         BOOST_LOG_TRIVIAL(error) << e.what();
 
-        return candidateUsers_;
+        return std::vector<CandidateUserStruct>();
     }
 }
 
@@ -553,7 +552,7 @@ std::vector<UsersOnServerStruct> UserDBManager::getUsersOnServer(std::shared_ptr
     {
         BOOST_LOG_TRIVIAL(error) << e.what();
 
-        return users_;
+        return std::vector<UsersOnServerStruct>();
     }
 }
 
