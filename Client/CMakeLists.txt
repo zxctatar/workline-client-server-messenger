@@ -39,6 +39,7 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/compositewidgets/ServerTable.qml
     QML_FILES src/view/customwidgets/compositewidgets/ChatsBar.qml
     QML_FILES src/view/customwidgets/compositewidgets/ChatHistory.qml
+    QML_FILES src/view/customwidgets/compositewidgets/ChatMessageView.qml
     RESOURCES src/view/customwidgets/compositewidgets/qmldir
 
     QML_FILES src/view/customwidgets/widgets/ErrorText.qml
@@ -68,6 +69,8 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/widgets/CreateChatButton.qml
     QML_FILES src/view/customwidgets/widgets/ConfigureAdminObject.qml
     QML_FILES src/view/customwidgets/widgets/AdminSwitcherButton.qml
+    QML_FILES src/view/customwidgets/widgets/ChatMessageInput.qml
+    QML_FILES src/view/customwidgets/widgets/ChatMessageObject.qml
     RESOURCES src/view/customwidgets/widgets/qmldir
 
     QML_FILES src/view/windowpages/menuprofilepage/MenuProfilePage.qml

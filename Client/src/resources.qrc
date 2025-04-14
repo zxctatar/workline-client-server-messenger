@@ -76,5 +76,7 @@
         <file>view/windowpages/menuconfigureadminpage/MenuConfigureAdminPage.qml</file>
         <file>view/customwidgets/compositewidgets/ChatHistory.qml</file>
         <file>view/customwidgets/widgets/ChatMessageInput.qml</file>
+        <file>view/customwidgets/widgets/ChatMessageObject.qml</file>
+        <file>view/customwidgets/compositewidgets/ChatMessageView.qml</file>
     </qresource>
 </RCC>
