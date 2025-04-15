@@ -165,13 +165,8 @@ pqxx::result DatabaseQueries::getChats(pqxx::transaction_base& conn_, const int 
             (p.user2_id = $1 AND p.user1_id = u.user_id)
         )
         AND p.server_id = $2
-    LEFT JOIN LATERAL (
-        SELECT content, sent_at
-        FROM messages
-        WHERE private_chat_id = p.id
-        ORDER BY sent_at DESC
-        LIMIT 1
-    ) m ON TRUE
+    LEFT JOIN chats_last_messages clm ON clm.chat_id = p.id
+    LEFT JOIN messages m ON m.id = clm.last_message_id
     WHERE u.user_id != $1
     AND u.user_id IN (
         SELECT user_id FROM users_on_servers WHERE server_id = $2
@@ -243,11 +238,10 @@ pqxx::result DatabaseQueries::checkChatAccess(pqxx::transaction_base& conn_, con
 pqxx::result DatabaseQueries::getChatHistory(pqxx::transaction_base& conn_, const int chatId_, const int userId_)
 {
     return conn_.exec_params(
-        "SELECT id, content, sent_at, sender_id <> $2 AS is_incoming "
-        "FROM messages "
-        "WHERE private_chat_id = $1 "
-        "ORDER BY sent_at ASC",
-        chatId_, userId_);
+        R"(SELECT id, content, sent_at, sender_id <> $2 AS is_incoming
+        FROM messages
+        WHERE private_chat_id = $1
+        ORDER BY sent_at ASC)", chatId_, userId_);
 }
 
 pqxx::result DatabaseQueries::addMessage(pqxx::transaction_base& conn_, const int chatId_, const int userId_, const int serverId_, const std::string& message_)

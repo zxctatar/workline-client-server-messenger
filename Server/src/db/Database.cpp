@@ -239,6 +239,13 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                 AND table_name = 'admins_on_servers'
             )");
 
+        pqxx::result result_check_chats_last_messages_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'chats_last_messages'
+            )");
+
         check_tables_.commit();
 
         if(result_check_users_table_.empty())
@@ -256,7 +263,7 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                     login VARCHAR(50) NOT NULL,
                     email VARCHAR(100) NOT NULL,
                     phone_number BIGINT NOT NULL,
-                    Registration_date TIMESTAMP,
+                    registration_date TIMESTAMP,
                     password VARCHAR(50) NOT NULL,
                     verified_user BOOLEAN NOT NULL DEFAULT FALSE
                     ))");
@@ -426,6 +433,25 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
         {
             BOOST_LOG_TRIVIAL(info) << "Admins_on_servers table already exists.";
         }
+
+        if(result_check_chats_last_messages_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Chats_last_messages table not found. Creating table...";
+
+            pqxx::work create_chats_last_messages_(connection_to_worklinedatabase_);
+
+            create_chats_last_messages_.exec(R"(
+                CREATE TABLE chats_last_messages(
+                    id SERIAL PRIMARY KEY,
+                    chat_id INTEGER NOT NULL REFERENCES private_chats(id) ON DELETE CASCADE,
+                    last_message_id INTEGER NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+                    CONSTRAINT unique_chat_id UNIQUE (chat_id)
+                ))");
+
+            create_chats_last_messages_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the chats_last_messages table successfully.";
+        }
     }
     catch (const pqxx::broken_connection& e)
     {
@@ -513,6 +539,8 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
         set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE admins_on_servers_id_seq TO wluser;");
 
         set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE messages_id_seq TO wluser;");
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE chats_last_messages_id_seq TO wluser;");
 
         set_privileges_.commit();
 
@@ -643,6 +671,28 @@ void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
     AFTER INSERT ON admins
     FOR EACH ROW
     EXECUTE FUNCTION add_admin_to_all_servers();
+    )");
+
+        // Функция для обновления или создание записи последнего сообщения в чате
+        create_trigger.exec(R"(
+    CREATE OR REPLACE FUNCTION update_chats_last_messages_last_message()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        INSERT INTO chats_last_messages (chat_id, last_message_id)
+        VALUES (NEW.private_chat_id, NEW.id)
+        ON CONFLICT (chat_id)
+        DO UPDATE SET last_message_id = EXCLUDED.last_message_id;
+
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+    )");
+
+        create_trigger.exec(R"(
+    CREATE TRIGGER trigger_update_chats_last_messages_last_message
+    AFTER INSERT ON messages
+    FOR EACH ROW
+    EXECUTE FUNCTION update_chats_last_messages_last_message();
     )");
 
         create_trigger.commit();
