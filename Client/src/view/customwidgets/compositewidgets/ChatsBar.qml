@@ -38,9 +38,11 @@ Item {
                 required property string name
                 required property bool isChat
                 required property int companionId
+                required property string lastMess
 
                 chatId: id
                 displayName: name
+                lastMessage: lastMess
 
                 selected: chatsBar.currentIndex == id ? true : false
 

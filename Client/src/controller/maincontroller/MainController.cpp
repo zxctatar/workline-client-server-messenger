@@ -187,6 +187,7 @@ void MainController::createChatsBarController()
         connect(serverConnector_, &ServerConnector::sendUserAddInChatSignal, chatsBarController_, &ChatsBarController::slotAddUserInChatProcessing);
         connect(serverTableController_, &ServerTableController::selectedServerDeletedSignal, chatsBarController_, &ChatsBarController::slotClearChat);
         connect(serverTableController_, &ServerTableController::serverSelectedSignal, chatsBarController_, &ChatsBarController::slotGetChats);
+        connect(serverConnector_, &ServerConnector::sendSetNewMessage, chatsBarController_, &ChatsBarController::slotSetNewLastMessage);
     }
 }
 

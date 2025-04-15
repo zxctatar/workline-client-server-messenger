@@ -47,7 +47,7 @@ QHash<int, QByteArray> ChatModel::roleNames() const
     QHash<int, QByteArray> roles_;
     roles_[Qt::DisplayRole] = "name";
     roles_[Qt::UserRole + 1] = "isChat";
-    roles_[Qt::UserRole + 2] = "lastMessage";
+    roles_[Qt::UserRole + 2] = "lastMess";
     roles_[Qt::UserRole + 3] = "id";
     roles_[Qt::UserRole + 4] = "companionId";
     return roles_;
@@ -108,5 +108,28 @@ void ChatModel::clearChat()
     beginRemoveRows(QModelIndex(), 0, chats_.size() - 1);
     chats_.clear();
     endRemoveRows();
+}
+
+void ChatModel::updateLastMessage(const int serverId_, const int chatId_, const QString& lastMessage_)
+{
+    if(SelectedServerManager::instance().getServerId() == serverId_)
+    {
+        auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_](const PrivateChat& chat_){
+            return chat_.chatId_ == chatId_;
+        });
+
+        if(it_ != chats_.end())
+        {
+            int row_ = std::distance(chats_.begin(), it_);
+
+            it_->lastMessage_ = lastMessage_;
+
+            QVector<int> roles_;
+            roles_ << Qt::UserRole + 2;
+
+            emit dataChanged(index(row_), index(row_), roles_);
+        }
+    }
+
 
 }

@@ -23,6 +23,7 @@ public:
     int getSize();
     void chatCreated(const int serverId_, const int companionId_, const int chatId_);
     void clearChat();
+    void updateLastMessage(const int serverId_, const int chatId_, const QString& lastMessage_);
 
 private:
     struct PrivateChat {

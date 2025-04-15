@@ -36,7 +36,6 @@ Item {
         boundsBehavior: Flickable.StopAtBounds
 
         delegate: ChatMessageObject {
-            id: obj
             required property bool companion
             required property string messages
 

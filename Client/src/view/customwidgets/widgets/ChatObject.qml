@@ -44,7 +44,7 @@ Button {
 
             ChatMessageText {
                 id: messageText
-                text: "555777777"
+                text: chatObject.lastMessage
                 width: parent.width
             }
         }

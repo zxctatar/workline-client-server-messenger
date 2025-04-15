@@ -99,3 +99,15 @@ void ChatsBarController::sendChatId(const int chatId_) const
 {
     SelectedChatManager::instance().setChatId(chatId_);
 }
+
+void ChatsBarController::slotSetNewLastMessage(const QJsonObject& jsonObj_)
+{
+    int serverId_ = jsonObj_["serverId"].toInt();
+    int chatId_ = jsonObj_["chatId"].toInt();
+    QString lastMessage_ = jsonObj_["message"].toString();
+
+    if(SelectedServerManager::instance().getServerId() == serverId_)
+    {
+        chatModel_->updateLastMessage(serverId_, chatId_, lastMessage_);
+    }
+}
