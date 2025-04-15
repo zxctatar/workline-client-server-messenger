@@ -159,8 +159,11 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     }
     else if(jsonObj_["Info"] == "Get_Chat_History")
     {
-        qDebug() << "1sdyhyhsdhsd";
         emit sendSetChatHistorySignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Set_New_Message")
+    {
+        emit sendSetNewMessage(jsonObj_);
     }
 }
 

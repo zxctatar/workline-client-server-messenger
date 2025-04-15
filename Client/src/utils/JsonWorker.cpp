@@ -225,3 +225,16 @@ QString JsonWorker::createJsonGetChatHistory(const int chatId_, const int server
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;
 }
+
+QString JsonWorker::createJsonSendMessage(const int chatId_, const int userId_, const int serverId_, const QString& message_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Send_Message");
+    jsonObject_.insert("userId", userId_);
+    jsonObject_.insert("serverId", serverId_);
+    jsonObject_.insert("chatId", chatId_);
+    jsonObject_.insert("message", message_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}

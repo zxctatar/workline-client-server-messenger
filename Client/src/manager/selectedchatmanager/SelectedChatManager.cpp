@@ -21,3 +21,8 @@ void SelectedChatManager::setChatId(const int chatId_)
     this->chatId_ = chatId_;
     emit setNewChatIdSignal(chatId_);
 }
+
+int SelectedChatManager::getChatId()
+{
+    return chatId_;
+}

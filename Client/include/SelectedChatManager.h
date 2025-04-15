@@ -11,6 +11,7 @@ public:
     static SelectedChatManager& instance();
 
     void setChatId(const int chatId_);
+    int getChatId();
 
 signals:
     void setNewChatIdSignal(const int chatId_);

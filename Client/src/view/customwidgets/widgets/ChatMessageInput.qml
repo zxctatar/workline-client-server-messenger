@@ -60,6 +60,7 @@ ScrollView {
                 }
                 else if (trimmedText.length > 0)
                 {
+                    chatScrollView.controller.sendMessage(chatScrollView.selectedChat, chatMessageInput.text)
                     chatMessageInput.text = ""
                 }
             }

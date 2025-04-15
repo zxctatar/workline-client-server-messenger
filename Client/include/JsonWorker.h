@@ -32,6 +32,7 @@ public:
     QString createJsonRemoveAdminOnServer(const int serverId_, const int userId_) const;
     QString createJsonGetServerRole(const int userId_, const int serverId_) const;
     QString createJsonGetChatHistory(const int chatId_, const int serverId_, const int userId_) const;
+    QString createJsonSendMessage(const int chatId_, const int userId_, const int serverId_, const QString& message_) const;
 
 private:
 };

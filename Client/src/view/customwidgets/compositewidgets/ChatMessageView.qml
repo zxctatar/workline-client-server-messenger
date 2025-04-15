@@ -3,7 +3,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "../widgets"
 
-ScrollView {
+Item {
     id: chatMessageView
 
     property var controller // chatHistory chatHistoryController
@@ -16,36 +16,38 @@ ScrollView {
         chatMessageView.controller.getChatHistory(chatMessageView.selectedChat)
     }
 
-    contentItem: Flickable {
-        id: flickable
-        boundsBehavior: Flickable.StopAtBounds
-        contentWidth: parent.width
-        contentHeight: parent.height
+    Connections {
+        target: chatMessageView.controller
 
-        ListView {
-            id: listView
-            width: flickable.width
-            height: flickable.height
-            spacing: 10
-            model: modell
-            interactive: false
-            clip: true
-
-            delegate: ChatMessageObject {
-                required property string name
-                required property string messages
-
-                width: listView.width
-                isCandidate: name === "a"
-                message: messages
-            }
+        function onScrollDown() {
+            listView.positionViewAtEnd()
         }
     }
 
-    ListModel {
-        id: modell
-        ListElement { name: "a"; messages: "Привет, я кандидат. Очень длинный текст, который должен автоматически переноситься на следующую строку." }
-        ListElement { name: "b"; messages: "Я не кандидат, но всё равно тут." }
-        ListElement { name: "b"; messages: "Вот обычное сообщение с пробелами, а вотэтооченьдлинноесловокотороеневлезетвстрокуипереносится" }
+    ListView {
+        id: listView
+        width: parent.width
+        height: parent.height
+        spacing: 10
+        model: chatMessageView.controller.getModel()
+        interactive: true
+        clip: true
+
+        boundsBehavior: Flickable.StopAtBounds
+
+        delegate: ChatMessageObject {
+            id: obj
+            required property bool companion
+            required property string messages
+
+            width: listView.width
+            isCompanion: companion
+            message: messages
+        }
+
+        ScrollBar.vertical: ScrollBar {
+            id: verticalScroll
+            policy: ScrollBar.AsNeeded
+        }
     }
 }

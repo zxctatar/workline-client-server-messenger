@@ -197,5 +197,8 @@ void MainController::createChatHistoryController()
         chatHistoryController_ = new ChatHistoryController(this);
         connect(&SelectedChatManager::instance(), &SelectedChatManager::setNewChatIdSignal, chatHistoryController_, &ChatHistoryController::slotSetChatId);
         connect(chatHistoryController_, &ChatHistoryController::getChatHistorySignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendSetChatHistorySignal, chatHistoryController_, &ChatHistoryController::slotSetChatHistory);
+        connect(chatHistoryController_, &ChatHistoryController::sendMessageSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendSetNewMessage, chatHistoryController_, &ChatHistoryController::slotSetNewMessage);
     }
 }

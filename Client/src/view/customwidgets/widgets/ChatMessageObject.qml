@@ -5,7 +5,7 @@ import "../../../resources"
 Item {
     id: chatMessageObject
     property string message
-    property bool isCandidate
+    property bool isCompanion
 
     property string processedMessage: {
         const maxLen = 30
@@ -18,7 +18,7 @@ Item {
 
     Rectangle {
         id: backgroundRect
-        color: chatMessageObject.isCandidate ? Colors.chatMessageCandidateColor : Colors.chatMessageUserColor
+        color: chatMessageObject.isCompanion ? Colors.chatMessageCandidateColor : Colors.chatMessageUserColor
         radius: 5
         anchors.left: parent.left
         anchors.leftMargin: 10

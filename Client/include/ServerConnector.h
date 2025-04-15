@@ -46,6 +46,7 @@ signals:
     void sendServerRoleAddSignal(const QJsonObject& jsonObj_);
     void sendServerRoleRemovedSignal(const QJsonObject& jsonObj_);
     void sendSetChatHistorySignal(const QJsonObject& jsonObj_);
+    void sendSetNewMessage(const QJsonObject& jsonObj_);
 
 private:
     void connectToServer();
