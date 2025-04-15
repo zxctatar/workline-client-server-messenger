@@ -579,5 +579,39 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             session_.lock()->do_write(responseJson_);
         });
     }
+    else if(json_["Info"] == "Send_Message")
+    {
+        if(!json_.contains("userId") || !json_.contains("serverId") ||
+           !json_.contains("chatId") || !json_.contains("message"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedUserId_ = json_["userId"].get<int>();
+        int receivedServerId_ = json_["serverId"].get<int>();
+        int receivedChatId_ = json_["chatId"].get<int>();
+        std::string receivedMessage_ = json_["message"].get<std::string>();
+
+        auto connection_ = connectionPool_.getConnection();
+        SetMessageResult response_ = messageManager_.setNewMessage(connection_, receivedServerId_, receivedUserId_, receivedChatId_, receivedMessage_);
+        connectionPool_.returnConnection(connection_);
+
+        if(!response_.message_.empty())
+        {
+            std::string responseJsonForSender_ = jsonWorker_.createSetMessageForSenderJson(response_.messageId_, receivedServerId_, receivedChatId_, receivedMessage_, response_.time_);
+            std::string responseJsonForCompanion_ = jsonWorker_.createSetMessageForCompanionJson(response_.messageId_, receivedServerId_, receivedChatId_, receivedMessage_, response_.time_);
+
+            std::weak_ptr<Session> companion_ = connUsers_.getUser(response_.companionId_);
+
+            boost::asio::post(executor_, [this, session_, responseJsonForSender_, responseJsonForCompanion_, &connUsers_, companion_](){
+                session_.lock()->do_write(responseJsonForSender_);
+
+                if(auto s_ = companion_.lock())
+                {
+                    s_->do_write(responseJsonForCompanion_);
+                }
+            });
+        }
+    }
 }
 

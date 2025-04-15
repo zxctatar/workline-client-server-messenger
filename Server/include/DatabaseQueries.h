@@ -38,6 +38,7 @@ public:
     static pqxx::result getServerRole(pqxx::transaction_base& conn_, const int serverId_, const int userId_);
     static pqxx::result checkChatAccess(pqxx::transaction_base& conn_, const int chatId_, const int userId_);
     static pqxx::result getChatHistory(pqxx::transaction_base& conn_, const int chatId_, const int userId_);
+    static pqxx::result addMessage(pqxx::transaction_base& conn_, const int chatId_, const int userId_, const int serverId_, const std::string& message_);
 };
 
 #endif // DATABASEQUERIES_H

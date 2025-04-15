@@ -6,16 +6,18 @@
 
 struct ChatHistoryResult
 {
+    int messageId_;
     std::string message_;
     std::string time_;
-    bool isCandidate_;
+    bool isCompanion_;
     bool viewed_;
 
     void to_json(nlohmann::json& j) const {
         j = nlohmann::json{
+            {"messageId", messageId_},
             {"message", message_},
             {"time", time_},
-            {"isCandidate", isCandidate_},
+            {"isCompanion", isCompanion_},
             {"viewed", viewed_}
         };
     }

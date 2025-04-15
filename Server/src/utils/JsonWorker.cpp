@@ -526,8 +526,53 @@ std::string JsonWorker::createGetChatHistoryJson(const std::vector<ChatHistoryRe
         {
             nlohmann::json jsonMessage_;
             i.to_json(jsonMessage_);
-            json_.push_back(jsonMessage_);
+            json_["messages"].push_back(jsonMessage_);
         }
+
+        return json_.dump();
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createSetMessageForSenderJson(const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Set_New_Message";
+        json_["serverId"] = serverId_;
+        json_["chatId"] = chatId_;
+        json_["message"] = message_;
+        json_["time"] = time_;
+        json_["isCompanion"] = false;
+        json_["viewed"] = true;
+
+        return json_.dump();
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createSetMessageForCompanionJson(const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Set_New_Message";
+        json_["messageId"] = messageId_;
+        json_["serverId"] = serverId_;
+        json_["chatId"] = chatId_;
+        json_["message"] = message_;
+        json_["time"] = time_;
+        json_["isCompanion"] = true;
+        json_["viewed"] = false;
 
         return json_.dump();
     }

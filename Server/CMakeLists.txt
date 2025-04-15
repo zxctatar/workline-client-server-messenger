@@ -55,6 +55,9 @@ add_executable(Server src/main.cpp
     include/ChatsDBManager.h
     include/struct/UsersOnServerStruct.h
     include/struct/ChatHistoryResult.h
+    include/struct/SetMessageResult.h
+    src/db/managers/MessageDBManager.cpp
+    include/MessageDBManager.h
 )
 
 if(Boost_FOUND)

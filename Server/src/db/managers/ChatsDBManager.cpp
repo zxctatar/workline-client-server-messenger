@@ -151,9 +151,11 @@ std::vector<ChatHistoryResult> ChatsDBManager::getChatHistory(std::shared_ptr<DB
                 {
                     ChatHistoryResult messageH_;
 
-                    std::string message_ = row[0].as<std::string>();
-                    std::string time_ = row[1].as<std::string>();
-                    bool isCandidate_ = row[2].as<bool>();
+                    messageH_.messageId_ = row[0].as<int>();
+                    messageH_.message_ = row[1].as<std::string>();
+                    messageH_.time_ = row[2].as<std::string>();
+                    messageH_.isCompanion_ = row[3].as<bool>();
+                    messageH_.viewed_ = true;
 
                     history_.push_back(messageH_);
                 }
@@ -164,6 +166,10 @@ std::vector<ChatHistoryResult> ChatsDBManager::getChatHistory(std::shared_ptr<DB
             {
                 return std::vector<ChatHistoryResult>();
             }
+        }
+        else
+        {
+            return std::vector<ChatHistoryResult>();
         }
     }
     catch(const std::exception& e)

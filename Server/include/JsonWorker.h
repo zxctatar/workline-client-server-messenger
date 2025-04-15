@@ -9,6 +9,7 @@
 #include "struct/PrivateChatStruct.h"
 #include "struct/UsersOnServerStruct.h"
 #include "struct/ChatHistoryResult.h"
+#include "struct/SetMessageResult.h"
 
 class JsonWorker
 {
@@ -44,6 +45,8 @@ public:
     std::string createRemoveAdminOnServerForUserJson(const std::string& code_, const int serverId_);
     std::string createGetServerRoleJson(const std::string& code_, const int serverId_, const int userId_);
     std::string createGetChatHistoryJson(const std::vector<ChatHistoryResult> history_, const int userId_, const int serverId_, const int chatId_);
+    std::string createSetMessageForSenderJson(const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_);
+    std::string createSetMessageForCompanionJson(const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_);
 
     ~JsonWorker();
 
