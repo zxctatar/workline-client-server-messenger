@@ -89,24 +89,27 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
     }
     else if(json_["Info"] == "Add_Server")
     {
-        if(!json_.contains("serverName") || !json_.contains("serverDescription"))
+        if(!json_.contains("serverName") || !json_.contains("serverDescription") || !json_.contains("image"))
         {
             throw std::runtime_error("Lost the value in the json document");
         }
 
         auto connection_ = connectionPool_.getConnection();
 
+        std::vector<uint8_t> receivedImage_ = imageWorker_.base64_decode(json_["image"].get<std::string>());
         std::string receivedServerName_ = json_["serverName"].get<std::string>();
         std::string receivedServerDescription_ = json_["serverDescription"].get<std::string>();
 
-        AddResult response_ = serverManager_.addServer(connection_, receivedServerName_, receivedServerDescription_);
+        AddResult response_ = serverManager_.addServer(connection_, receivedImage_, receivedServerName_, receivedServerDescription_);
         connectionPool_.returnConnection(connection_);
+
+        response_.image_ = json_["image"].get<std::string>();
 
         std::string responseJsonForSender_;
 
         if(response_.code_ == "MY_SERVER_ADDED")
         {
-            responseJsonForSender_ = jsonWorker_.createAddingServerSuccessJson(response_.code_, response_.serverID_, response_.serverName_, response_.serverDescription_);
+            responseJsonForSender_ = jsonWorker_.createAddingServerSuccessJson(response_.code_, response_.serverID_, response_.image_, response_.serverName_, response_.serverDescription_);
 
             boost::asio::post(executor_, [this, session_, responseJsonForSender_](){
                 session_.lock()->do_write(responseJsonForSender_);
@@ -114,7 +117,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
 
             response_.code_ = "ADD_NEW_SERVER";
 
-            std::string responseJsonForOther_ = jsonWorker_.createAddingServerSuccessJson(response_.code_, response_.serverID_, response_.serverName_, response_.serverDescription_);
+            std::string responseJsonForOther_ = jsonWorker_.createAddingServerSuccessJson(response_.code_, response_.serverID_, response_.image_, response_.serverName_, response_.serverDescription_);
 
             boost::asio::post(executor_, [this, session_, &connUsers_, responseJsonForOther_](){
                 for(const auto& i : connUsers_.getAuthorizeAdmins())
@@ -147,6 +150,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         connectionPool_.returnConnection(connection_);
 
         std::string responseJson_ = jsonWorker_.createGetServersJson(response_);
+
         boost::asio::post(executor_, [this, session_, responseJson_](){
             session_.lock()->do_write(responseJson_);
         });

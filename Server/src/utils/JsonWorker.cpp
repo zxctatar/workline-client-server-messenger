@@ -95,7 +95,7 @@ std::string JsonWorker::createLoginUnsuccessJson(const std::string& code_)
     }
 }
 
-std::string JsonWorker::createAddingServerSuccessJson(const std::string& code_, const int serverID_, const std::string& serverName_, const std::string& serverDescription_)
+std::string JsonWorker::createAddingServerSuccessJson(const std::string& code_, const int serverID_, const std::string& serverImage_, const std::string& serverName_, const std::string& serverDescription_)
 {
     try
     {
@@ -103,6 +103,7 @@ std::string JsonWorker::createAddingServerSuccessJson(const std::string& code_, 
         json_["Info"] = "Add_Server";
         json_["Code"] = code_;
         json_["ServerID"] = serverID_;
+        json_["ServerImage"] = serverImage_;
         json_["ServerName"] = serverName_;
         json_["ServerDescription"] = serverDescription_;
         return json_.dump();

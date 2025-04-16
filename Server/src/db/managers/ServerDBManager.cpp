@@ -12,7 +12,7 @@ ServerDBManager::~ServerDBManager()
 {
 }
 
-AddResult ServerDBManager::addServer(std::shared_ptr<DBConnection> connection_, const std::string& serverName_, const std::string& serverDescription_) const
+AddResult ServerDBManager::addServer(std::shared_ptr<DBConnection> connection_, const std::vector<uint8_t>& image_, const std::string& serverName_, const std::string& serverDescription_) const
 {
     AddResult addResult_;
 
@@ -35,7 +35,7 @@ AddResult ServerDBManager::addServer(std::shared_ptr<DBConnection> connection_, 
         if(result_check_server_name_.empty())
         {
             pqxx::work add_server_(connection_->getConnection());
-            pqxx::result result_add_server_ = DatabaseQueries::addNewServer(add_server_, serverName_, serverDescription_);
+            pqxx::result result_add_server_ = DatabaseQueries::addNewServer(add_server_, image_, serverName_, serverDescription_);
             add_server_.commit();
 
             BOOST_LOG_TRIVIAL(info) << "Server addition completed.";
@@ -64,7 +64,7 @@ AddResult ServerDBManager::addServer(std::shared_ptr<DBConnection> connection_, 
     }
 }
 
-std::vector<ServerStruct> ServerDBManager::getServers(std::shared_ptr<DBConnection> connection_, const int userID_) const
+std::vector<ServerStruct> ServerDBManager::getServers(std::shared_ptr<DBConnection> connection_, const int userID_)
 {
     std::vector<ServerStruct> servers_;
 
@@ -101,8 +101,13 @@ std::vector<ServerStruct> ServerDBManager::getServers(std::shared_ptr<DBConnecti
         {
             ServerStruct server_;
             server_.serverID_ = row[0].as<int>();
-            server_.serverName_ = row[1].as<std::string>();
-            server_.serverDescription_ = row[2].as<std::string>();
+
+            pqxx::binarystring image_data_ = row[1].as<pqxx::binarystring>();
+            std::vector<uint8_t> imageBytes_(image_data_.begin(), image_data_.end());
+            server_.serverImage_ = imageWorker_.base64_encode(imageBytes_);
+
+            server_.serverName_ = row[2].as<std::string>();
+            server_.serverDescription_ = row[3].as<std::string>();
 
             servers_.push_back(server_);
         }

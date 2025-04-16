@@ -8,6 +8,7 @@
 #include "ServerDBManager.h"
 #include "ChatsDBManager.h"
 #include "MessageDBManager.h"
+#include "ImageWorker.h"
 #include <nlohmann/json.hpp>
 
 class Session;
@@ -22,6 +23,7 @@ public:
 
 private:
     JsonWorker jsonWorker_;
+    ImageWorker imageWorker_;
     UserDBManager userManager_;
     ServerDBManager serverManager_;
     ChatsDBManager chatManager_;

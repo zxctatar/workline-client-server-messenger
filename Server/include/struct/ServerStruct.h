@@ -6,12 +6,14 @@
 
 struct ServerStruct {
     int serverID_;
+    std::string serverImage_;
     std::string serverName_;
     std::string serverDescription_;
 
     void to_json(nlohmann::json& j) const {
         j = nlohmann::json{
             {"id", serverID_},
+            {"image", serverImage_},
             {"name", serverName_},
             {"description", serverDescription_}
         };

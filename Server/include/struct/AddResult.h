@@ -6,6 +6,7 @@
 struct AddResult {
     std::string code_;
     int serverID_;
+    std::string image_;
     std::string serverName_;
     std::string serverDescription_;
 };

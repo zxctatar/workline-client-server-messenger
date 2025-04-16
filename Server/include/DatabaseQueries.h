@@ -16,7 +16,7 @@ public:
     static pqxx::result getUserId(pqxx::transaction_base& conn_, const std::string& login_);
     static pqxx::result checkIsAdmin(pqxx::transaction_base& conn_, const int userID_);
     static pqxx::result checkServerName(pqxx::transaction_base& conn_, const std::string& serverName_);
-    static pqxx::result addNewServer(pqxx::transaction_base& conn_, const std::string& serverName_, const std::string& serverDescription_);
+    static pqxx::result addNewServer(pqxx::transaction_base& conn_, const std::vector<uint8_t>& image_, const std::string& serverName_, const std::string& serverDescription_);
     static pqxx::result getUserServers(pqxx::transaction_base& conn_, const int userID_);
     static pqxx::result getAllServers(pqxx::transaction_base& conn_);
     static pqxx::result getUserData(pqxx::transaction_base& conn_, const std::string& login_);

@@ -307,6 +307,7 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
             create_server_table_.exec(R"(
                 CREATE TABLE servers(
                     server_id SERIAL PRIMARY KEY,
+                    server_image BYTEA,
                     server_name VARCHAR(255) NOT NULL,
                     server_description VARCHAR(255)
                     ))");

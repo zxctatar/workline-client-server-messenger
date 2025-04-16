@@ -48,22 +48,24 @@ pqxx::result DatabaseQueries::checkServerName(pqxx::transaction_base& conn_, con
     return conn_.exec_params("SELECT 1 FROM servers WHERE server_name = $1", serverName_);
 }
 
-pqxx::result DatabaseQueries::addNewServer(pqxx::transaction_base& conn_, const std::string& serverName_, const std::string& serverDescription_)
+pqxx::result DatabaseQueries::addNewServer(pqxx::transaction_base& conn_, const std::vector<uint8_t>& image_, const std::string& serverName_, const std::string& serverDescription_)
 {
-    return conn_.exec_params(R"(INSERT INTO servers(server_name, server_description)
-                             VALUES($1, $2) RETURNING server_id)", serverName_, serverDescription_);
+    pqxx::binarystring imageSQL_(image_.data(), image_.size());
+
+    return conn_.exec_params(R"(INSERT INTO servers(server_image, server_name, server_description)
+                             VALUES($1, $2, $3) RETURNING server_id)", imageSQL_, serverName_, serverDescription_);
 }
 
 pqxx::result DatabaseQueries::getUserServers(pqxx::transaction_base& conn_, const int userID_)
 {
-    return conn_.exec_params(R"(SELECT s.server_id, s.server_name, s.server_description FROM servers s
+    return conn_.exec_params(R"(SELECT s.server_id, s.server_image, s.server_name, s.server_description FROM servers s
                      JOIN users_on_servers uos ON s.server_id = uos.server_id
                      WHERE uos.user_id = $1)", userID_);
 }
 
 pqxx::result DatabaseQueries::getAllServers(pqxx::transaction_base& conn_)
 {
-    return conn_.exec("SELECT server_id, server_name, server_description FROM servers");
+    return conn_.exec("SELECT server_id, server_image, server_name, server_description FROM servers");
 }
 
 pqxx::result DatabaseQueries::getUserData(pqxx::transaction_base& conn_, const std::string& login_)

@@ -58,6 +58,8 @@ add_executable(Server src/main.cpp
     include/struct/SetMessageResult.h
     src/db/managers/MessageDBManager.cpp
     include/MessageDBManager.h
+    src/utils/ImageWorker.cpp
+    include/ImageWorker.h
 )
 
 if(Boost_FOUND)
