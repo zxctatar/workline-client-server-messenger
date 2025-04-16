@@ -80,5 +80,6 @@
         <file>view/customwidgets/compositewidgets/ChatMessageView.qml</file>
         <file>resources/img/WindowIcon.ico</file>
         <file>resources/img/WindowIcon.png</file>
+        <file>view/customwidgets/widgets/AddImage.qml</file>
     </qresource>
 </RCC>

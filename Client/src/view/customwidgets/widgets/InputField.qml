@@ -18,7 +18,7 @@ TextField {
     color: Colors.pressedInputFieldTextColor
     placeholderTextColor: Colors.normalInputFieldTextColor
 
-    font.pixelSize: Sizes.inputFieldTextSize // 20
+    font.pixelSize: Sizes.inputFieldTextSize // 16
     font.family: Fonts.textFont
 
     echoMode: showPasswordBtn.visible ? (showPasswordBtn.showPassword ? TextInput.Normal : TextInput.Password) : TextInput.Normal

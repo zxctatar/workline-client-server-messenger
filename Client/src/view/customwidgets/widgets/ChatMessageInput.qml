@@ -42,7 +42,7 @@ ScrollView {
         horizontalAlignment: TextInput.AlignLeft
 
         font.family: Fonts.windowTextFont
-        font.pixelSize: Sizes.chatMessageTextSizes
+        font.pixelSize: Sizes.chatMessageTextSizes // 16
         color: Colors.chatMessageTextColor
 
         Keys.onPressed: function(event) {

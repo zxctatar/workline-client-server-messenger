@@ -64,6 +64,7 @@ Item {
                 required property string name
                 required property string fullName
                 required property string description
+                required property string path
 
                 serverId: id
 
@@ -71,7 +72,8 @@ Item {
                 selected: serverTable.currentIndex == serverId ? true : false
 
                 anchors.horizontalCenter: parent ? parent.horizontalCenter : undefined
-                text: name
+                text: path == "" ? name : ""
+                imagePath: path
 
                 onClicked: {
                     serverTable.currentIndex = id
@@ -107,8 +109,8 @@ Item {
                 anchors.centerIn: parent
                 notificationManager: serverTable.notificationManager
 
-                onAddServerSignal: function(serverName, serverDescription) {
-                    serverTable.controller.preparingAddServerRequest(serverName, serverDescription)
+                onAddServerSignal: function(base64Image, serverName, serverDescription) {
+                    serverTable.controller.preparingAddServerRequest(base64Image, serverName, serverDescription)
                 }
             }
         }

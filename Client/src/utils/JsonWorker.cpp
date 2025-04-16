@@ -57,10 +57,11 @@ QString JsonWorker::createJsonLogin(const QString& login_, const QString& passwo
     return jsonString_;
 }
 
-QString JsonWorker::createJsonAddServer(const QString& serverName_, const QString& serverDescriptrion_) const
+QString JsonWorker::createJsonAddServer(const QString& image_, const QString& serverName_, const QString& serverDescriptrion_) const
 {
     QJsonObject jsonObject_;
     jsonObject_.insert("Info", "Add_Server");
+    jsonObject_.insert("image", image_);
     jsonObject_.insert("serverName", serverName_);
     jsonObject_.insert("serverDescription", serverDescriptrion_);
     QJsonDocument json_(jsonObject_);

@@ -1,4 +1,5 @@
 #include "../../../include/ServerTableController.h"
+#include <QFile>
 
 ServerTableController::ServerTableController(QObject* parent)
     : QObject(parent)
@@ -26,9 +27,11 @@ void ServerTableController::getUserRole() const
     emit setUserRoleSignal(userRole_);
 }
 
-void ServerTableController::preparingAddServerRequest(const QString& q_serverName, const QString& q_serverDescription)
+void ServerTableController::preparingAddServerRequest(const QString& q_base64Image, const QString& q_serverName, const QString& q_serverDescription)
 {
-    QString request_ = jsonWorker_.createJsonAddServer(q_serverName, q_serverDescription);
+    QString base64ImageData_ = imageWorker_.encodeImage(q_base64Image);
+
+    QString request_ = jsonWorker_.createJsonAddServer(base64ImageData_, q_serverName, q_serverDescription);
 
     emit addServerSignal(request_);
 }
@@ -57,7 +60,7 @@ void ServerTableController::serverSelected(const int serverId_)
     emit serverSelectedSignal(serverId_);
 }
 
-void ServerTableController::slotServerProcessing(const QJsonObject& jsonObj_) const
+void ServerTableController::slotServerProcessing(const QJsonObject& jsonObj_)
 {
     QJsonArray serversArray_ = jsonObj_["Servers"].toArray();
 
@@ -72,22 +75,27 @@ void ServerTableController::slotServerProcessing(const QJsonObject& jsonObj_) co
 
         int serverID_ = serverObj_["id"].toInt();
         QString serverName_ = serverObj_["name"].toString();
+
+        QImage image_ = imageWorker_.decodeImage(serverObj_["image"].toString());
+
         QString serverDescription_ = serverObj_["description"].toString();
 
-        serverModel_->addServer(serverID_, serverName_[0], serverName_, serverDescription_);
+        serverModel_->addServer(serverID_, image_, serverName_[0], serverName_, serverDescription_);
     }
 }
 
-void ServerTableController::slotCodeProcessing(const QJsonObject& jsonObj_) const
+void ServerTableController::slotCodeProcessing(const QJsonObject& jsonObj_)
 {
     if(jsonObj_["Code"].toString() == "MY_SERVER_ADDED")
     {
-        serverModel_->addServer(jsonObj_["ServerID"].toInt(), jsonObj_["ServerName"].toString()[0], jsonObj_["ServerName"].toString(), jsonObj_["ServerDescription"].toString());
+        QImage image_ = imageWorker_.decodeImage(jsonObj_["ServerImage"].toString());
+        serverModel_->addServer(jsonObj_["ServerID"].toInt(), image_, jsonObj_["ServerName"].toString()[0], jsonObj_["ServerName"].toString(), jsonObj_["ServerDescription"].toString());
         emit myServerAddedSignal();
     }
     else if(jsonObj_["Code"].toString() == "ADD_NEW_SERVER")
     {
-        serverModel_->addServer(jsonObj_["ServerID"].toInt(), jsonObj_["ServerName"].toString()[0], jsonObj_["ServerName"].toString(), jsonObj_["ServerDescription"].toString());
+        QImage image_ = imageWorker_.decodeImage(jsonObj_["ServerImage"].toString());
+        serverModel_->addServer(jsonObj_["ServerID"].toInt(), image_, jsonObj_["ServerName"].toString()[0], jsonObj_["ServerName"].toString(), jsonObj_["ServerDescription"].toString());
     }
     else if(jsonObj_["Code"].toString() == "SERVER_NAME_EXISTS")
     {
@@ -118,7 +126,14 @@ void ServerTableController::deleteServer(const int serverId_)
     emit deleteServerSignal(request_);
 }
 
-void ServerTableController::slotAddNewServer(const int serverId_, const QString& serverName_, const QString& serverDescription_)
+void ServerTableController::slotAddNewServer(const QJsonObject& jsonObj_)
 {
-    serverModel_->addServer(serverId_, serverName_[0] ,serverName_, serverDescription_);
+    int serverID_ = jsonObj_["id"].toInt();
+    QString serverName_ = jsonObj_["name"].toString();
+
+    QImage image_ = imageWorker_.decodeImage(jsonObj_["image"].toString());
+
+    QString serverDescription_ = jsonObj_["description"].toString();
+
+    serverModel_->addServer(serverID_, image_, serverName_[0], serverName_, serverDescription_);
 }

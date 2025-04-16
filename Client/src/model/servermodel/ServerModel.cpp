@@ -7,6 +7,7 @@ ServerModel::ServerModel(QObject* parent)
 
 ServerModel::~ServerModel()
 {
+    imageWorker_.cleanupTempFiles();
 }
 
 int ServerModel::rowCount(const QModelIndex& parent_) const
@@ -27,13 +28,15 @@ QVariant ServerModel::data(const QModelIndex& index_, int role_) const
     switch(role_)
     {
     case Qt::DisplayRole:
-        return server_.name_;
+        return QVariant(server_.tempImagePath_);
     case Qt::UserRole + 1:
         return server_.id_;
     case Qt::UserRole + 2:
         return server_.fullName_;
     case Qt::UserRole + 3:
         return server_.description_;
+    case Qt::UserRole + 4:
+        return server_.name_;
     default:
         return QVariant();
     }
@@ -42,17 +45,20 @@ QVariant ServerModel::data(const QModelIndex& index_, int role_) const
 QHash<int, QByteArray> ServerModel::roleNames() const
 {
     QHash<int, QByteArray> roles_;
-    roles_[Qt::DisplayRole] = "name";
+    roles_[Qt::DisplayRole] = "path";
     roles_[Qt::UserRole + 1] = "id";
     roles_[Qt::UserRole + 2] = "fullName";
     roles_[Qt::UserRole + 3] = "description";
+    roles_[Qt::UserRole + 4] = "name";
     return roles_;
 }
 
-void ServerModel::addServer(const int id_, const QString& name_, const QString& fullName_, const QString& description_)
+void ServerModel::addServer(const int id_, const QImage& image_, const QString& name_, const QString& fullName_, const QString& description_)
 {
+    QString imagePath_ = imageWorker_.saveImageToTempFile(image_);
+
     beginInsertRows(QModelIndex(), servers_.size(), servers_.size());
-    servers_.append({id_, name_, fullName_, description_});
+    servers_.append({id_, image_, imagePath_, name_, fullName_, description_});
     endInsertRows();
 }
 

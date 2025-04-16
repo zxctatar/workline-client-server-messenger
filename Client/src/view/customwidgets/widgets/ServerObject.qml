@@ -8,22 +8,39 @@ Button {
     property bool isAdmin: false
     property bool selected: false
 
-    width: Sizes.maxServerObjectWidth // 55
-    height: Sizes.maxServerObjectHeight // 55
+    width: Sizes.maxServerObjectWidth
+    height: Sizes.maxServerObjectHeight
 
     signal deleteServerClicked(int serverId)
 
     property int serverId
+    property string imagePath
 
     palette.buttonText: "black"
-    font.pixelSize: Sizes.serverObjectTextSize // 32
+    font.pixelSize: Sizes.serverObjectTextSize
     font.family: Fonts.textFont
 
     background: Rectangle {
         radius: Sizes.serverObjectRadius // 10
         color: "#93CCFF"
+    }
+
+    Image {
+        id: image
+        anchors.fill: parent
+        source: serverObject.imagePath
+        visible: serverObject.imagePath !== ""
+        z: 0
+    }
+
+    // Рамка поверх изображения
+    Rectangle {
+        anchors.fill: parent
+        radius: Sizes.serverObjectRadius // 10
+        color: "transparent"
         border.color: serverObject.selected ? "#00FF62" : "transparent"
         border.width: serverObject.selected ? 6 : 0
+        z: 1
     }
 
     Menu {
@@ -31,10 +48,7 @@ Button {
 
         MenuItem {
             text: "Удалить"
-
-            onClicked: {
-                serverObject.deleteServerClicked(serverObject.serverId)
-            }
+            onClicked: serverObject.deleteServerClicked(serverObject.serverId)
         }
     }
 
@@ -46,12 +60,9 @@ Button {
         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         onClicked: (mouse) => {
-            if(mouse.button == Qt.LeftButton && !serverObject.selected)
-            {
+            if (mouse.button == Qt.LeftButton && !serverObject.selected) {
                 parent.clicked()
-            }
-            else if(mouse.button == Qt.RightButton && serverObject.isAdmin)
-            {
+            } else if (mouse.button == Qt.RightButton && serverObject.isAdmin) {
                 contextMenu.open()
             }
         }

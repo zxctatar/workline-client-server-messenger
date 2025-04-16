@@ -9,9 +9,9 @@ Popup {
     width: Sizes.maxAddServerWindowWidth // 475
     height: Sizes.maxAddServerWindowHeight // 550
     modal: true
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    closePolicy: addImage.isFileDialogOpen ? Popup.NoAutoClose : Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-    signal addServerSignal(string serverName, string serverDescription)
+    signal addServerSignal(string base64Image, string serverName, string serverDescription)
 
     property var notificationManager // ServerTable notificationManager
 
@@ -61,24 +61,40 @@ Popup {
         anchors.centerIn: parent
         spacing: 18
 
+        AddImage {
+            id: addImage
+            Layout.preferredWidth: 100
+            Layout.preferredHeight: 100
+            Layout.alignment: Qt.AlignHCenter
+
+            onBadImage: {
+                errorText.text = "Неверное изображение"
+                errorText.visible = true
+            }
+
+            onDone: {
+                errorText.visible = false
+            }
+        }
+
         InputField {
             id: inputFieldName
             Layout.preferredWidth: 375
             Layout.preferredHeight: 40
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
-            font.pixelSize: Sizes.addServerWindowFontSize // 18
+            font.pixelSize: Sizes.addServerWindowFontSize // 16
             placeholderText: "Название сервера"
         }
 
         InputField {
             id: inputFieldDescription
             Layout.preferredWidth: 375
-            Layout.preferredHeight: 300
+            Layout.preferredHeight: 250
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignTop
             wrapMode: TextArea.Wrap
-            font.pixelSize: Sizes.addServerWindowFontSize // 18
+            font.pixelSize: Sizes.addServerWindowFontSize // 16
             placeholderText: "Описание"
         }
 
@@ -107,7 +123,8 @@ Popup {
                 }
 
                 errorText.visible = false
-                addServerWindow.addServerSignal(inputFieldName.text, inputFieldDescription.text)
+
+                addServerWindow.addServerSignal(addImage.base64Image, inputFieldName.text, inputFieldDescription.text)
             }
         }
     }

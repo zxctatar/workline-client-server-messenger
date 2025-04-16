@@ -61,7 +61,7 @@ QtObject {
     readonly property int chatNameTextSize: 16 // размер текста названия чата
 
     //chat message text
-    readonly property int chatMessageTextSizes: 15 // размер текста сообщения чата
+    readonly property int chatMessageTextSizes: 16 // размер текста сообщения чата
 
     //chat object
     readonly property int maxChatObjectHeight: 70 // высота объекта чата
@@ -131,13 +131,13 @@ QtObject {
 
     readonly property int radiusAddServerWindow: 5 // скругление углов окна добавления сервера
 
-    readonly property int addServerWindowFontSize: 18 // размер шрифта у окна добавления сервера
+    readonly property int addServerWindowFontSize: 16 // размер шрифта у окна добавления сервера
 
     //buttons
     readonly property int maxButtonWidth: 410 // ширина кнопки
     readonly property int maxButtonHeight: 48 // высота кнопки
 
-    readonly property int buttonTextSize: 20 // размер текста кнопки
+    readonly property int buttonTextSize: 16 // размер текста кнопки
     readonly property int radiusButtonRectangle: 10 // скругление квадрата кнопки
 
     //server table
@@ -205,7 +205,7 @@ QtObject {
 
     readonly property int radiusInputFieldRectangle: 10 // скругление квадрата поля ввода данных
 
-    readonly property int inputFieldTextSize: 20 // размер текста поля ввода данных
+    readonly property int inputFieldTextSize: 16 // размер текста поля ввода данных
 
     //tooltip
     readonly property int maxToolTipWidth: 20 // ширина подсказки

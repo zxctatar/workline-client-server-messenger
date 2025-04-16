@@ -135,7 +135,7 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     }
     else if(jsonObj_["Info"] == "Add_New_Server")
     {
-        emit sendAddNewServerSignal(jsonObj_["serverId"].toInt(), jsonObj_["serverName"].toString(), jsonObj_["serverDescription"].toString());
+        emit sendAddNewServerSignal(jsonObj_);
     }
     else if(jsonObj_["Info"] == "Add_Admin_On_Server")
     {

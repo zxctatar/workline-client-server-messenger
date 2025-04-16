@@ -9,7 +9,7 @@ Button {
 
     palette.buttonText: myButton.hovered ? Colors.hoverButtonTextColor : Colors.normalButtonTextColor
     font.family: Fonts.textFont
-    font.pixelSize: Sizes.buttonTextSize // 20
+    font.pixelSize: Sizes.buttonTextSize // 16
 
     background: Rectangle {
         color: myButton.hovered ? Colors.hoverButtonColor : Colors.normalButtonColor
