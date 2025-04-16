@@ -8,6 +8,7 @@
 #include "struct/CandidateUserStruct.h"
 #include "struct/UsersOnServerStruct.h"
 #include "struct/AddUserOnServerResult.h"
+#include "ImageWorker.h"
 #include <string>
 #include <memory>
 
@@ -25,13 +26,14 @@ public:
     std::string approveUser(std::shared_ptr<DBConnection> connection_, const int userId_) const;
     std::string rejectUser(std::shared_ptr<DBConnection> connection_, const int userId_) const;
     std::vector<CandidateUserStruct> getCandidateUsers(std::shared_ptr<DBConnection> connection_, const int serverId_) const;
-    AddUserOnServerResult addUserOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const;
+    AddUserOnServerResult addUserOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_);
     std::vector<UsersOnServerStruct> getUsersOnServer(std::shared_ptr<DBConnection> connection_, const int serverId_) const;
     std::string addAdminOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const;
     std::string removeAdminOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const;
     std::string getServerRole(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const;
 
 private:
+    ImageWorker imageWorker_;
 };
 
 #endif // USERDBMANAGER_H

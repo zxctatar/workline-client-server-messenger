@@ -37,8 +37,8 @@ public:
     std::string createChatCreateForSenderJson(const int serverId_, const int userId_, const int companionId_, const int chatId_);
     std::string createChatCreateForCompanionJson(const int serverId_, const int userId_, const int companionId_, const int chatId_);
     std::string createGetUsersOnServerJson(const int serverId_, const std::vector<UsersOnServerStruct>& users_);
-    std::string createAddInChatJson(const int serverId_, const int userId_, const std::string lastName_, const std::string firstName_, const std::string middleName_);
-    std::string createForAddedUserJson(const int serverId_, std::string serverName_, std::string serverDescription_);
+    std::string createAddInChatJson(const int serverId_, const int userId_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_);
+    std::string createForAddedUserJson(const int serverId_, const std::string& serverImage_,  const std::string& serverName_, const std::string& serverDescription_);
     std::string createAddAdminOnServerJson(const std::string& code_, const int serverId_, const int userId_);
     std::string createRemoveAdminOnServerJson(const std::string& code_, const int serverId_, const int userId_);
     std::string createAddAdminOnServerForUserJson(const std::string& code_, const int serverId_);

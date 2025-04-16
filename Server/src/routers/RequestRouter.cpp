@@ -337,7 +337,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         if(response_.code_ == "USER_ADDED")
         {
             std::string responseJsonAddInChat_ = jsonWorker_.createAddInChatJson(receivedServerId_, receivedUserId_, response_.lastName_, response_.firstName_, response_.middleName_);
-            std::string responseJsonForAddedUser_ = jsonWorker_.createForAddedUserJson(receivedServerId_, response_.serverName_, response_.serverDescription_);
+            std::string responseJsonForAddedUser_ = jsonWorker_.createForAddedUserJson(receivedServerId_, response_.serverImage_, response_.serverName_, response_.serverDescription_);
 
             std::weak_ptr<Session> user_ = connUsers_.getUser(receivedUserId_);
 

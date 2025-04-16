@@ -451,7 +451,7 @@ std::vector<CandidateUserStruct> UserDBManager::getCandidateUsers(std::shared_pt
     }
 }
 
-AddUserOnServerResult UserDBManager::addUserOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_) const
+AddUserOnServerResult UserDBManager::addUserOnServer(std::shared_ptr<DBConnection> connection_, const int userId_, const int serverId_)
 {
     AddUserOnServerResult result_;
 
@@ -488,8 +488,13 @@ AddUserOnServerResult UserDBManager::addUserOnServer(std::shared_ptr<DBConnectio
                 result_.lastName_ = row[0].as<std::string>();
                 result_.firstName_ = row[1].as<std::string>();
                 result_.middleName_ = row[2].as<std::string>();
-                result_.serverName_ = row[3].as<std::string>();
-                result_.serverDescription_ = row[4].as<std::string>();
+
+                pqxx::binarystring image_data_ = row[3].as<pqxx::binarystring>();
+                std::vector<uint8_t> imageBytes_(image_data_.begin(), image_data_.end());
+                result_.serverImage_ = imageWorker_.base64_encode(imageBytes_);
+
+                result_.serverName_ = row[4].as<std::string>();
+                result_.serverDescription_ = row[5].as<std::string>();
                 result_.code_ = "USER_ADDED";
 
                 return result_;

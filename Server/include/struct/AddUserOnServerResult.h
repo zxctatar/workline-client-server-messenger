@@ -11,7 +11,7 @@ struct AddUserOnServerResult
     std::string lastName_;
     std::string firstName_;
     std::string middleName_;
-
+    std::string serverImage_;
     std::string serverName_;
     std::string serverDescription_;
 };

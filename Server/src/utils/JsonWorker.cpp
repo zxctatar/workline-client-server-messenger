@@ -387,7 +387,7 @@ std::string JsonWorker::createGetUsersOnServerJson(const int serverId_, const st
     }
 }
 
-std::string JsonWorker::createAddInChatJson(const int serverId_, const int userId_, const std::string lastName_, const std::string firstName_, const std::string middleName_)
+std::string JsonWorker::createAddInChatJson(const int serverId_, const int userId_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_)
 {
     try
     {
@@ -407,13 +407,14 @@ std::string JsonWorker::createAddInChatJson(const int serverId_, const int userI
     }
 }
 
-std::string JsonWorker::createForAddedUserJson(const int serverId_, std::string serverName_, std::string serverDescription_)
+std::string JsonWorker::createForAddedUserJson(const int serverId_, const std::string& serverImage_,  const std::string& serverName_, const std::string& serverDescription_)
 {
     try
     {
         nlohmann::json json_;
         json_["Info"] = "Add_New_Server";
         json_["serverId"] = serverId_;
+        json_["serverImage"] = serverImage_;
         json_["serverName"] = serverName_;
         json_["serverDescription"] = serverDescription_;
         return json_.dump();
@@ -425,7 +426,7 @@ std::string JsonWorker::createForAddedUserJson(const int serverId_, std::string 
     }
 }
 
-std::string JsonWorker::createAddAdminOnServerJson(const std::string& code_ ,const int serverId_, const int userId_)
+std::string JsonWorker::createAddAdminOnServerJson(const std::string& code_, const int serverId_, const int userId_)
 {
     try
     {

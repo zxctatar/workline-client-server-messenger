@@ -128,12 +128,12 @@ void ServerTableController::deleteServer(const int serverId_)
 
 void ServerTableController::slotAddNewServer(const QJsonObject& jsonObj_)
 {
-    int serverID_ = jsonObj_["id"].toInt();
-    QString serverName_ = jsonObj_["name"].toString();
+    int serverID_ = jsonObj_["serverId"].toInt();
+    QString serverName_ = jsonObj_["serverName"].toString();
 
-    QImage image_ = imageWorker_.decodeImage(jsonObj_["image"].toString());
+    QImage image_ = imageWorker_.decodeImage(jsonObj_["serverImage"].toString());
 
-    QString serverDescription_ = jsonObj_["description"].toString();
+    QString serverDescription_ = jsonObj_["serverDescription"].toString();
 
     serverModel_->addServer(serverID_, image_, serverName_[0], serverName_, serverDescription_);
 }

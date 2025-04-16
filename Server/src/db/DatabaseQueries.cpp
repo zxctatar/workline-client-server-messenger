@@ -137,6 +137,7 @@ pqxx::result DatabaseQueries::addUserOnServer(pqxx::transaction_base& conn_, con
             u.lastname,
             u.firstname,
             u.middlename,
+            s.server_image,
             s.server_name,
             s.server_description
         FROM ins
