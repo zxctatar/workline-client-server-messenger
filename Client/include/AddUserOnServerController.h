@@ -7,6 +7,7 @@
 #include "CandidateUserModel.h"
 #include "SelectedServerManager.h"
 #include "JsonWorker.h"
+#include "ImageWorker.h"
 
 class AddUserOnServerController : public QObject
 {
@@ -38,6 +39,7 @@ public slots:
 
 private:
     JsonWorker jsonWorker_;
+    ImageWorker imageWorker_;
 
     std::shared_ptr<CandidateUserModel> candidateUserModel_;
 };

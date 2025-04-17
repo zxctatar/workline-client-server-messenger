@@ -8,6 +8,7 @@
 #include "SelectedServerManager.h"
 #include "SelectedChatManager.h"
 #include "ChatModel.h"
+#include "ImageWorker.h"
 
 class ChatsBarController : public QObject
 {
@@ -32,12 +33,13 @@ public slots:
     void slotGetChats(const int serverId_);
     void slotChatsProcessing(const QJsonObject& jsonObj_);
     void slotChatCreatedProcessing(const QJsonObject& jsonObj_);
-    void slotAddUserInChatProcessing(const int userId_, const int serverId_, const QString& lastName_, const QString& firstName_, const QString& middleName_);
+    void slotAddUserInChatProcessing(const QJsonObject& jsonObj_);
     void slotClearChat();
     void slotSetNewLastMessage(const QJsonObject& jsonObj_);
 
 private:
     JsonWorker jsonWorker_;
+    ImageWorker imageWorker_;
     ChatModel* chatModel_;
 };
 

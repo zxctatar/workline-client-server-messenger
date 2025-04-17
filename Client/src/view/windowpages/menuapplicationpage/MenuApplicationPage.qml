@@ -90,10 +90,12 @@ Page {
         delegate: ApplicationObject {
             required property int id
             required property string name
+            required property string imagePath
 
             displayName: name
             width: parent ? parent.width : undefined
             height: Sizes.maxApplicationObjectHeight
+            path: imagePath
 
             onApproveButtonClicked: {
                 menuApplicationPage.controller.approveUser(id)

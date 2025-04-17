@@ -5,6 +5,7 @@
 #include <QObject>
 #include <qqml.h>
 #include "SelectedServerManager.h"
+#include "ImageWorker.h"
 
 class ChatModel : public QAbstractListModel
 {
@@ -18,7 +19,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
-    void addChat(const int companionId_, const int chatId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_);
+    void addChat(const int companionId_, const int chatId_, const QImage& image_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_);
     void deleteChats();
     int getSize();
     void chatCreated(const int serverId_, const int companionId_, const int chatId_);
@@ -28,6 +29,7 @@ public:
 private:
     struct PrivateChat {
         QString displayName_;
+        QString avatarPath_;
         int companionId_;
         int chatId_;
         QString firstName_;
@@ -39,6 +41,8 @@ private:
     };
 
     QVector<PrivateChat> chats_;
+
+    ImageWorker imageWorker_;
 };
 
 #endif // CHATMODEL_H

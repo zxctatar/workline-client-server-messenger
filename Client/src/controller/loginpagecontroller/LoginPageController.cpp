@@ -25,6 +25,10 @@ void LoginPageController::slotResponseProcessing(const QJsonObject& jsonObj_) co
     }
     else if(jsonObj_["Code"].toString() == "ACCESS_ALLOWED_ADMIN" || jsonObj_["Code"].toString() == "ACCESS_ALLOWED_USER")
     {
+        QImage image_ = imageWorker_.decodeImage(jsonObj_["UserAvatar"].toString());
+        QString avatarPath_ = imageWorker_.saveImageToTempFile(image_);
+
+        QString birthDate_ = jsonObj_["UserBirthDate"].toString();
         QString firstName_ = jsonObj_["UserFirstName"].toString();
         QString lastName_ = jsonObj_["UserLastName"].toString();
         QString middleName_ = jsonObj_["UserMiddleName"].toString();
@@ -35,7 +39,7 @@ void LoginPageController::slotResponseProcessing(const QJsonObject& jsonObj_) co
         int userId_ = jsonObj_["UserId"].toInt();
         QString userRole_ = jsonObj_["UserRole"].toString();
 
-        UserAccountManager::instance().setUserData(firstName_, lastName_, middleName_, email_, phoneNumber_, login_, password_, userId_, userRole_);
+        UserAccountManager::instance().setUserData(avatarPath_, birthDate_, firstName_, lastName_, middleName_, email_, phoneNumber_, login_, password_, userId_, userRole_);
 
         emit accessAllowedSignal();
     }

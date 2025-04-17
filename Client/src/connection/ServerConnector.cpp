@@ -131,7 +131,7 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     }
     else if(jsonObj_["Info"] == "Add_User_In_Chat")
     {
-        emit sendUserAddInChatSignal(jsonObj_["userId"].toInt(), jsonObj_["serverId"].toInt(), jsonObj_["lastName"].toString(), jsonObj_["firstName"].toString(), jsonObj_["middleName"].toString());
+        emit sendUserAddInChatSignal(jsonObj_);
     }
     else if(jsonObj_["Info"] == "Add_New_Server")
     {

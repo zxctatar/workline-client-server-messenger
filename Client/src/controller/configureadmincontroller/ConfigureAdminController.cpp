@@ -46,13 +46,16 @@ void ConfigureAdminController::slotSetUsersOnServerPreparing(const QJsonObject& 
             QJsonObject userObject_ = i.toObject();
 
             int userId_ = userObject_["userId"].toInt();
+
+            QImage image_ = imageWorker_.decodeImage(userObject_["avatar"].toString());
+
             QString firstName_ = userObject_["firstName"].toString();
             QString lastName_ = userObject_["lastName"].toString();
             QString middleName_ = userObject_["middleName"].toString();
             bool isServerAdmin_ = userObject_["isServerAdmin"].toBool();
             bool isGlobalAdmin_ = userObject_["isGlobalAdmin"].toBool();
 
-            usersModel_->addUser(serverId_, userId_, firstName_, lastName_, middleName_, isServerAdmin_, isGlobalAdmin_);
+            usersModel_->addUser(serverId_, image_, userId_, firstName_, lastName_, middleName_, isServerAdmin_, isGlobalAdmin_);
         }
     }
 }

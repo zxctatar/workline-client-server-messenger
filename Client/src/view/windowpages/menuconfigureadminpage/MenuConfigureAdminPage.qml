@@ -70,12 +70,14 @@ Page {
             required property int id
             required property string name
             required property bool isServerAdmin
+            required property string imagePath
 
             width: parent ? parent.width : undefined
             height: 50
 
             displayName: name
             isAdmin: isServerAdmin
+            path: imagePath
 
             onAddAdminSignal: {
                 configureAdminPage.controller.sendAddAdmin(configureAdminPage.serverId, id)

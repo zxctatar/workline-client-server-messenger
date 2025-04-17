@@ -38,7 +38,7 @@ signals:
     void sendChatsSignal(const QJsonObject& jsonObj_);
     void sendChatCreatedSignal(const QJsonObject& jsonObj_);
     void sendUsersOnServerSignal(const QJsonObject& jsonObj_);
-    void sendUserAddInChatSignal(const int userId_, const int serverId_, const QString& lastName_, const QString& firstName_, const QString& middleName_);
+    void sendUserAddInChatSignal(const QJsonObject& jsonObj_);
     void sendAddNewServerSignal(const QJsonObject& jsonObj_);
     void sendAddAdminOnServerSignal(const QJsonObject& jsonObj_);
     void sendRemoveAdminOnServerSignal(const QJsonObject& jsonObj_);

@@ -39,10 +39,12 @@ Item {
                 required property bool isChat
                 required property int companionId
                 required property string lastMess
+                required property string imagePath
 
                 chatId: id
                 displayName: name
                 lastMessage: lastMess
+                path: imagePath
 
                 selected: chatsBar.currentIndex == id ? true : false
 

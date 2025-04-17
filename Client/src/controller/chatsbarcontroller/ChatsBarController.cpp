@@ -42,6 +42,9 @@ void ChatsBarController::slotChatsProcessing(const QJsonObject& jsonObj_)
 
             int compaonionId_ = chat_["compaonionId"].toInt();
             int chatId_ = chat_["chatId"].toInt();
+
+            QImage image_ = imageWorker_.decodeImage(chat_["avatar"].toString());
+
             QString firstName_ = chat_["firstName"].toString();
             QString lastName_ = chat_["lastName"].toString();
             QString middleName_ = chat_["middleName"].toString();
@@ -49,7 +52,7 @@ void ChatsBarController::slotChatsProcessing(const QJsonObject& jsonObj_)
             QString messageTime_ = chat_["messageTime"].toString();
             bool isChat_ = chat_["isChat"].toBool();
 
-            chatModel_->addChat(compaonionId_, chatId_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_);
+            chatModel_->addChat(compaonionId_, chatId_, image_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_);
         }
     }
 }
@@ -82,11 +85,20 @@ void ChatsBarController::slotChatCreatedProcessing(const QJsonObject& jsonObj_)
     }
 }
 
-void ChatsBarController::slotAddUserInChatProcessing(const int userId_, const int serverId_, const QString& lastName_, const QString& firstName_, const QString& middleName_)
+void ChatsBarController::slotAddUserInChatProcessing(const QJsonObject& jsonObj_)
 {
+    int serverId_ = jsonObj_["serverId"].toInt();
+
     if(serverId_ == SelectedServerManager::instance().getServerId())
     {
-        chatModel_->addChat(userId_, 0, firstName_, lastName_, middleName_, "", "", false);
+        QImage image_ = imageWorker_.decodeImage(jsonObj_["avatar"].toString());
+
+        int userId_ = jsonObj_["userId"].toInt();
+        QString firstName_ = jsonObj_["firstName"].toString();
+        QString lastName_ = jsonObj_["lastName"].toString();
+        QString middleName_ = jsonObj_["middleName"].toString();
+
+        chatModel_->addChat(userId_, 0, image_, firstName_, lastName_, middleName_, "", "", false);
     }
 }
 

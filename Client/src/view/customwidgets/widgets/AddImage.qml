@@ -1,39 +1,62 @@
+pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Qt.labs.platform 1.1
+import Qt5Compat.GraphicalEffects
 
 Button {
     id: addImage
 
     readonly property string base64Image: Qt.btoa(image.source)
     property bool isFileDialogOpen: false
+    property int radius: 0
     signal badImage()
     signal done()
 
     background: Rectangle {
-        radius: 10
+        radius: addImage.radius
         border.color: "#4EABFD"
         border.width: 1
         color: "#DDEFFF"
     }
 
-    Image {
-        id: image
-        anchors.fill: parent
-        visible: fileDialog.file !== ""
-        source: fileDialog.file
+    Rectangle {
+        id: recta
+        radius: addImage.radius
+        anchors.centerIn: parent
+        anchors.margins: 1
+        width: parent.width - 2
+        height: parent.height - 2
+        color: "transparent"
 
-        onStatusChanged: {
-            if(status === Image.Ready)
-            {
-                if(image.width > 100 || image.height > 100)
+        layer.enabled: true
+        layer.effect: OpacityMask {
+            maskSource: Rectangle {
+                width: recta.width
+                height: recta.height
+                radius: recta.radius
+            }
+        }
+
+        Image {
+            id: image
+            anchors.fill: parent
+            visible: fileDialog.file !== ""
+            source: fileDialog.file
+            fillMode: Image.PreserveAspectCrop
+
+            onStatusChanged: {
+                if(status === Image.Ready)
                 {
-                    image.source = ""
-                    addImage.badImage()
-                }
-                else
-                {
-                    addImage.done()
+                    if(image.width > 100 || image.height > 100)
+                    {
+                        image.source = ""
+                        addImage.badImage()
+                    }
+                    else
+                    {
+                        addImage.done()
+                    }
                 }
             }
         }
@@ -54,7 +77,7 @@ Button {
 
     FileDialog {
         id: fileDialog
-        nameFilters: ["Image files (*.png *.ico *.svg)"]
+        nameFilters: ["Image files (*.png *.ico *.svg *.jpeg)"]
 
         onAccepted: {
             addImage.isFileDialogOpen = false

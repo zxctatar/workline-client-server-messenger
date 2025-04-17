@@ -32,6 +32,8 @@ QVariant CandidateUserModel::data(const QModelIndex& index_, int role_) const
         return user_.displayName_;
     case Qt::UserRole + 1:
         return user_.id_;
+    case Qt::UserRole + 2:
+        return user_.imagePath_;
     default:
         return QVariant();
     }
@@ -42,20 +44,23 @@ QHash<int, QByteArray> CandidateUserModel::roleNames() const
     QHash<int, QByteArray> roles_;
     roles_[Qt::DisplayRole] = "name";
     roles_[Qt::UserRole + 1] = "id";
+    roles_[Qt::UserRole + 2] = "imagePath";
     return roles_;
 }
 
-void CandidateUserModel::addCandidateUser(const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_)
+void CandidateUserModel::addCandidateUser(const int userId_, const QImage& image_, const QString& firstName_, const QString& lastName_, const QString& middleName_)
 {
     if(containsCandidateUser(userId_))
     {
         return;
     }
 
+    QString imagePath_ = imageWorker_.saveImageToTempFile(image_);
+
     QString displayName_ = lastName_ + ' ' + firstName_[0] + ". " + middleName_[0] + '.';
 
     beginInsertRows(QModelIndex(), candidateUsers_.size(), candidateUsers_.size());
-    candidateUsers_.append({userId_, firstName_, lastName_, middleName_, displayName_});
+    candidateUsers_.append({userId_, imagePath_, firstName_, lastName_, middleName_, displayName_});
     endInsertRows();
 }
 

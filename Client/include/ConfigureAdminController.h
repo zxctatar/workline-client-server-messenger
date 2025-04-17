@@ -7,6 +7,7 @@
 #include "UsersModel.h"
 #include "SelectedServerManager.h"
 #include "JsonWorker.h"
+#include "ImageWorker.h"
 
 class ConfigureAdminController : public QObject
 {
@@ -36,6 +37,7 @@ public slots:
 
 private:
     JsonWorker jsonWorker_;
+    ImageWorker imageWorker_;
 
     std::shared_ptr<UsersModel> usersModel_;
 };

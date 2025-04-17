@@ -1,5 +1,7 @@
+pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 import "../../../resources"
 
 Item {
@@ -7,6 +9,7 @@ Item {
     height: Sizes.maxApplicationObjectHeight // 50
 
     property string displayName
+    property string path
 
     signal approveButtonClicked()
     signal rejectButtonClicked()
@@ -15,10 +18,29 @@ Item {
         anchors.fill: parent
         spacing: 10
 
-        Image {
-            source: "qrc:/resources/img/avatar.svg"
+        Rectangle {
+            id: recta
+            radius: 24
             Layout.preferredWidth: Sizes.maxApplicationObjectImageWidth // 40
             Layout.preferredHeight: Sizes.maxApplicationObjectImageHeight // 40
+            Layout.alignment: Qt.AlignVCenter
+            color: "transparent"
+
+            layer.enabled: true
+            layer.effect: OpacityMask {
+                maskSource: Rectangle {
+                    width: recta.width
+                    height: recta.height
+                    radius: recta.radius
+                }
+            }
+
+            Image {
+                id: avatar
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectCrop
+                source: applicationObject.path == "" ? "qrc:/resources/img/avatar.svg" : applicationObject.path
+            }
         }
 
         MenuText {
@@ -50,3 +72,5 @@ Item {
         }
     }
 }
+
+

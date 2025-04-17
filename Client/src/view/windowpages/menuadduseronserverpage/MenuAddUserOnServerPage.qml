@@ -89,10 +89,12 @@ Page {
         delegate: CandidateUserObject {
             required property int id
             required property string name
+            required property string imagePath
 
             displayName: name
             width: parent ? parent.width : undefined
             height: Sizes.maxCandidateUserObjectHeight // 50
+            path: imagePath
 
             onAddUserClicked: {
                 addUserOnServerPage.controller.requestAddUser(id, addUserOnServerPage.serverId)

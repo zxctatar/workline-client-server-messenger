@@ -81,5 +81,6 @@
         <file>resources/img/WindowIcon.ico</file>
         <file>resources/img/WindowIcon.png</file>
         <file>view/customwidgets/widgets/AddImage.qml</file>
+        <file>resources/img/images.jpeg</file>
     </qresource>
 </RCC>

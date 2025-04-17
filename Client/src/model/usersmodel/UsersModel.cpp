@@ -33,6 +33,8 @@ QVariant UsersModel::data(const QModelIndex& index_, int role_) const
         return user_.userId_;
     case Qt::UserRole + 2:
         return user_.isServerAdmin_;
+    case Qt::UserRole + 3:
+        return user_.avatarPath_;
     default:
         return QVariant();
     }
@@ -44,17 +46,20 @@ QHash<int, QByteArray> UsersModel::roleNames() const
     roles_[Qt::DisplayRole] = "name";
     roles_[Qt::UserRole + 1] = "id";
     roles_[Qt::UserRole + 2] = "isServerAdmin";
+    roles_[Qt::UserRole + 3] = "imagePath";
     return roles_;
 }
 
-void UsersModel::addUser(const int serverId_, const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const bool isServerAdmin_, const bool isGlobalAdmin_)
+void UsersModel::addUser(const int serverId_, const QImage& image_, const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const bool isServerAdmin_, const bool isGlobalAdmin_)
 {
     if(SelectedServerManager::instance().getServerId() == serverId_ && !isGlobalAdmin_)
     {
+        QString avatarPath_ = imageWorker_.saveImageToTempFile(image_);
+
         QString displayName_ = lastName_ + ' ' + firstName_[0] + ". " + middleName_[0] + '.';
 
         beginInsertRows(QModelIndex(), users_.size(), users_.size());
-        users_.append({displayName_, userId_, firstName_, lastName_, middleName_, isServerAdmin_});
+        users_.append({avatarPath_, displayName_, userId_, firstName_, lastName_, middleName_, isServerAdmin_});
         endInsertRows();
     }
 }

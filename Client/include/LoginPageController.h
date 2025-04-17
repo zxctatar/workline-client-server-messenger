@@ -4,6 +4,7 @@
 #include <QObject>
 #include <qqml.h>
 #include "JsonWorker.h"
+#include "ImageWorker.h"
 #include "UserAccountManager.h"
 
 class LoginPageController : public QObject
@@ -30,6 +31,7 @@ public slots:
 
 private:
     JsonWorker jsonWorker_;
+    ImageWorker imageWorker_;
 };
 
 #endif // LOGINPAGECONTROLLER_H

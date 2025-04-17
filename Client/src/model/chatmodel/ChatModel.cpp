@@ -37,6 +37,8 @@ QVariant ChatModel::data(const QModelIndex& index_, int role_) const
         return chat_.chatId_;
     case Qt::UserRole + 4:
         return chat_.companionId_;
+    case Qt::UserRole + 5:
+        return chat_.avatarPath_;
     default:
         return QVariant();
     }
@@ -50,15 +52,18 @@ QHash<int, QByteArray> ChatModel::roleNames() const
     roles_[Qt::UserRole + 2] = "lastMess";
     roles_[Qt::UserRole + 3] = "id";
     roles_[Qt::UserRole + 4] = "companionId";
+    roles_[Qt::UserRole + 5] = "imagePath";
     return roles_;
 }
 
-void ChatModel::addChat(const int companionId_, const int chatId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_)
+void ChatModel::addChat(const int companionId_, const int chatId_, const QImage& image_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_)
 {
+    QString imagePath_ = imageWorker_.saveImageToTempFile(image_);
+
     QString displayName_ = lastName_ + ' ' + firstName_;
 
     beginInsertRows(QModelIndex(), chats_.size(), chats_.size());
-    chats_.append({displayName_, companionId_, chatId_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_});
+    chats_.append({displayName_, imagePath_, companionId_, chatId_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_});
     endInsertRows();
 }
 

@@ -43,6 +43,8 @@ MainController::~MainController()
     {
         chatsBarController_->deleteLater();
     }
+
+    imageWorker_.cleanupTempFiles();
 }
 
 MainController* MainController::getMainController()

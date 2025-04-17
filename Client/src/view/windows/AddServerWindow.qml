@@ -66,6 +66,7 @@ Popup {
             Layout.preferredWidth: 100
             Layout.preferredHeight: 100
             Layout.alignment: Qt.AlignHCenter
+            radius: 10
 
             onBadImage: {
                 errorText.text = "Неверное изображение"

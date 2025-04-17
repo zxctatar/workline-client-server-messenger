@@ -1,5 +1,7 @@
+pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import Qt5Compat.GraphicalEffects
 import "../../../resources"
 
 Button {
@@ -25,22 +27,39 @@ Button {
         color: "#93CCFF"
     }
 
-    Image {
-        id: image
-        anchors.fill: parent
-        source: serverObject.imagePath
-        visible: serverObject.imagePath !== ""
-        z: 0
-    }
-
-    // Рамка поверх изображения
     Rectangle {
-        anchors.fill: parent
+        id: recta
         radius: Sizes.serverObjectRadius // 10
+        anchors.fill: parent
+        anchors.verticalCenter: parent.verticalCenter
         color: "transparent"
-        border.color: serverObject.selected ? "#00FF62" : "transparent"
-        border.width: serverObject.selected ? 6 : 0
-        z: 1
+
+        layer.enabled: true
+        layer.effect: OpacityMask {
+            maskSource: Rectangle {
+                width: recta.width
+                height: recta.height
+                radius: recta.radius
+            }
+        }
+
+        Image {
+            id: image
+            anchors.fill: parent
+            source: serverObject.imagePath
+            visible: serverObject.imagePath !== ""
+            z: 0
+        }
+
+        // Рамка поверх изображения
+        Rectangle {
+            anchors.fill: parent
+            radius: Sizes.serverObjectRadius // 10
+            color: "transparent"
+            border.color: serverObject.selected ? "#00FF62" : "transparent"
+            border.width: serverObject.selected ? 6 : 0
+            z: 1
+        }
     }
 
     Menu {

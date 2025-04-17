@@ -6,6 +6,7 @@
 #include <memory>
 #include "UnverifiedUserModel.h"
 #include "JsonWorker.h"
+#include "ImageWorker.h"
 
 class ApplicationPageController : public QObject
 {
@@ -44,6 +45,7 @@ public slots:
 private:
     std::shared_ptr<UnverifiedUserModel> unverUserModel_;
     JsonWorker jsonWorker_;
+    ImageWorker imageWorker_;
 };
 
 #endif // APPLICATIONPAGECONTROLLER_H

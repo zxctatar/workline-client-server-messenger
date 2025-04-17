@@ -11,14 +11,16 @@ RegistrationPageController::~RegistrationPageController()
 {
 }
 
-void RegistrationPageController::prepareRegistrationRequest(const QString& q_initials, const QString& q_login, const QString& q_phoneNumber, const QString& q_email, const QString& q_password) const
+void RegistrationPageController::prepareRegistrationRequest(const QString& q_image, const QString& q_initials, const QString& q_birthDate, const QString& q_login, const QString& q_phoneNumber, const QString& q_email, const QString& q_password) const
 {
     QStringList strList_ = q_initials.split(' ');
     QString lastname_ = strList_[0];
     QString firstname_ = strList_[1];
     QString middlename_ = strList_[2];
 
-    QString request_ = jsonWorker_.createJsonRegistration(lastname_, firstname_, middlename_, q_login, q_phoneNumber, q_email, q_password);
+    QString image_ = imageWorker_.encodeImage(q_image);
+
+    QString request_ = jsonWorker_.createJsonRegistration(image_, lastname_, firstname_, middlename_, q_birthDate, q_login, q_phoneNumber, q_email, q_password);
 
     emit registrationRequestSignal(request_);
 }

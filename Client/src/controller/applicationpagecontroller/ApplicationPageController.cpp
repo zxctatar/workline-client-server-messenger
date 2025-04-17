@@ -53,12 +53,14 @@ void ApplicationPageController::slotUnverUsersProcessing(const QJsonObject& json
 
         QJsonObject userObject_ = value.toObject();
 
+        QImage image_ = imageWorker_.decodeImage(userObject_["avatar"].toString());
+
         int userId_ = userObject_["userId"].toInt();
         QString firstName_ = userObject_["firstName"].toString();
         QString lastName_ = userObject_["lastName"].toString();
         QString middleName_ = userObject_["middleName"].toString();
 
-        unverUserModel_->addUnverifiedUser(userId_, firstName_, lastName_, middleName_);
+        unverUserModel_->addUnverifiedUser(userId_, image_, firstName_, lastName_, middleName_);
     }
 }
 

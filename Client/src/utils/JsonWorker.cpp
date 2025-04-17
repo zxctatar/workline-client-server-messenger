@@ -30,17 +30,19 @@ QString JsonWorker::createJsonGetUserId() const
     return jsonString_;
 }
 
-QString JsonWorker::createJsonRegistration(const QString& lastname_, const QString& firstname_, const QString& middlename_, const QString& login_, const QString& phoneNumber_, const QString& email_, const QString& password_) const
+QString JsonWorker::createJsonRegistration(const QString& image_, const QString& lastname_, const QString& firstname_, const QString& middlename_, const QString& birthDate_, const QString& login_, const QString& phoneNumber_, const QString& email_, const QString& password_) const
 {
     QJsonObject jsonObject_;
     jsonObject_.insert("Info", "Registration");
-    jsonObject_.insert("lastname", QJsonValue::fromVariant(lastname_));
-    jsonObject_.insert("firstname", QJsonValue::fromVariant(firstname_));
-    jsonObject_.insert("middlename", QJsonValue::fromVariant(middlename_));
-    jsonObject_.insert("login", QJsonValue::fromVariant(login_));
-    jsonObject_.insert("phonenumber", QJsonValue::fromVariant(phoneNumber_));
-    jsonObject_.insert("email", QJsonValue::fromVariant(email_));
-    jsonObject_.insert("password", QJsonValue::fromVariant(password_));
+    jsonObject_.insert("image", image_);
+    jsonObject_.insert("lastname", lastname_);
+    jsonObject_.insert("firstname", firstname_);
+    jsonObject_.insert("middlename", middlename_);
+    jsonObject_.insert("birthDate", birthDate_);
+    jsonObject_.insert("login", login_);
+    jsonObject_.insert("phonenumber", phoneNumber_);
+    jsonObject_.insert("email", email_);
+    jsonObject_.insert("password", password_);
     QJsonDocument json_(jsonObject_);
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;

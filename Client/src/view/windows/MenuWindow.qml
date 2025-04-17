@@ -62,8 +62,6 @@ Popup {
         function onSetServerRoleSignal(roleId) {
             menuWindow.serverRole = roleId
 
-            console.log(roleId)
-
             if(roleId == 0 && menuWindow.serverSelected == true) // none
             {
                 menuWindow.controller.accessToServerDenied(menuWindow.serverId)
@@ -207,7 +205,7 @@ Popup {
                         })
 
                         page.deleteController.connect(function(){
-                            if(typeof meniWindow !== 'undefined' && menuWindow) {
+                            if(typeof menuWindow !== 'undefined' && menuWindow) {
                                 menuWindow.controller.deleteAddUserOnServerController()
                             }
                         })

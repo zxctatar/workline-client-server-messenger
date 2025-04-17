@@ -11,7 +11,7 @@ class UserAccountManager : public QObject
 public:
     static UserAccountManager& instance();
 
-    void setUserData(const QString& receivedUserFirstName_, const QString& receivedUserLastName_, const QString& receivedUserMiddleName_, const QString& receivedUserEmail_, const QString& receivedUserPhoneNumber_, const QString& receivedUserLogin_, const QString& receivedUserPassword_, const int receivedUserId_, const QString& receivedUserRole_);
+    void setUserData(const QString& receivedUserAvatar_, const QString& receivedBirthDate_, const QString& receivedUserFirstName_, const QString& receivedUserLastName_, const QString& receivedUserMiddleName_, const QString& receivedUserEmail_, const QString& receivedUserPhoneNumber_, const QString& receivedUserLogin_, const QString& receivedUserPassword_, const int receivedUserId_, const QString& receivedUserRole_);
     QString getUserRole() const;
     bool getAuthorized() const;
     QString getUserLogin() const;
@@ -28,7 +28,9 @@ private:
     ~UserAccountManager();
 
     int id_;
-    QString userRole_;    
+    QString userRole_;
+    QString userAvatarPath_;
+    QString userBirthDate_;
     QString userLogin_;
     QString userPassword_;
     QString userFirstName_;

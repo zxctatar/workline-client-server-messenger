@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include <QObject>
 #include <qqml.h>
+#include "ImageWorker.h"
 
 class UnverifiedUserModel : public QAbstractListModel
 {
@@ -18,7 +19,7 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    void addUnverifiedUser(const int id_, const QString& firstName_, const QString& lastName_, const QString& middleName_);
+    void addUnverifiedUser(const int id_, const QImage& avatar_, const QString& firstName_, const QString& lastName_, const QString& middleName_);
     int getModelSize();
     void deleteUnverifiedUser(const int userId_);
     void clearUnverUser();
@@ -28,6 +29,7 @@ private:
 
     struct UnverifiedUsers {
         int id_;
+        QString imagePath_;
         QString firstName_;
         QString lastName_;
         QString middleName_;
@@ -35,6 +37,7 @@ private:
     };
 
     QVector<UnverifiedUsers> unverifiedUsers_;
+    ImageWorker imageWorker_;
 };
 
 #endif // UNVERIFIEDUSERMODEL_H

@@ -45,12 +45,14 @@ void AddUserOnServerController::slotCandidateUsersProcessing(const QJsonObject& 
 
             QJsonObject obj_ = val.toObject();
 
+            QImage image_ = imageWorker_.decodeImage(obj_["avatar"].toString());
+
             int userId_ = obj_["userId"].toInt();
             QString firstName_ = obj_["firstName"].toString();
             QString lastName_ = obj_["lastName"].toString();
             QString middleName_ = obj_["middleName"].toString();
 
-            candidateUserModel_->addCandidateUser(userId_, firstName_, lastName_, middleName_);
+            candidateUserModel_->addCandidateUser(userId_, image_, firstName_, lastName_, middleName_);
         }
     }
 }

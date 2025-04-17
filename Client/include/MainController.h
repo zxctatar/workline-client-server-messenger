@@ -13,6 +13,7 @@
 #include "UserAccountManager.h"
 #include "ChatHistoryController.h"
 #include "SelectedChatManager.h"
+#include "ImageWorker.h"
 
 class MainController : public QObject
 {
@@ -62,6 +63,8 @@ private:
     TopBarController* topBarController_;
     ChatsBarController* chatsBarController_;
     ChatHistoryController* chatHistoryController_;
+
+    ImageWorker imageWorker_;
 };
 
 #endif // MAINCONTROLLER_H

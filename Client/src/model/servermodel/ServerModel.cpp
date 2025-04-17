@@ -7,7 +7,6 @@ ServerModel::ServerModel(QObject* parent)
 
 ServerModel::~ServerModel()
 {
-    imageWorker_.cleanupTempFiles();
 }
 
 int ServerModel::rowCount(const QModelIndex& parent_) const

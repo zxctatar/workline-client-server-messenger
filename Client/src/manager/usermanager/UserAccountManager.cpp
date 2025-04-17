@@ -17,8 +17,10 @@ UserAccountManager::~UserAccountManager()
 {
 }
 
-void UserAccountManager::setUserData(const QString& receivedUserFirstName_, const QString& receivedUserLastName_, const QString& receivedUserMiddleName_, const QString& receivedUserEmail_, const QString& receivedUserPhoneNumber_, const QString& receivedUserLogin_, const QString& receivedUserPassword_, const int receivedUserId_, const QString& receivedUserRole_)
+void UserAccountManager::setUserData(const QString& receivedUserAvatar_, const QString& receivedBirthDate_, const QString& receivedUserFirstName_, const QString& receivedUserLastName_, const QString& receivedUserMiddleName_, const QString& receivedUserEmail_, const QString& receivedUserPhoneNumber_, const QString& receivedUserLogin_, const QString& receivedUserPassword_, const int receivedUserId_, const QString& receivedUserRole_)
 {
+    userAvatarPath_ = receivedUserAvatar_;
+    userBirthDate_ = receivedBirthDate_;
     userFirstName_ = receivedUserFirstName_;
     userLastName_ = receivedUserLastName_;
     userMiddleName_ = receivedUserMiddleName_;
