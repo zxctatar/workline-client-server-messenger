@@ -8,7 +8,7 @@ ImageWorker::~ImageWorker()
 {
 }
 
-std::string ImageWorker::base64_encode(const std::vector<uint8_t>& buffer)
+std::string ImageWorker::base64_encode(const std::vector<uint8_t>& buffer) const
 {
     static const std::string base64_chars =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -53,7 +53,7 @@ std::string ImageWorker::base64_encode(const std::vector<uint8_t>& buffer)
     return ret;
 }
 
-std::vector<uint8_t> ImageWorker::base64_decode(const std::string& encoded_string)
+std::vector<uint8_t> ImageWorker::base64_decode(const std::string& encoded_string) const
 {
     static const std::string base64_chars =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"

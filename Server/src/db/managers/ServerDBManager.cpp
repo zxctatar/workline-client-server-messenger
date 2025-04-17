@@ -102,8 +102,8 @@ std::vector<ServerStruct> ServerDBManager::getServers(std::shared_ptr<DBConnecti
             ServerStruct server_;
             server_.serverID_ = row[0].as<int>();
 
-            pqxx::binarystring image_data_ = row[1].as<pqxx::binarystring>();
-            std::vector<uint8_t> imageBytes_(image_data_.begin(), image_data_.end());
+            pqxx::binarystring imageData_ = row[1].as<pqxx::binarystring>();
+            std::vector<uint8_t> imageBytes_(imageData_.begin(), imageData_.end());
             server_.serverImage_ = imageWorker_.base64_encode(imageBytes_);
 
             server_.serverName_ = row[2].as<std::string>();

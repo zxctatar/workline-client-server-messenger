@@ -20,7 +20,7 @@ public:
 
     std::string createUserIdJson(const int id_);
     std::string createRegistrationCodeJson(const std::string& code_);
-    std::string createLoginSuccessJson( const std::string& code_, const std::string& firstName_, const std::string& lastName_, const std::string& middleName_, const std::string& email_, const std::string& phoneNumber_, const int userID_, const std::string& userRole_, const std::string& userLogin_, const std::string& userPassword_);
+    std::string createLoginSuccessJson( const std::string& code_, const std::string& image_, const std::string& birthDate_, const std::string& firstName_, const std::string& lastName_, const std::string& middleName_, const std::string& email_, const std::string& phoneNumber_, const int userID_, const std::string& userRole_, const std::string& userLogin_, const std::string& userPassword_);
     std::string createLoginUnsuccessJson(const std::string& code_);
     std::string createAddingServerSuccessJson(const std::string& code_, const int serverID_, const std::string& serverImage_, const std::string& serverName_, const std::string& serverDescription);
     std::string createAddingServerUnsuccessJson(const std::string& code_);
@@ -37,7 +37,7 @@ public:
     std::string createChatCreateForSenderJson(const int serverId_, const int userId_, const int companionId_, const int chatId_);
     std::string createChatCreateForCompanionJson(const int serverId_, const int userId_, const int companionId_, const int chatId_);
     std::string createGetUsersOnServerJson(const int serverId_, const std::vector<UsersOnServerStruct>& users_);
-    std::string createAddInChatJson(const int serverId_, const int userId_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_);
+    std::string createAddInChatJson(const int serverId_, const std::string& avatar_, const int userId_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_);
     std::string createForAddedUserJson(const int serverId_, const std::string& serverImage_,  const std::string& serverName_, const std::string& serverDescription_);
     std::string createAddAdminOnServerJson(const std::string& code_, const int serverId_, const int userId_);
     std::string createRemoveAdminOnServerJson(const std::string& code_, const int serverId_, const int userId_);

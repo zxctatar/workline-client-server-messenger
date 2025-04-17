@@ -10,7 +10,7 @@ UserDBManager::UserDBManager()
 UserDBManager::~UserDBManager()
 {}
 
-std::string UserDBManager::regUser(std::shared_ptr<DBConnection> connection_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_, const std::string& login_, const long long int phoneNumber_, const std::string& email_, const std::string& password_) const
+std::string UserDBManager::regUser(std::shared_ptr<DBConnection> connection_, const std::vector<uint8_t>& image_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_, const std::string& birthDate_, const std::string& login_, const long long int phoneNumber_, const std::string& email_, const std::string& password_) const
 {
     try
     {
@@ -46,8 +46,8 @@ std::string UserDBManager::regUser(std::shared_ptr<DBConnection> connection_, co
         else
         {
             pqxx::work reg_user_(connection_->getConnection());
-            pqxx::result result_reg_user = DatabaseQueries::registrationUser(reg_user_, firstName_, lastName_,
-                                                                             middleName_, login_, email_,
+            pqxx::result result_reg_user = DatabaseQueries::registrationUser(reg_user_, image_, firstName_, lastName_,
+                                                                             middleName_, birthDate_, login_, email_,
                                                                              phoneNumber_, password_);
             reg_user_.commit();
 
@@ -118,11 +118,24 @@ LoginResult UserDBManager::loginUser(std::shared_ptr<DBConnection> connection_, 
                     result_.code_ = "ACCESS_ALLOWED_USER";
                     result_.userID_ = userID_;
                     result_.userRole_ = "user";
-                    result_.userFirstName_ = result_get_initials_[0][0].as<std::string>();
-                    result_.userLastName_ = result_get_initials_[0][1].as<std::string>();
-                    result_.userMiddleName_ = result_get_initials_[0][2].is_null() ? "" : result_get_initials_[0][2].as<std::string>();
-                    result_.userEmail_ = result_get_initials_[0][3].as<std::string>();
-                    result_.userPhoneNumber = result_get_initials_[0][4].as<std::string>();
+
+                    if (!result_get_initials_[0][0].is_null())
+                    {
+                        pqxx::binarystring imageData_ = result_get_initials_[0][0].as<pqxx::binarystring>();
+                        std::vector<uint8_t> imageBytes_(imageData_.begin(), imageData_.end());
+                        result_.userAvatar_ = imageWorker_.base64_encode(imageBytes_);
+                    }
+                    else
+                    {
+                        result_.userAvatar_ = "";
+                    }
+
+                    result_.userFirstName_ = result_get_initials_[0][1].as<std::string>();
+                    result_.userLastName_ = result_get_initials_[0][2].as<std::string>();
+                    result_.userMiddleName_ = result_get_initials_[0][3].is_null() ? "" : result_get_initials_[0][3].as<std::string>();
+                    result_.userBirthDate_ = result_get_initials_[0][4].as<std::string>();
+                    result_.userEmail_ = result_get_initials_[0][5].as<std::string>();
+                    result_.userPhoneNumber = result_get_initials_[0][6].as<std::string>();
                     result_.userLogin_ = login_;
                     result_.userPassword_ = password_;
                     return result_;
@@ -142,11 +155,24 @@ LoginResult UserDBManager::loginUser(std::shared_ptr<DBConnection> connection_, 
                 result_.code_ = "ACCESS_ALLOWED_ADMIN";
                 result_.userID_ = userID_;
                 result_.userRole_ = "admin";
-                result_.userFirstName_ = result_get_initials_[0][0].as<std::string>();
-                result_.userLastName_ = result_get_initials_[0][1].as<std::string>();
-                result_.userMiddleName_ = result_get_initials_[0][2].is_null() ? "" : result_get_initials_[0][2].as<std::string>();
-                result_.userEmail_ = result_get_initials_[0][3].as<std::string>();
-                result_.userPhoneNumber = result_get_initials_[0][4].as<std::string>();
+
+                if (!result_get_initials_[0][0].is_null())
+                {
+                    pqxx::binarystring imageData_ = result_get_initials_[0][0].as<pqxx::binarystring>();
+                    std::vector<uint8_t> imageBytes_(imageData_.begin(), imageData_.end());
+                    result_.userAvatar_ = imageWorker_.base64_encode(imageBytes_);
+                }
+                else
+                {
+                    result_.userAvatar_ = "";
+                }
+
+                result_.userFirstName_ = result_get_initials_[0][1].as<std::string>();
+                result_.userLastName_ = result_get_initials_[0][2].as<std::string>();
+                result_.userMiddleName_ = result_get_initials_[0][3].is_null() ? "" : result_get_initials_[0][3].as<std::string>();
+                result_.userBirthDate_ = result_get_initials_[0][4].as<std::string>();
+                result_.userEmail_ = result_get_initials_[0][5].as<std::string>();
+                result_.userPhoneNumber = result_get_initials_[0][6].as<std::string>();
                 result_.userLogin_ = login_;
                 result_.userPassword_ = password_;
                 return result_;
@@ -288,9 +314,14 @@ std::vector<UnverUserStruct> UserDBManager::getUnverUsers(std::shared_ptr<DBConn
         {
             UnverUserStruct unverUser_;
             unverUser_.userId_ = row[0].as<int>();
-            unverUser_.firstName_ = row[1].as<std::string>();
-            unverUser_.lastName_ = row[2].as<std::string>();
-            unverUser_.middleName_ = row[3].as<std::string>();
+
+            pqxx::binarystring imageData_ = row[1].as<pqxx::binarystring>();
+            std::vector<uint8_t> imageBytes_(imageData_.begin(), imageData_.end());
+            unverUser_.avatar_ = imageWorker_.base64_encode(imageBytes_);
+
+            unverUser_.firstName_ = row[2].as<std::string>();
+            unverUser_.lastName_ = row[3].as<std::string>();
+            unverUser_.middleName_ = row[4].as<std::string>();
 
             unverUsers_.push_back(unverUser_);
         }
@@ -432,9 +463,21 @@ std::vector<CandidateUserStruct> UserDBManager::getCandidateUsers(std::shared_pt
             CandidateUserStruct candidateUser_;
 
             candidateUser_.userId_ = row[0].as<int>();
-            candidateUser_.firstName_ = row[1].as<std::string>();
-            candidateUser_.lastName_ = row[2].as<std::string>();
-            candidateUser_.middleName_ = row[3].as<std::string>();
+
+            if(!row[1].is_null())
+            {
+                pqxx::binarystring imageData_ = row[1].as<pqxx::binarystring>();
+                std::vector<uint8_t> imageBytes_(imageData_.begin(), imageData_.end());
+                candidateUser_.avatar_ = imageWorker_.base64_encode(imageBytes_);
+            }
+            else
+            {
+                candidateUser_.avatar_ = "";
+            }
+
+            candidateUser_.firstName_ = row[2].as<std::string>();
+            candidateUser_.lastName_ = row[3].as<std::string>();
+            candidateUser_.middleName_ = row[4].as<std::string>();
 
             candidateUsers_.push_back(candidateUser_);
         }
@@ -489,12 +532,30 @@ AddUserOnServerResult UserDBManager::addUserOnServer(std::shared_ptr<DBConnectio
                 result_.firstName_ = row[1].as<std::string>();
                 result_.middleName_ = row[2].as<std::string>();
 
-                pqxx::binarystring image_data_ = row[3].as<pqxx::binarystring>();
-                std::vector<uint8_t> imageBytes_(image_data_.begin(), image_data_.end());
-                result_.serverImage_ = imageWorker_.base64_encode(imageBytes_);
+                if(!row[3].is_null())
+                {
+                    pqxx::binarystring imageData_ = row[3].as<pqxx::binarystring>();
+                    std::vector<uint8_t> imageBytes_(imageData_.begin(), imageData_.end());
+                    result_.avatar_ = imageWorker_.base64_encode(imageBytes_);
+                }
+                else
+                {
+                    result_.serverImage_ = "";
+                }
 
-                result_.serverName_ = row[4].as<std::string>();
-                result_.serverDescription_ = row[5].as<std::string>();
+                if(!row[4].is_null())
+                {
+                    pqxx::binarystring imageData_ = row[4].as<pqxx::binarystring>();
+                    std::vector<uint8_t> imageBytes_(imageData_.begin(), imageData_.end());
+                    result_.serverImage_ = imageWorker_.base64_encode(imageBytes_);
+                }
+                else
+                {
+                    result_.serverImage_ = "";
+                }
+
+                result_.serverName_ = row[5].as<std::string>();
+                result_.serverDescription_ = row[6].as<std::string>();
                 result_.code_ = "USER_ADDED";
 
                 return result_;
@@ -540,11 +601,23 @@ std::vector<UsersOnServerStruct> UserDBManager::getUsersOnServer(std::shared_ptr
         {
             UsersOnServerStruct user_;
             user_.userId_ = row[0].as<int>();
-            user_.firstName_ = row[1].as<std::string>();
-            user_.lastName_ = row[2].as<std::string>();
-            user_.middleName_ = row[3].as<std::string>();
-            user_.isServerAdmin_ = row[4].as<bool>();
-            user_.isGlobalAdmin_ = row[5].as<bool>();
+
+            if(!row[1].is_null())
+            {
+                pqxx::binarystring imageData_ = row[1].as<pqxx::binarystring>();
+                std::vector<uint8_t> imageBytes_(imageData_.begin(), imageData_.end());
+                user_.avatar_ = imageWorker_.base64_encode(imageBytes_);
+            }
+            else
+            {
+                user_.avatar_ = "";
+            }
+
+            user_.firstName_ = row[2].as<std::string>();
+            user_.lastName_ = row[3].as<std::string>();
+            user_.middleName_ = row[4].as<std::string>();
+            user_.isServerAdmin_ = row[5].as<bool>();
+            user_.isGlobalAdmin_ = row[6].as<bool>();
 
             users_.push_back(user_);
         }

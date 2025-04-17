@@ -15,12 +15,14 @@ pqxx::result DatabaseQueries::checkUserEmail(pqxx::transaction_base& conn_, cons
     return conn_.exec_params("SELECT 1 FROM users WHERE email = $1", email_);
 }
 
-pqxx::result DatabaseQueries::registrationUser(pqxx::transaction_base& conn_, const std::string& firstName_, const std::string& lastName_, const std::string& middleName_, const std::string& login_, const std::string& email_, const long long int phoneNumber_, const std::string& password_)
+pqxx::result DatabaseQueries::registrationUser(pqxx::transaction_base& conn_, const std::vector<uint8_t>& image_, const std::string& firstName_, const std::string& lastName_, const std::string& middleName_, const std::string& birthDate_, const std::string& login_, const std::string& email_, const long long int phoneNumber_, const std::string& password_)
 {
+    pqxx::binarystring imageSQL_(image_.data(), image_.size());
+
     return conn_.exec_params(R"(
-                INSERT INTO users(firstname, lastname, middlename, login, email, phone_number, password, verified_user)
-                VALUES($1,$2,$3,$4,$5,$6,$7, FALSE)
-            )", firstName_, lastName_, middleName_, login_, email_, phoneNumber_, password_);
+                INSERT INTO users(avatar, firstname, lastname, middlename, birth_date, login, email, phone_number, password, verified_user)
+                VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9, FALSE)
+            )", imageSQL_, firstName_, lastName_, middleName_, birthDate_, login_, email_, phoneNumber_, password_);
 }
 
 pqxx::result DatabaseQueries::checkDataVerification(pqxx::transaction_base& conn_, const std::string& login_, const std::string& password_)
@@ -70,7 +72,7 @@ pqxx::result DatabaseQueries::getAllServers(pqxx::transaction_base& conn_)
 
 pqxx::result DatabaseQueries::getUserData(pqxx::transaction_base& conn_, const std::string& login_)
 {
-    return conn_.exec_params("SELECT firstname, lastname, middlename, email, phone_number FROM users WHERE login = $1", login_);
+    return conn_.exec_params("SELECT avatar, firstname, lastname, middlename, birth_date, email, phone_number FROM users WHERE login = $1", login_);
 }
 
 pqxx::result DatabaseQueries::deleteServer(pqxx::transaction_base& conn_, const int serverId_)
@@ -85,7 +87,7 @@ pqxx::result DatabaseQueries::getUsersIdOnServers(pqxx::transaction_base& conn_,
 
 pqxx::result DatabaseQueries::getUnverUsers(pqxx::transaction_base& conn_)
 {
-    return conn_.exec(R"(SELECT user_id, firstname, lastname, middlename
+    return conn_.exec(R"(SELECT user_id, avatar, firstname, lastname, middlename
                         FROM users
                         WHERE verified_user = false
                           AND NOT EXISTS (
@@ -112,7 +114,7 @@ pqxx::result DatabaseQueries::checkIfUserRejected(pqxx::transaction_base& conn_,
 
 pqxx::result DatabaseQueries::getCandidateUsers(pqxx::transaction_base& conn_, const int serverId_)
 {
-    return conn_.exec_params(R"(SELECT user_id, firstname, lastname, middlename
+    return conn_.exec_params(R"(SELECT user_id, avatar, firstname, lastname, middlename
     FROM users
     WHERE verified_user = TRUE
     AND user_id NOT IN (SELECT user_id FROM users_on_servers WHERE server_id = $1)
@@ -137,6 +139,7 @@ pqxx::result DatabaseQueries::addUserOnServer(pqxx::transaction_base& conn_, con
             u.lastname,
             u.firstname,
             u.middlename,
+            u.avatar,
             s.server_image,
             s.server_name,
             s.server_description
@@ -151,6 +154,7 @@ pqxx::result DatabaseQueries::getChats(pqxx::transaction_base& conn_, const int 
     return conn_.exec_params(R"(
     SELECT
         u.user_id AS user_id,
+        u.avatar,
         u.firstname,
         u.lastname,
         u.middlename,
@@ -189,6 +193,7 @@ pqxx::result DatabaseQueries::getUsersOnServer(pqxx::transaction_base& conn_, co
     return conn_.exec_params(R"(
         SELECT
             u.user_id,
+            u.avatar,
             u.firstname,
             u.lastname,
             u.middlename,

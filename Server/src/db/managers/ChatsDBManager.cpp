@@ -40,17 +40,32 @@ std::vector<PrivateChatStruct> ChatsDBManager::getPrivateChats(std::shared_ptr<D
             for(const auto& row : result_get_chats_)
             {
                 int companionId_ = row[0].as<int>();
-                std::string firstName_ = row[1].as<std::string>();
-                std::string lastName_ = row[2].as<std::string>();
-                std::string middleName_ = row[3].as<std::string>();
-                std::string lastMessage_ = row[4].as<std::string>();
-                std::string messageTime_ = row[5].as<std::string>();
-                int chatId_ = row[6].as<int>();
-                bool hasChat_ = row[7].as<bool>();
+
+                std::string image_;
+
+                if(!row[1].is_null())
+                {
+                    pqxx::binarystring imageData_ = row[1].as<pqxx::binarystring>();
+                    std::vector<uint8_t> imageBytes_(imageData_.begin(), imageData_.end());
+                    image_ = imageWorker_.base64_encode(imageBytes_);
+                }
+                else
+                {
+                    image_ = "";
+                }
+
+                std::string firstName_ = row[2].as<std::string>();
+                std::string lastName_ = row[3].as<std::string>();
+                std::string middleName_ = row[4].as<std::string>();
+                std::string lastMessage_ = row[5].as<std::string>();
+                std::string messageTime_ = row[6].as<std::string>();
+                int chatId_ = row[7].as<int>();
+                bool hasChat_ = row[8].as<bool>();
 
                 PrivateChatStruct chat_;
                 chat_.chatId_ = chatId_;
                 chat_.companionId_ = companionId_;
+                chat_.avatar_ = image_;
                 chat_.lastMessage_ = lastMessage_;
                 chat_.firstName_ = firstName_;
                 chat_.lastName_ = lastName_;

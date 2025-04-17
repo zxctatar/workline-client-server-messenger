@@ -5,6 +5,7 @@
 #include "struct/PrivateChatStruct.h"
 #include "struct/ChatHistoryResult.h"
 #include "DBConnection.h"
+#include "ImageWorker.h"
 
 class ChatsDBManager
 {
@@ -17,7 +18,7 @@ public:
     std::vector<ChatHistoryResult> getChatHistory(std::shared_ptr<DBConnection> connection_, const int serverId_, const int userId_, const int chatId_);
 
 private:
-
+    ImageWorker imageWorker_;
 };
 
 #endif // CHATSDBMANAGER_H

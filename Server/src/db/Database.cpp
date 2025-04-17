@@ -257,13 +257,15 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
             create_users_table_.exec(R"(
                 CREATE TABLE users(
                     user_id SERIAL PRIMARY KEY,
+                    avatar BYTEA,
                     firstname VARCHAR(50) NOT NULL,
                     lastname VARCHAR(50) NOT NULL,
                     middlename VARCHAR(50) NOT NULL,
+                    birth_date DATE NOT NULL,
                     login VARCHAR(50) NOT NULL,
                     email VARCHAR(100) NOT NULL,
                     phone_number BIGINT NOT NULL,
-                    registration_date TIMESTAMP,
+                    registration_date TIMESTAMP DEFAULT NOW(),
                     password VARCHAR(50) NOT NULL,
                     verified_user BOOLEAN NOT NULL DEFAULT FALSE
                     ))");
@@ -712,8 +714,8 @@ void Database::insertAdmin(pqxx::connection& connection_to_worklinedatabase_)
         pqxx::work txn1(connection_to_worklinedatabase_);
 
         pqxx::result result = txn1.exec(R"(
-            INSERT INTO users (firstname, lastname, middlename, login, email, phone_number, password, verified_user)
-            VALUES ('Максим', 'Кнутов', 'Владимирович', 'zxctatar', 'maksimknutov80@gmail.com', 79333668855, '123123', FALSE);
+            INSERT INTO users (firstname, lastname, middlename, birth_date, login, email, phone_number, password, verified_user)
+            VALUES ('Максим', 'Кнутов', 'Владимирович', '18-03-2025', 'zxctatar', 'maksimknutov80@gmail.com', 79333668855, '123123', FALSE);
         )");
 
         txn1.commit();

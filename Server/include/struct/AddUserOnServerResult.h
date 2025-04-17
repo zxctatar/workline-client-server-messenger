@@ -7,7 +7,7 @@
 struct AddUserOnServerResult
 {
     std::string code_;
-
+    std::string avatar_;
     std::string lastName_;
     std::string firstName_;
     std::string middleName_;

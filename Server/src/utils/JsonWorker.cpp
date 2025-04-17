@@ -54,13 +54,15 @@ std::string JsonWorker::createRegistrationCodeJson(const std::string& code_)
     }
 }
 
-std::string JsonWorker::createLoginSuccessJson(const std::string& code_, const std::string& firstName_, const std::string& lastName_, const std::string& middleName_, const std::string& email_, const std::string& phoneNumber_, const int userID_, const std::string& userRole_, const std::string& userLogin_, const std::string& userPassword_)
+std::string JsonWorker::createLoginSuccessJson(const std::string& code_, const std::string& image_, const std::string& birthDate_, const std::string& firstName_, const std::string& lastName_, const std::string& middleName_, const std::string& email_, const std::string& phoneNumber_, const int userID_, const std::string& userRole_, const std::string& userLogin_, const std::string& userPassword_)
 {
     try
     {
         nlohmann::json json_;
         json_["Info"] = "Login";
         json_["Code"] = code_;
+        json_["UserAvatar"] = image_;
+        json_["UserBirthDate"] = birthDate_;
         json_["UserFirstName"] = firstName_;
         json_["UserLastName"] = lastName_;
         json_["UserMiddleName"] = middleName_;
@@ -387,12 +389,13 @@ std::string JsonWorker::createGetUsersOnServerJson(const int serverId_, const st
     }
 }
 
-std::string JsonWorker::createAddInChatJson(const int serverId_, const int userId_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_)
+std::string JsonWorker::createAddInChatJson(const int serverId_, const std::string& avatar_, const int userId_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_)
 {
     try
     {
         nlohmann::json json_;
         json_["Info"] = "Add_User_In_Chat";
+        json_["avatar"] = avatar_;
         json_["serverId"] = serverId_;
         json_["userId"] = userId_;
         json_["lastName"] = lastName_;

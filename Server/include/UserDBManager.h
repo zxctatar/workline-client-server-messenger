@@ -18,7 +18,7 @@ public:
     explicit UserDBManager();
     ~UserDBManager();
 
-    std::string regUser(std::shared_ptr<DBConnection> connection_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_, const std::string& login_, const long long int phoneNumber_, const std::string& email_, const std::string& password_) const;
+    std::string regUser(std::shared_ptr<DBConnection> connection_, const std::vector<uint8_t>& image_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_, const std::string& birthDate_, const std::string& login_, const long long int phoneNumber_, const std::string& email_, const std::string& password_) const;
     LoginResult loginUser(std::shared_ptr<DBConnection> connection_, const std::string& login_, const std::string& password_) const;
     ReconnectResult reconnectUser(std::shared_ptr<DBConnection> connection_, const std::string& login_, const std::string& password_) const;
     std::vector<int> getUsersOnServers(std::shared_ptr<DBConnection> connection_, const int serverId_) const;

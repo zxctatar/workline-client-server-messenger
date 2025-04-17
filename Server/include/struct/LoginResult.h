@@ -6,6 +6,8 @@
 struct LoginResult {
     std::string code_;
     int userID_;
+    std::string userAvatar_;
+    std::string userBirthDate_;
     std::string userRole_;
     std::string userLogin_;
     std::string userPassword_;

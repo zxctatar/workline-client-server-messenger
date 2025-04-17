@@ -8,6 +8,7 @@ struct PrivateChatStruct
 {
     int companionId_;
     int chatId_;
+    std::string avatar_;
     std::string firstName_;
     std::string lastName_;
     std::string middleName_;
@@ -19,6 +20,7 @@ struct PrivateChatStruct
         j = nlohmann::json{
             {"compaonionId", companionId_},
             {"chatId", chatId_},
+            {"avatar", avatar_},
             {"firstName", firstName_},
             {"lastName", lastName_},
             {"middleName", middleName_},

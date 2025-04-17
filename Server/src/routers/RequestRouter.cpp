@@ -25,22 +25,25 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         if(!json_.contains("lastname") || !json_.contains("firstname") ||
            !json_.contains("middlename") || !json_.contains("login") ||
            !json_.contains("phonenumber") || !json_.contains("email") ||
-           !json_.contains("password"))
+           !json_.contains("password") || !json_.contains("image") ||
+           !json_.contains("birthDate"))
         {
             throw std::runtime_error("Lost the value in the json document");
         }
 
         auto connection_ = connectionPool_.getConnection();
 
+        std::vector<uint8_t> receivedImage_ = imageWorker_.base64_decode(json_["image"].get<std::string>());
         std::string receivedLastname_ = json_["lastname"].get<std::string>();
         std::string receivedFirstname_ = json_["firstname"].get<std::string>();
         std::string receivedMiddlename_ = json_["middlename"].get<std::string>();
+        std::string receivedBirthDate_ = json_["birthDate"].get<std::string>();
         std::string receivedLogin_ = json_["login"].get<std::string>();
         long long int receivedPhonenumber_ = std::stoll(json_["phonenumber"].get<std::string>());
         std::string receivedEmail_ = json_["email"].get<std::string>();
         std::string receivedPassword_ = json_["password"].get<std::string>();
 
-        std::string response_ = userManager_.regUser(connection_, receivedLastname_, receivedFirstname_, receivedMiddlename_, receivedLogin_, receivedPhonenumber_, receivedEmail_, receivedPassword_);
+        std::string response_ = userManager_.regUser(connection_, receivedImage_, receivedLastname_, receivedFirstname_, receivedMiddlename_, receivedBirthDate_, receivedLogin_, receivedPhonenumber_, receivedEmail_, receivedPassword_);
         connectionPool_.returnConnection(connection_);
 
         std::string responseJson_ = jsonWorker_.createRegistrationCodeJson(response_);
@@ -80,7 +83,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             {
                 connUsers_.addAuthorizeUser(response_.userID_, session_);
             }
-            responseJson_ = jsonWorker_.createLoginSuccessJson(response_.code_, response_.userFirstName_, response_.userLastName_, response_.userMiddleName_, response_.userEmail_, response_.userPhoneNumber, response_.userID_, response_.userRole_, response_.userLogin_, response_.userPassword_);
+            responseJson_ = jsonWorker_.createLoginSuccessJson(response_.code_, response_.userAvatar_, response_.userBirthDate_, response_.userFirstName_, response_.userLastName_, response_.userMiddleName_, response_.userEmail_, response_.userPhoneNumber, response_.userID_, response_.userRole_, response_.userLogin_, response_.userPassword_);
         }
 
         boost::asio::post(executor_, [this, session_, responseJson_](){
@@ -336,7 +339,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
 
         if(response_.code_ == "USER_ADDED")
         {
-            std::string responseJsonAddInChat_ = jsonWorker_.createAddInChatJson(receivedServerId_, receivedUserId_, response_.lastName_, response_.firstName_, response_.middleName_);
+            std::string responseJsonAddInChat_ = jsonWorker_.createAddInChatJson(receivedServerId_, response_.avatar_, receivedUserId_, response_.lastName_, response_.firstName_, response_.middleName_);
             std::string responseJsonForAddedUser_ = jsonWorker_.createForAddedUserJson(receivedServerId_, response_.serverImage_, response_.serverName_, response_.serverDescription_);
 
             std::weak_ptr<Session> user_ = connUsers_.getUser(receivedUserId_);
