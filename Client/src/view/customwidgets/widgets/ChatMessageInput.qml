@@ -32,11 +32,11 @@ ScrollView {
             color: "#ADD8FC"
         }
 
-        leftPadding: 30
-        rightPadding: 30
+        leftPadding: Sizes.chatMessageLeftPadding // 30
+        rightPadding: Sizes.chatMessageRightPadding // 30
 
-        topPadding: 5
-        bottomPadding: 5
+        topPadding: Sizes.chatMessageTopPadding // 5
+        bottomPadding: Sizes.chatMessageBottomPadding // 5
 
         verticalAlignment: TextInput.AlignVCenter
         horizontalAlignment: TextInput.AlignLeft

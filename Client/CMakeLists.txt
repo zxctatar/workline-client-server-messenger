@@ -71,6 +71,7 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/widgets/AdminSwitcherButton.qml
     QML_FILES src/view/customwidgets/widgets/ChatMessageInput.qml
     QML_FILES src/view/customwidgets/widgets/ChatMessageObject.qml
+    QML_FILES src/view/customwidgets/widgets/AddImage.qml
     RESOURCES src/view/customwidgets/widgets/qmldir
 
     QML_FILES src/view/windowpages/menuprofilepage/MenuProfilePage.qml

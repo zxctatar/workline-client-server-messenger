@@ -17,7 +17,7 @@ public:
     Q_INVOKABLE void getUserData() const;
 
 signals:
-    void setUserDataSignal(const QString& userFirstName_, const QString& userLastName_, const QString& userMiddleName_, const QString& userEmail_, const QString& userPhoneNumber_) const;
+    void setUserDataSignal(const QString& userAvatarPath_, const QString& userBirthDate_, const QString& userFirstName_, const QString& userLastName_, const QString& userMiddleName_, const QString& userEmail_, const QString& userPhoneNumber_) const;
 };
 
 #endif // PROFILEPAGECONTROLLER_H

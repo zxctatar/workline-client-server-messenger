@@ -3,6 +3,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Qt.labs.platform 1.1
 import Qt5Compat.GraphicalEffects
+import "../../../resources"
 
 Button {
     id: addImage
@@ -10,14 +11,16 @@ Button {
     readonly property string base64Image: Qt.btoa(image.source)
     property bool isFileDialogOpen: false
     property int radius: 0
+    property string path: ""
+    property bool change: true
     signal badImage()
     signal done()
 
     background: Rectangle {
         radius: addImage.radius
-        border.color: "#4EABFD"
+        border.color: Colors.addImageBorderColor
         border.width: 1
-        color: "#DDEFFF"
+        color: Colors.addImageBackgroundColor
     }
 
     Rectangle {
@@ -42,7 +45,7 @@ Button {
             id: image
             anchors.fill: parent
             visible: fileDialog.file !== ""
-            source: fileDialog.file
+            source: addImage.path == "" ? fileDialog.file : addImage.path
             fillMode: Image.PreserveAspectCrop
 
             onStatusChanged: {
@@ -71,13 +74,13 @@ Button {
         font.pixelSize: 11
         wrapMode: Text.WordWrap
         color: "black"
-        text: "Добавить изображение 100x100 (png, ico, svg)"
-        visible: fileDialog.file == ""
+        text: "Добавить изображение 100x100 (png, ico, svg, jpeg, jpg)"
+        visible: fileDialog.file == "" ?  (addImage.change ? true : false) : false
     }
 
     FileDialog {
         id: fileDialog
-        nameFilters: ["Image files (*.png *.ico *.svg *.jpeg)"]
+        nameFilters: ["Image files (*.png *.ico *.svg *.jpeg *.jpg)"]
 
         onAccepted: {
             addImage.isFileDialogOpen = false
@@ -89,8 +92,11 @@ Button {
     }
 
     onClicked: {
-        addImage.isFileDialogOpen = true
-        fileDialog.open()
+        if(addImage.change)
+        {
+            addImage.isFileDialogOpen = true
+            fileDialog.open()
+        }
     }
 
     MouseArea {

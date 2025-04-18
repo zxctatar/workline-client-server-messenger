@@ -16,6 +16,11 @@ Button {
     property string lastMessage
     property string path
 
+    property string processedLastMessage: {
+        const words = lastMessage.split("\n")
+        return words[0]
+    }
+
     background: Rectangle {
         color: chatObject.selected ? Colors.selectedChatColor : (chatObject.hovered ? "#85B4DE" : Colors.normalChatColor)
     }
@@ -64,7 +69,7 @@ Button {
 
             ChatMessageText {
                 id: messageText
-                text: chatObject.lastMessage
+                text: chatObject.processedLastMessage
                 width: parent.width
             }
         }

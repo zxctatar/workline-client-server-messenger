@@ -14,6 +14,15 @@ QtObject {
     // add admin object
     readonly property int maxAddAdminObjectHeight: 50 // высота объекта добавления админа
 
+    //chat message input
+    readonly property int chatMessageLeftPadding: 30 // левый отступ текст поля ввода сообщения
+    readonly property int chatMessageRightPadding: 30 // правый отступ текста поля ввода сообщения
+    readonly property int chatMessageTopPadding: 5 // верхний отступ текста поля ввода сообщения
+    readonly property int chatMessageBottomPadding: 5 // нижний отступ текста поля ввода сообщения
+
+    //chat message object
+    readonly property int chatMessageObjectRadius: 5 // скругление углов объекта сообщения
+
     // admin switcher button
     readonly property int maxAdminSwitcherButtonWidth: 35 // ширина кнопки переключения админа
     readonly property int maxAdminSwitcherButtonHeight: 35 // высота кнопки переключения админа

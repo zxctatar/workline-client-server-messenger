@@ -14,6 +14,10 @@ QtObject {
     readonly property color hoverButtonTextColor: "#292929" // цвет текста кнопки когда навелись
     readonly property color normalButtonTextColor: "#373737" // цвет текста обычной кнопки
 
+    //add image
+    readonly property color addImageBackgroundColor: "#DDEFFF" // задний фон поля добавления фото
+    readonly property color addImageBorderColor: "#4EABFD" // цвет рамки поля добавления фото
+
     //chat name text
     readonly property color chatNameTextColor: "#373737" // цвет имени чата
 

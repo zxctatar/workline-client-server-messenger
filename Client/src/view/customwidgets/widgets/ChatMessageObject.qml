@@ -19,11 +19,11 @@ Item {
     Rectangle {
         id: backgroundRect
         color: chatMessageObject.isCompanion ? Colors.chatMessageCandidateColor : Colors.chatMessageUserColor
-        radius: 5
+        radius: Sizes.chatMessageObjectRadius // 5
         anchors.left: parent.left
         anchors.leftMargin: 10
 
-        width: Math.min(messageText.paintedWidth + 20, Sizes.maxChatMessageObjectWidth) //400
+        width: Math.min(messageText.paintedWidth + 20, Sizes.maxChatMessageObjectWidth) // 400
         height: messageText.paintedHeight + 20
 
         Text {

@@ -44,6 +44,16 @@ bool UserAccountManager::getAuthorized() const
     return isAuthorized;
 }
 
+QString UserAccountManager::getUserAvatarPath() const
+{
+    return userAvatarPath_;
+}
+
+QString UserAccountManager::getUserBirthDate() const
+{
+    return userBirthDate_;
+}
+
 QString UserAccountManager::getUserLogin() const
 {
     return userLogin_;

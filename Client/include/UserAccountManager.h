@@ -14,6 +14,8 @@ public:
     void setUserData(const QString& receivedUserAvatar_, const QString& receivedBirthDate_, const QString& receivedUserFirstName_, const QString& receivedUserLastName_, const QString& receivedUserMiddleName_, const QString& receivedUserEmail_, const QString& receivedUserPhoneNumber_, const QString& receivedUserLogin_, const QString& receivedUserPassword_, const int receivedUserId_, const QString& receivedUserRole_);
     QString getUserRole() const;
     bool getAuthorized() const;
+    QString getUserAvatarPath() const;
+    QString getUserBirthDate() const;
     QString getUserLogin() const;
     QString getUserPassword() const;
     QString getUserFirstName() const;

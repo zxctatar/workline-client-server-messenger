@@ -11,6 +11,8 @@ Page {
 
     property var controller // profilePageController MenuWindow.qml
 
+    property string avatarPath
+    property string birthDate
     property string firstName
     property string lastName
     property string middleName
@@ -24,7 +26,9 @@ Page {
     Connections {
         target: menuProfilePage.controller
 
-        function onSetUserDataSignal(firstname, lastname, middlename, email, phoneNumber) {
+        function onSetUserDataSignal(avatarPath, birthDate, firstname, lastname, middlename, email, phoneNumber) {
+            menuProfilePage.avatarPath = avatarPath
+            menuProfilePage.birthDate = birthDate
             menuProfilePage.firstName = firstname
             menuProfilePage.lastName = lastname
             menuProfilePage.middleName = middlename
@@ -61,81 +65,133 @@ Page {
         text: "Профиль"
     }
 
-    ColumnLayout {
-        id: layout
+    Item {
+        id: fields
+        anchors.top: windowText.bottom
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: backButton.bottom
-        spacing: Sizes.mainPageWidgetsSpacing
 
-        MenuText {
-            id: lastname
-            Layout.topMargin: 10
-            text: "Фамилия"
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-        }
+        ScrollView {
+            anchors.fill: parent
+            clip: true
+            width: parent.width
+            height: parent.height
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+            ScrollBar.vertical.policy: ScrollBar.AlwaysOff
 
-        MenuPageLabel {
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            Layout.fillWidth: true
-            text: menuProfilePage.lastName
-        }
+            contentItem: Flickable {
+                id: flickable
+                boundsBehavior: Flickable.StopAtBounds
+                contentWidth: parent.width
+                contentHeight: coll.height + 5
+                interactive: true
 
-        MenuText {
-            id: firstname
-            Layout.topMargin: 25
-            text: "Имя"
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-        }
+                ColumnLayout {
+                    id: coll
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.preferredWidth: parent.width
+                    spacing: Sizes.mainPageWidgetsSpacing
 
-        MenuPageLabel {
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            Layout.fillWidth: true
-            text: menuProfilePage.firstName
-        }
+                    AddImage {
+                        id: avatar
+                        Layout.topMargin: 10
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                        radius: 50
+                        Layout.preferredWidth: 100
+                        Layout.preferredHeight: 100
+                        change: false
+                        path: menuProfilePage.avatarPath
+                    }
 
-        MenuText {
-            id: middlename
-            Layout.topMargin: 25
-            text: "Отчество"
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-        }
+                    MenuText {
+                        id: lastname
+                        Layout.topMargin: 25
+                        text: "Фамилия"
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                    }
 
-        MenuPageLabel {
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            Layout.fillWidth: true
-            text: menuProfilePage.middleName
-        }
+                    MenuPageLabel {
+                        Layout.preferredHeight: 20
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                        Layout.fillWidth: true
+                        text: menuProfilePage.lastName
+                    }
 
-        MenuText {
-            id: email
-            Layout.topMargin: 25
-            text: "Почта"
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-        }
+                    MenuText {
+                        id: firstname
+                        Layout.topMargin: 25
+                        text: "Имя"
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                    }
 
-        MenuPageLabel {
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            Layout.fillWidth: true
-            text: menuProfilePage.email
-        }
+                    MenuPageLabel {
+                        Layout.preferredHeight: 20
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                        Layout.fillWidth: true
+                        text: menuProfilePage.firstName
+                    }
 
-        MenuText {
-            id: phoneNumber
-            Layout.topMargin: 25
-            text: "Телефон"
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-        }
+                    MenuText {
+                        id: middlename
+                        Layout.topMargin: 25
+                        text: "Отчество"
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                    }
 
-        MenuPageLabel {
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            Layout.fillWidth: true
-            text: menuProfilePage.phoneNumber
+                    MenuPageLabel {
+                        Layout.preferredHeight: 20
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                        Layout.fillWidth: true
+                        text: menuProfilePage.middleName
+                    }
+
+                    MenuText {
+                        id: birthDate
+                        Layout.topMargin: 25
+                        text: "Дата рождения"
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                    }
+
+                    MenuPageLabel {
+                        Layout.preferredHeight: 20
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                        Layout.fillWidth: true
+                        text: menuProfilePage.birthDate
+                    }
+
+                    MenuText {
+                        id: email
+                        Layout.topMargin: 25
+                        text: "Почта"
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                    }
+
+                    MenuPageLabel {
+                        Layout.preferredHeight: 20
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                        Layout.fillWidth: true
+                        text: menuProfilePage.email
+                    }
+
+                    MenuText {
+                        id: phoneNumber
+                        Layout.topMargin: 25
+                        text: "Телефон"
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                    }
+
+                    MenuPageLabel {
+                        Layout.preferredHeight: 20
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                        Layout.fillWidth: true
+                        text: menuProfilePage.phoneNumber
+                    }
+                }
+            }
         }
     }
 }
