@@ -565,7 +565,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             session_.lock()->do_write(responseJson_);
         });
     }
-    else if(json_["Info"] == "Get_Chat_History")
+    else if(json_["Info"] == "Get_Chat_Data")
     {
         if(!json_.contains("userId") || !json_.contains("serverId") || !json_.contains("chatId"))
         {
@@ -577,10 +577,11 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         int receivedChatId_ = json_["chatId"].get<int>();
 
         auto connection_ = connectionPool_.getConnection();
-        std::vector<ChatHistoryResult> response_ = chatManager_.getChatHistory(connection_, receivedServerId_, receivedUserId_, receivedChatId_);
+        std::vector<ChatHistoryResult> responseHistory_ = chatManager_.getChatHistory(connection_, receivedServerId_, receivedUserId_, receivedChatId_);
+        ChatDataResult responseData_ = chatManager_.getChatData(connection_, receivedServerId_, receivedUserId_, receivedChatId_);
         connectionPool_.returnConnection(connection_);
 
-        std::string responseJson_ = jsonWorker_.createGetChatHistoryJson(response_, receivedUserId_, receivedServerId_, receivedChatId_);
+        std::string responseJson_ = jsonWorker_.createGetChatDataJson(responseHistory_, responseData_, receivedUserId_, receivedServerId_, receivedChatId_);
 
         boost::asio::post(executor_, [this, session_, responseJson_](){
             session_.lock()->do_write(responseJson_);

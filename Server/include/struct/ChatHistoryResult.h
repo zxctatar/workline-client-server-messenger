@@ -12,6 +12,13 @@ struct ChatHistoryResult
     bool isCompanion_;
     bool viewed_;
 
+    std::string firstName_;
+    std::string lastName_;
+    std::string middleName_;
+    std::string email_;
+    std::string birthDate_;
+    std::string phoneNumber_;
+
     void to_json(nlohmann::json& j) const {
         j = nlohmann::json{
             {"messageId", messageId_},

@@ -132,7 +132,7 @@ int ChatsDBManager::createChat(std::shared_ptr<DBConnection> connection_, const 
 
 std::vector<ChatHistoryResult> ChatsDBManager::getChatHistory(std::shared_ptr<DBConnection> connection_, const int serverId_, const int userId_, const int chatId_)
 {
-    std::vector<ChatHistoryResult> history_;
+    std::vector<ChatHistoryResult> messages_;
 
     try
     {
@@ -172,10 +172,10 @@ std::vector<ChatHistoryResult> ChatsDBManager::getChatHistory(std::shared_ptr<DB
                     messageH_.isCompanion_ = row[3].as<bool>();
                     messageH_.viewed_ = true;
 
-                    history_.push_back(messageH_);
+                    messages_.push_back(messageH_);
                 }
 
-                return history_;
+                return messages_;
             }
             else
             {
@@ -191,5 +191,63 @@ std::vector<ChatHistoryResult> ChatsDBManager::getChatHistory(std::shared_ptr<DB
     {
         BOOST_LOG_TRIVIAL(info) << e.what();
         return std::vector<ChatHistoryResult>();
+    }
+}
+
+ChatDataResult ChatsDBManager::getChatData(std::shared_ptr<DBConnection> connection_, const int serverId_, const int userId_, const int chatId_)
+{
+    ChatDataResult result_;
+
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Get chat data...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Сonnection problem.";
+        }
+
+        pqxx::work access_check_(connection_->getConnection());
+        pqxx::result result_access_check_ = DatabaseQueries::checkAccess(access_check_, userId_);
+
+        bool access_ = result_access_check_[0][0].as<bool>();
+
+        access_check_.commit();
+
+        if(access_)
+        {
+            pqxx::work check_chat_access_(connection_->getConnection());
+            pqxx::result result_check_chat_access_ = DatabaseQueries::checkChatAccess(check_chat_access_, chatId_, userId_);
+            check_chat_access_.commit();
+
+            if(!result_check_chat_access_.empty())
+            {
+                pqxx::work get_chat_data_(connection_->getConnection());
+                pqxx::result result_get_chat_data_ = DatabaseQueries::getCompanionData(get_chat_data_, chatId_, serverId_, userId_);
+                get_chat_data_.commit();
+
+                result_.firstName_ = result_get_chat_data_[0][0].as<std::string>();
+                result_.lastName_ = result_get_chat_data_[0][1].as<std::string>();
+                result_.middleName_ = result_get_chat_data_[0][2].as<std::string>();
+                result_.email_ = result_get_chat_data_[0][3].as<std::string>();
+                result_.birthDate_ = result_get_chat_data_[0][4].as<std::string>();
+                result_.phoneNumber_ = result_get_chat_data_[0][5].as<std::string>();
+
+                return result_;
+            }
+            else
+            {
+                return result_;
+            }
+        }
+        else
+        {
+            return result_;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(info) << e.what();
+        return result_;
     }
 }

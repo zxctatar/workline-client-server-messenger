@@ -275,3 +275,20 @@ pqxx::result DatabaseQueries::addMessage(pqxx::transaction_base& conn_, const in
         userId_, chatId_, serverId_, message_
         );
 }
+
+pqxx::result DatabaseQueries::getCompanionData(pqxx::transaction_base& conn_, const int chatId_, const int serverId_, const int userId_)
+{
+    return conn_.exec_params(R"(
+        SELECT u.firstname, u.lastname, u.middlename, u.email, u.birth_date, u.phone_number
+        FROM private_chats pc
+        JOIN users u
+            ON u.user_id = (
+                CASE
+                    WHEN pc.user1_id = $3 THEN pc.user2_id
+                    ELSE pc.user1_id
+                END
+            )
+        WHERE pc.server_id = $1 AND pc.id = $2
+          AND ($3 = pc.user1_id OR $3 = pc.user2_id)
+    )", serverId_, chatId_, userId_);
+}

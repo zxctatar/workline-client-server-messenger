@@ -517,15 +517,21 @@ std::string JsonWorker::createGetServerRoleJson(const std::string& code_, const 
     }
 }
 
-std::string JsonWorker::createGetChatHistoryJson(const std::vector<ChatHistoryResult> history_, const int userId_, const int serverId_, const int chatId_)
+std::string JsonWorker::createGetChatDataJson(const std::vector<ChatHistoryResult>& history_, const ChatDataResult& data_, const int userId_, const int serverId_, const int chatId_)
 {
     try
     {
         nlohmann::json json_;
-        json_["Info"] = "Get_Chat_History";
+        json_["Info"] = "Get_Chat_Data";
         json_["userId"] = userId_;
         json_["serverId"] = serverId_;
         json_["chatId"] = chatId_;
+        json_["firstName"] = data_.firstName_;
+        json_["lastName"] = data_.lastName_;
+        json_["middleName"] = data_.middleName_;
+        json_["email"] = data_.email_;
+        json_["birthDate"] = data_.birthDate_;
+        json_["phoneNumber"] = data_.phoneNumber_;
 
         for(const auto& i : history_)
         {
