@@ -9,6 +9,7 @@ MainController::MainController(QObject* parent)
     , topBarController_(nullptr)
     , chatsBarController_(nullptr)
     , chatHistoryController_(nullptr)
+    , chatInfoBarController_(nullptr)
 {
     serverConnector_ = (new ServerConnector("localhost", 8001, this));
 
@@ -42,6 +43,10 @@ MainController::~MainController()
     if(chatsBarController_)
     {
         chatsBarController_->deleteLater();
+    }
+    if(chatInfoBarController_)
+    {
+        chatInfoBarController_->deleteLater();
     }
 
     imageWorker_.cleanupTempFiles();
@@ -106,6 +111,15 @@ ChatHistoryController* MainController::getChatHistoryController()
     return chatHistoryController_;
 }
 
+ChatInfoBarController* MainController::getChatInfoBarController()
+{
+    if(!chatInfoBarController_)
+    {
+        createChatInfoBarController();
+    }
+    return chatInfoBarController_;
+}
+
 void MainController::createLoginPageController()
 {
     if(!loginPageController_)
@@ -140,6 +154,8 @@ void MainController::createServerTableController()
         connect(serverConnector_, &ServerConnector::sendAddNewServerSignal, serverTableController_, &ServerTableController::slotAddNewServer);
         connect(serverTableController_, &ServerTableController::getServerRoleSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(&SelectedServerManager::instance(), &SelectedServerManager::deleteServerSignal, serverTableController_, &ServerTableController::slotDeleteServer);
+        connect(serverTableController_, &ServerTableController::serverSelectedSignal, chatHistoryController_, &ChatHistoryController::slotServerChanged);
+        connect(serverTableController_, &ServerTableController::serverSelectedSignal, chatInfoBarController_, &ChatInfoBarController::slotServerChanged);
     }
 }
 
@@ -199,9 +215,21 @@ void MainController::createChatHistoryController()
     {
         chatHistoryController_ = new ChatHistoryController(this);
         connect(&SelectedChatManager::instance(), &SelectedChatManager::setNewChatIdSignal, chatHistoryController_, &ChatHistoryController::slotSetChatId);
-        connect(chatHistoryController_, &ChatHistoryController::getChatHistorySignal, serverConnector_, &ServerConnector::slotSendToServer);
-        connect(serverConnector_, &ServerConnector::sendSetChatHistorySignal, chatHistoryController_, &ChatHistoryController::slotSetChatHistory);
+        connect(chatHistoryController_, &ChatHistoryController::getChatDataSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendSetChatDataSignal, chatHistoryController_, &ChatHistoryController::slotSetChatData);
         connect(chatHistoryController_, &ChatHistoryController::sendMessageSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendSetNewMessage, chatHistoryController_, &ChatHistoryController::slotSetNewMessage);
+    }
+}
+
+void MainController::createChatInfoBarController()
+{
+    if(!chatInfoBarController_)
+    {
+        chatInfoBarController_ = new ChatInfoBarController(this);
+        connect(&SelectedChatManager::instance(), &SelectedChatManager::chatDataChangedSignal, chatInfoBarController_, &ChatInfoBarController::slotSetChatData);
+        connect(&SelectedChatManager::instance(), &SelectedChatManager::chatAvatarChangedSignal, chatInfoBarController_, &ChatInfoBarController::slotSetChatAvatar);
+        connect(&SelectedChatManager::instance(), &SelectedChatManager::clearChatDataSignal, chatInfoBarController_, &ChatInfoBarController::slotClearChatData);
+        connect(&SelectedChatManager::instance(), &SelectedChatManager::setNewChatIdSignal, chatInfoBarController_, &ChatInfoBarController::slotChatIdChanged);
     }
 }

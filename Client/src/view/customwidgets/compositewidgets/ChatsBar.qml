@@ -40,11 +40,13 @@ Item {
                 required property int companionId
                 required property string lastMess
                 required property string imagePath
+                required property bool isGroupChat
 
                 chatId: id
                 displayName: name
                 lastMessage: lastMess
                 path: imagePath
+                isGroup: isGroupChat
 
                 selected: chatsBar.currentIndex == id ? true : false
 
@@ -52,7 +54,7 @@ Item {
                 height: Sizes.maxChatObjectHeight // 70
 
                 onClicked: {
-                    if(isChat == false)
+                    if(isChat == false && isGroupChat == false)
                     {
                         createChatWindow.companionId = companionId
                         createChatWindow.open()
@@ -60,6 +62,8 @@ Item {
                     else if(chatsBar.currentIndex != id)
                     {
                         chatsBar.currentIndex = id
+                        chatsBar.controller.clearChatData()
+                        chatsBar.controller.setChatAvatar(imagePath)
                         chatsBar.controller.sendChatId(id)
                     }
                 }

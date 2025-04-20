@@ -20,6 +20,9 @@ QtObject {
     readonly property int chatMessageTopPadding: 5 // верхний отступ текста поля ввода сообщения
     readonly property int chatMessageBottomPadding: 5 // нижний отступ текста поля ввода сообщения
 
+    //chat info bar
+    readonly property int maxChatInfoBarHeight: 70 // высота панели информации чата
+
     //chat message object
     readonly property int chatMessageObjectRadius: 5 // скругление углов объекта сообщения
 
@@ -141,6 +144,12 @@ QtObject {
     readonly property int radiusAddServerWindow: 5 // скругление углов окна добавления сервера
 
     readonly property int addServerWindowFontSize: 16 // размер шрифта у окна добавления сервера
+
+    //chat info wondow
+    readonly property int maxChatInfoWindowWidth: 475 // ширина окна информации чата
+    readonly property int maxChatInfoWindowHeight: 550 // высота окна информации чата
+
+    readonly property int radiusChatInfoWindow: 5 // скругление углов окна информации чата
 
     //buttons
     readonly property int maxButtonWidth: 410 // ширина кнопки

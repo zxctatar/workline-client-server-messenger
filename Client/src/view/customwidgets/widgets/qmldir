@@ -29,3 +29,4 @@ AdminSwitcherButton 1.0 AdminSwitcherButton.qml
 ChatMessageInput 1.0 ChatMessageInput.qml
 ChatMessageObject 1.0 ChatMessageObject.qml
 AddImage 1.0 AddImage.qml
+ViewImage 1.0 ViewImage.qml

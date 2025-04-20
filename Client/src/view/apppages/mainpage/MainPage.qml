@@ -52,12 +52,23 @@ Page {
         }
     }
 
+    ChatInfoBar  {
+        id: chatInfoBar
+        anchors.top: parent.top
+        anchors.left: layout.right
+        anchors.right: parent.right
+
+        controller: mainPage.mainController.chatInfoBarController
+
+        height: Sizes.maxChatInfoBarHeight // 70
+    }
+
     ChatHistory {
         controller: mainPage.mainController.chatHistoryController
         notificationManager: mainPage.notificationManager
 
         anchors.left: layout.right
-        anchors.top: parent.top
+        anchors.top: chatInfoBar.bottom
         anchors.bottom: parent.bottom
         anchors.right: parent.right
     }
@@ -74,6 +85,12 @@ Page {
 
         cursorShape: Qt.SizeHorCursor
 
+        Rectangle {
+            width: parent.width - 4
+            height: parent.height
+            color: "#1673C8"
+        }
+
         onPressed: {
             drag.target = layout
             drag.axis = Drag.XAxis
@@ -83,7 +100,7 @@ Page {
             if(drag.active) {
                 const newWidth = Math.max(
                     100, Math.min(
-                        400,
+                        350,
                         layout.width + mouseX
                         )
                 )

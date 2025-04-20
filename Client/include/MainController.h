@@ -14,6 +14,7 @@
 #include "ChatHistoryController.h"
 #include "SelectedChatManager.h"
 #include "ImageWorker.h"
+#include "ChatInfoBarController.h"
 
 class MainController : public QObject
 {
@@ -26,6 +27,7 @@ class MainController : public QObject
     Q_PROPERTY(TopBarController* topBarController READ getTopBarController NOTIFY topBarControllerChanged FINAL)
     Q_PROPERTY(ChatsBarController* chatsBarController READ getChatsBarController NOTIFY chatsBarControllerChanged FINAL)
     Q_PROPERTY(ChatHistoryController* chatHistoryController READ getChatHistoryController NOTIFY chatHistoryControllerChanged FINAL)
+    Q_PROPERTY(ChatInfoBarController* chatInfoBarController READ getChatInfoBarController NOTIFY chatInfoBarControllerChanged FINAL)
 
 public:
     explicit MainController(QObject* parent = nullptr);
@@ -39,6 +41,7 @@ public:
     Q_INVOKABLE TopBarController* getTopBarController();
     Q_INVOKABLE ChatsBarController* getChatsBarController();
     Q_INVOKABLE ChatHistoryController* getChatHistoryController();
+    Q_INVOKABLE ChatInfoBarController* getChatInfoBarController();
 
 signals:
     void loginPageControllerChanged();
@@ -47,6 +50,7 @@ signals:
     void topBarControllerChanged();
     void chatsBarControllerChanged();
     void chatHistoryControllerChanged();
+    void chatInfoBarControllerChanged();
 
 private:
     void createLoginPageController();
@@ -55,6 +59,7 @@ private:
     void createTopBarController();
     void createChatsBarController();
     void createChatHistoryController();
+    void createChatInfoBarController();
 
     ServerConnector* serverConnector_;
     LoginPageController* loginPageController_;
@@ -63,6 +68,7 @@ private:
     TopBarController* topBarController_;
     ChatsBarController* chatsBarController_;
     ChatHistoryController* chatHistoryController_;
+    ChatInfoBarController* chatInfoBarController_;
 
     ImageWorker imageWorker_;
 };

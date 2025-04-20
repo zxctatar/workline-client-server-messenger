@@ -82,5 +82,8 @@
         <file>resources/img/WindowIcon.png</file>
         <file>view/customwidgets/widgets/AddImage.qml</file>
         <file>resources/img/images.jpeg</file>
+        <file>view/customwidgets/compositewidgets/ChatInfoBar.qml</file>
+        <file>view/customwidgets/widgets/ViewImage.qml</file>
+        <file>view/windows/ChatInfoWindow.qml</file>
     </qresource>
 </RCC>

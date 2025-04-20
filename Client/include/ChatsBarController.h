@@ -22,6 +22,8 @@ public:
     Q_INVOKABLE ChatModel* getChatModel();
     Q_INVOKABLE void createChat(const int companionId_) const;
     Q_INVOKABLE void sendChatId(const int chatId_) const;
+    Q_INVOKABLE void setChatAvatar(const QString& avatarPath_);
+    Q_INVOKABLE void clearChatData();
 
 signals:
     void getChatsSignal(const QString& info_);

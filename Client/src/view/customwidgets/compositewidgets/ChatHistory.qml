@@ -4,7 +4,7 @@ import "../widgets"
 Item {
     id: chatHistory
 
-    property var controller
+    property var controller // chatHistoryController
     property var notificationManager
 
     property var selectedChat: -1
@@ -14,6 +14,10 @@ Item {
 
         function onSetChatIdSignal(id) {
             chatHistory.selectedChat = id
+        }
+
+        function onClearChatIdSignal() {
+            chatHistory.selectedChat = -1
         }
     }
 
@@ -26,6 +30,8 @@ Item {
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.top: parent.top
+
+        visible: chatHistory.selectedChat == -1 ? false : true
     }
 
     ChatMessageInput {
@@ -36,5 +42,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+
+        visible: chatHistory.selectedChat == -1 ? false : true
     }
 }

@@ -13,13 +13,13 @@ Item {
     clip: true
 
     onSelectedChatChanged: {
-        chatMessageView.controller.getChatHistory(chatMessageView.selectedChat)
+        chatMessageView.controller.getChatData(chatMessageView.selectedChat)
     }
 
     Connections {
         target: chatMessageView.controller
 
-        function onScrollDown() {
+        function onScrollDownSignal() {
             listView.positionViewAtEnd()
         }
     }

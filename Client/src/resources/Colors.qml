@@ -63,6 +63,9 @@ QtObject {
     //top bar
     readonly property color topBarBackgroundColor: "#729EC6" // цвет заднего фона верхнего меню
 
+    //chat info bar
+    readonly property color chatInfoBarBackgroundColor: "#729EC6" // цвет заднего фона панели информации чата
+
     //add server button
     readonly property color addServerButtonBackgroundColor: "#5EA9EA" // цвет заднего фона кнопки добавления сервера
 

@@ -157,9 +157,9 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     {
         emit sendServerRoleRemovedSignal(jsonObj_);
     }
-    else if(jsonObj_["Info"] == "Get_Chat_History")
+    else if(jsonObj_["Info"] == "Get_Chat_Data")
     {
-        emit sendSetChatHistorySignal(jsonObj_);
+        emit sendSetChatDataSignal(jsonObj_);
     }
     else if(jsonObj_["Info"] == "Set_New_Message")
     {

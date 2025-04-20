@@ -19,19 +19,21 @@ public:
     ~ChatHistoryController();
 
     Q_INVOKABLE void sendMessage(const int chatId_, const QString& message_);
-    Q_INVOKABLE void getChatHistory(const int chatId_);
+    Q_INVOKABLE void getChatData(const int chatId_);
     Q_INVOKABLE ChatHistoryModel* getModel();
 
 signals:
     void setChatIdSignal(const int chatId_);
-    void getChatHistorySignal(const QString& info_);
+    void getChatDataSignal(const QString& info_);
     void sendMessageSignal(const QString& info_);
-    void scrollDown();
+    void scrollDownSignal();
+    void clearChatIdSignal();
 
 public slots:
     void slotSetChatId(const int chatId_);
-    void slotSetChatHistory(const QJsonObject& jsonObj_);
+    void slotSetChatData(const QJsonObject& jsonObj_);
     void slotSetNewMessage(const QJsonObject& jsonObj_);
+    void slotServerChanged(const int serverId_);
 
 private:
     JsonWorker jsonWorker_;

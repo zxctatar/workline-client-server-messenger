@@ -220,7 +220,7 @@ QString JsonWorker::createJsonGetServerRole(const int userId_, const int serverI
 QString JsonWorker::createJsonGetChatHistory(const int chatId_, const int serverId_, const int userId_) const
 {
     QJsonObject jsonObject_;
-    jsonObject_.insert("Info", "Get_Chat_History");
+    jsonObject_.insert("Info", "Get_Chat_Data");
     jsonObject_.insert("userId", userId_);
     jsonObject_.insert("serverId", serverId_);
     jsonObject_.insert("chatId", chatId_);

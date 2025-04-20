@@ -31,19 +31,28 @@ void ChatHistoryController::slotSetChatId(const int chatId_)
     emit setChatIdSignal(chatId_);
 }
 
-void ChatHistoryController::getChatHistory(const int chatId_)
+void ChatHistoryController::getChatData(const int chatId_)
 {
     int userId_ = UserAccountManager::instance().getUserId();
     int serverId_ = SelectedServerManager::instance().getServerId();
 
     QString request_ = jsonWorker_.createJsonGetChatHistory(chatId_, serverId_, userId_);
-    emit getChatHistorySignal(request_);
+    emit getChatDataSignal(request_);
 }
 
-void ChatHistoryController::slotSetChatHistory(const QJsonObject& jsonObj_)
+void ChatHistoryController::slotSetChatData(const QJsonObject& jsonObj_)
 {
     int serverId_ = jsonObj_["serverId"].toInt();
     int chatId_ = jsonObj_["chatId"].toInt();
+
+    QString receivedFirstName_ = jsonObj_["firstName"].toString();
+    QString receivedLastName_ = jsonObj_["lastName"].toString();
+    QString receivedMiddleName_ = jsonObj_["middleName"].toString();
+    QString receivedEmail_ = jsonObj_["email"].toString();
+    QString receivedBirthDate_ = jsonObj_["birthDate"].toString();
+    QString receivedPhoneNumber_ = jsonObj_["phoneNumber"].toString();
+
+    SelectedChatManager::instance().setChatData(receivedFirstName_, receivedLastName_, receivedMiddleName_, receivedBirthDate_, receivedEmail_, receivedPhoneNumber_);
 
     if(serverId_ == SelectedServerManager::instance().getServerId() && chatId_ == SelectedChatManager::instance().getChatId())
     {
@@ -86,6 +95,13 @@ void ChatHistoryController::slotSetNewMessage(const QJsonObject& jsonObj_)
     }
     if(!jsonObj_["isCompanion"].toBool())
     {
-        emit scrollDown();
+        emit scrollDownSignal();
     }
+}
+
+void ChatHistoryController::slotServerChanged(const int serverId_)
+{
+    Q_UNUSED(serverId_);
+
+    emit clearChatIdSignal();
 }

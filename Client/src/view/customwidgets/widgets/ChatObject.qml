@@ -12,6 +12,7 @@ Button {
 
     property bool selected: false
 
+    property bool isGroup
     property string displayName
     property string lastMessage
     property string path
@@ -52,7 +53,7 @@ Button {
                 id: avatar
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectCrop
-                source: chatObject.path == "" ? "qrc:/resources/img/avatar.svg" : chatObject.path
+                source: chatObject.path == "" ? "qrc:/resources/img/avatar.svg" : chatObject.path // сделать под групповой
             }
         }
 

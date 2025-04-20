@@ -40,6 +40,7 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/compositewidgets/ChatsBar.qml
     QML_FILES src/view/customwidgets/compositewidgets/ChatHistory.qml
     QML_FILES src/view/customwidgets/compositewidgets/ChatMessageView.qml
+    QML_FILES src/view/customwidgets/compositewidgets/ChatInfoBar.qml
     RESOURCES src/view/customwidgets/compositewidgets/qmldir
 
     QML_FILES src/view/customwidgets/widgets/ErrorText.qml
@@ -72,6 +73,7 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/widgets/ChatMessageInput.qml
     QML_FILES src/view/customwidgets/widgets/ChatMessageObject.qml
     QML_FILES src/view/customwidgets/widgets/AddImage.qml
+    QML_FILES src/view/customwidgets/widgets/ViewImage.qml
     RESOURCES src/view/customwidgets/widgets/qmldir
 
     QML_FILES src/view/windowpages/menuprofilepage/MenuProfilePage.qml
@@ -89,6 +91,7 @@ qt_add_qml_module(appClient
     QML_FILES src/view/windows/AddServerWindow.qml
     QML_FILES src/view/windows/MenuWindow.qml
     QML_FILES src/view/windows/CreateChatWindow.qml
+    QML_FILES src/view/windows/ChatInfoWindow.qml
     RESOURCES src/view/windows/qmldir
 
     QML_FILES src/view/windowpages/menuconfigureadminpage/MenuConfigureAdminPage.qml
@@ -159,7 +162,6 @@ qt_add_qml_module(appClient
 
     SOURCES include/UsersModel.h
     SOURCES src/model/usersmodel/UsersModel.cpp
-    SOURCES
     SOURCES src/controller/chathistorycontroller/ChatHistoryController.cpp
     SOURCES include/ChatHistoryController.h
     SOURCES include/ChatHistoryModel.h
@@ -168,6 +170,8 @@ qt_add_qml_module(appClient
     SOURCES src/manager/selectedchatmanager/SelectedChatManager.cpp
     SOURCES src/utils/ImageWorker.cpp
     SOURCES include/ImageWorker.h
+    SOURCES include/ChatInfoBarController.h
+    SOURCES src/controller/chatinfobarcontroller/ChatInfoBarController.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

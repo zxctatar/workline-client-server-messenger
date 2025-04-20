@@ -23,7 +23,7 @@ QVariant ChatModel::data(const QModelIndex& index_, int role_) const
         return QVariant();
     }
 
-    const PrivateChat& chat_ = chats_.at(index_.row());
+    const Chat& chat_ = chats_.at(index_.row());
 
     switch(role_)
     {
@@ -39,6 +39,8 @@ QVariant ChatModel::data(const QModelIndex& index_, int role_) const
         return chat_.companionId_;
     case Qt::UserRole + 5:
         return chat_.avatarPath_;
+    case Qt::UserRole + 6:
+        return chat_.isGroupChat_;
     default:
         return QVariant();
     }
@@ -53,17 +55,18 @@ QHash<int, QByteArray> ChatModel::roleNames() const
     roles_[Qt::UserRole + 3] = "id";
     roles_[Qt::UserRole + 4] = "companionId";
     roles_[Qt::UserRole + 5] = "imagePath";
+    roles_[Qt::UserRole + 6] = "isGroupChat";
     return roles_;
 }
 
-void ChatModel::addChat(const int companionId_, const int chatId_, const QImage& image_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_)
+void ChatModel::addChat(const int companionId_, const int chatId_, const QImage& image_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_, const bool isGroupChat_)
 {
     QString imagePath_ = imageWorker_.saveImageToTempFile(image_);
 
     QString displayName_ = lastName_ + ' ' + firstName_;
 
     beginInsertRows(QModelIndex(), chats_.size(), chats_.size());
-    chats_.append({displayName_, imagePath_, companionId_, chatId_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_});
+    chats_.append({displayName_, imagePath_, companionId_, chatId_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_, isGroupChat_});
     endInsertRows();
 }
 
@@ -85,7 +88,7 @@ void ChatModel::chatCreated(const int serverId_, const int companionId_, const i
 
     if(serverId_ == currentServerId_)
     {
-        auto it_ = std::find_if(chats_.begin(), chats_.end(), [companionId_](const PrivateChat& privateChat_){
+        auto it_ = std::find_if(chats_.begin(), chats_.end(), [companionId_](const Chat& privateChat_){
             return privateChat_.companionId_ == companionId_;
         });
 
@@ -119,7 +122,7 @@ void ChatModel::updateLastMessage(const int serverId_, const int chatId_, const 
 {
     if(SelectedServerManager::instance().getServerId() == serverId_)
     {
-        auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_](const PrivateChat& chat_){
+        auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_](const Chat& chat_){
             return chat_.chatId_ == chatId_;
         });
 
