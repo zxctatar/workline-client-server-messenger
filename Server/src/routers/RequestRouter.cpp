@@ -621,5 +621,34 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             });
         }
     }
+    else if(json_["Info"] == "Mark_Message")
+    {
+        if(!json_.contains("userId") || !json_.contains("chatId") ||
+            !json_.contains("messageId"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedUserId_ = json_["userId"].get<int>();
+        int receivedChatId_ = json_["chatId"].get<int>();
+        int receivedMessageId_ = json_["messageId"].get<int>();
+
+        auto connection_ = connectionPool_.getConnection();
+        int companionId_ = messageManager_.markMessage(connection_, receivedUserId_, receivedChatId_, receivedMessageId_);
+        connectionPool_.returnConnection(connection_);
+
+        std::string response_ = jsonWorker_.createMarkMessageJson(receivedMessageId_, receivedChatId_);
+
+        std::weak_ptr<Session> companion_ = connUsers_.getUser(companionId_);
+
+        boost::asio::post(executor_, [this, session_, response_, companion_](){
+            if(auto s_ = companion_.lock())
+            {
+                s_->do_write(response_);
+            }
+
+            session_.lock()->do_write(response_);
+        });
+    }
 }
 

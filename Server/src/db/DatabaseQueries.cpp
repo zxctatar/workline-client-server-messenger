@@ -246,10 +246,36 @@ pqxx::result DatabaseQueries::checkChatAccess(pqxx::transaction_base& conn_, con
 pqxx::result DatabaseQueries::getChatHistory(pqxx::transaction_base& conn_, const int chatId_, const int userId_)
 {
     return conn_.exec_params(
-        R"(SELECT id, content, sent_at, sender_id, sender_id <> $2 AS is_incoming
-        FROM messages
-        WHERE private_chat_id = $1
-        ORDER BY sent_at ASC)", chatId_, userId_);
+        R"(
+        SELECT
+            m.id,
+            m.content,
+            m.sent_at,
+            m.sender_id,
+            m.sender_id <> $2 AS is_incoming,
+            CASE
+                WHEN m.sender_id = $2 THEN
+                    EXISTS (
+                        SELECT 1 FROM viewed_messages vm
+                        WHERE vm.message_id = m.id AND vm.user_id = (
+                            SELECT CASE
+                                WHEN pc.user1_id = $2 THEN pc.user2_id
+                                ELSE pc.user1_id
+                            END
+                            FROM private_chats pc
+                            WHERE pc.id = m.private_chat_id
+                        )
+                    )
+                ELSE
+                    EXISTS (
+                        SELECT 1 FROM viewed_messages vm
+                        WHERE vm.message_id = m.id AND vm.user_id = $2
+                    )
+            END AS is_viewed
+        FROM messages m
+        WHERE m.private_chat_id = $1
+        ORDER BY m.sent_at ASC
+        )", chatId_, userId_);
 }
 
 pqxx::result DatabaseQueries::addMessage(pqxx::transaction_base& conn_, const int chatId_, const int userId_, const int serverId_, const std::string& message_)
@@ -291,4 +317,30 @@ pqxx::result DatabaseQueries::getCompanionData(pqxx::transaction_base& conn_, co
         WHERE pc.server_id = $1 AND pc.id = $2
           AND ($3 = pc.user1_id OR $3 = pc.user2_id)
     )", serverId_, chatId_, userId_);
+}
+
+pqxx::result DatabaseQueries::addViewedMessage(pqxx::transaction_base& conn_, const int userId_, const int messageId_)
+{
+    return conn_.exec_params(R"(
+        WITH inserted AS (
+            INSERT INTO viewed_messages (user_id, message_id)
+            VALUES ($1, $2)
+            RETURNING message_id
+        ),
+        message_info AS (
+            SELECT m.sender_id, m.private_chat_id
+            FROM messages m
+            WHERE m.id = $2
+        ),
+        chat_info AS (
+            SELECT
+                CASE
+                    WHEN pc.user1_id = $1 THEN pc.user2_id
+                    ELSE pc.user1_id
+                END AS companion_id
+            FROM private_chats pc
+            JOIN message_info mi ON pc.id = mi.private_chat_id
+        )
+        SELECT * FROM chat_info;
+    )", userId_, messageId_);
 }

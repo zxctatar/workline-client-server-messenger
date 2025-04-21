@@ -171,7 +171,7 @@ std::vector<ChatHistoryResult> ChatsDBManager::getChatHistory(std::shared_ptr<DB
                     messageH_.time_ = row[2].as<std::string>();
                     messageH_.senderId_ = row[3].as<int>();
                     messageH_.isCompanion_ = row[4].as<bool>();
-                    messageH_.viewed_ = true;
+                    messageH_.viewed_ = row[5].as<bool>();
 
                     messages_.push_back(messageH_);
                 }

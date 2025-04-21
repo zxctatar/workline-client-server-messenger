@@ -61,6 +61,7 @@ add_executable(Server src/main.cpp
     src/utils/ImageWorker.cpp
     include/ImageWorker.h
     include/struct/ChatDataResult.h
+
 )
 
 if(Boost_FOUND)

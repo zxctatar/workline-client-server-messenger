@@ -555,13 +555,14 @@ std::string JsonWorker::createSetMessageForSenderJson(const int senderId_, const
     {
         nlohmann::json json_;
         json_["Info"] = "Set_New_Message";
+        json_["messageId"] = messageId_;
         json_["senderId"] = senderId_;
         json_["serverId"] = serverId_;
         json_["chatId"] = chatId_;
         json_["message"] = message_;
         json_["time"] = time_;
         json_["isCompanion"] = false;
-        json_["viewed"] = true;
+        json_["viewed"] = false;
 
         return json_.dump();
     }
@@ -586,6 +587,25 @@ std::string JsonWorker::createSetMessageForCompanionJson(const int senderId_, co
         json_["time"] = time_;
         json_["isCompanion"] = true;
         json_["viewed"] = false;
+
+        return json_.dump();
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createMarkMessageJson(const int messageId_, const int chatId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Mark_Message";
+        json_["messageId"] = messageId_;
+        json_["chatId"] = chatId_;
+        json_["viewed"] = true;
 
         return json_.dump();
     }

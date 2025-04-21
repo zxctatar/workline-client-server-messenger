@@ -19,7 +19,7 @@ SetMessageResult MessageDBManager::setNewMessage(std::shared_ptr<DBConnection> c
 
     try
     {
-        BOOST_LOG_TRIVIAL(info) << "Adding a new message";
+        BOOST_LOG_TRIVIAL(info) << "Adding a new message...";
 
         if(!connection_->isConnected() || !connection_->isStarted())
         {
@@ -66,5 +66,54 @@ SetMessageResult MessageDBManager::setNewMessage(std::shared_ptr<DBConnection> c
     {
         BOOST_LOG_TRIVIAL(error) << e.what();
         return SetMessageResult();
+    }
+}
+
+int MessageDBManager::markMessage(std::shared_ptr<DBConnection> connection_, const int userId_, const int chatId_, const int messageId_)
+{
+    try
+    {
+        BOOST_LOG_TRIVIAL(info) << "Mark message...";
+
+        if(!connection_->isConnected() || !connection_->isStarted())
+        {
+            BOOST_LOG_TRIVIAL(error) << "Сonnection problem.";
+        }
+
+        pqxx::work access_check_(connection_->getConnection());
+        pqxx::result result_access_check_ = DatabaseQueries::checkAccess(access_check_, userId_);
+
+        bool access_ = result_access_check_[0][0].as<bool>();
+
+        access_check_.commit();
+
+        if(access_)
+        {
+            pqxx::work check_chat_access_(connection_->getConnection());
+            pqxx::result result_check_chat_access_ = DatabaseQueries::checkChatAccess(check_chat_access_, chatId_, userId_);
+            check_chat_access_.commit();
+
+            if(!result_check_chat_access_.empty())
+            {
+                pqxx::work mark_message_(connection_->getConnection());
+                pqxx::result result_mark_message_ = DatabaseQueries::addViewedMessage(mark_message_, userId_, messageId_);
+                mark_message_.commit();
+
+                return result_mark_message_[0][0].as<int>();
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        else
+        {
+            return -1;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return -1;
     }
 }

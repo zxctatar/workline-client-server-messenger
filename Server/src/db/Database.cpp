@@ -246,6 +246,13 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                 AND table_name = 'chats_last_messages'
             )");
 
+        pqxx::result result_check_viewed_messages_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'viewed_messages'
+            )");
+
         check_tables_.commit();
 
         if(result_check_users_table_.empty())
@@ -459,6 +466,26 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
         {
             BOOST_LOG_TRIVIAL(info) << "Chats_last_messages table already exists.";
         }
+
+        if(result_check_viewed_messages_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Viewed_messages table not found. Creating table...";
+
+            pqxx::work create_viewed_messages_(connection_to_worklinedatabase_);
+
+            create_viewed_messages_.exec(R"(
+                CREATE TABLE viewed_messages(
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    message_id INTEGER NOT NULL REFERENCES messages(id) ON DELETE CASCADE
+                ))");
+
+            create_viewed_messages_.commit();
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Viewed_messages table already exists.";
+        }
     }
     catch (const pqxx::broken_connection& e)
     {
@@ -548,6 +575,8 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
         set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE messages_id_seq TO wluser;");
 
         set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE chats_last_messages_id_seq TO wluser;");
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE viewed_messages_id_seq TO wluser;");
 
         set_privileges_.commit();
 

@@ -40,6 +40,7 @@ public:
     static pqxx::result getChatHistory(pqxx::transaction_base& conn_, const int chatId_, const int userId_);
     static pqxx::result addMessage(pqxx::transaction_base& conn_, const int chatId_, const int userId_, const int serverId_, const std::string& message_);
     static pqxx::result getCompanionData(pqxx::transaction_base& conn_, const int chatId_, const int serverId_, const int userId_);
+    static pqxx::result addViewedMessage(pqxx::transaction_base& conn_, const int userId_, const int messageId_);
 };
 
 #endif // DATABASEQUERIES_H
