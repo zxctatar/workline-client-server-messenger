@@ -76,14 +76,14 @@ void UsersModel::addAdminRole(const int userId_, const int serverId_)
 
         if(it_ != users_.end())
         {
-            int row = std::distance(users_.begin(), it_);
+            int row_ = std::distance(users_.begin(), it_);
 
             it_->isServerAdmin_ = true;
 
             QVector<int> roles_;
             roles_ << Qt::UserRole + 2;
 
-            emit dataChanged(index(row), index(row), roles_);
+            emit dataChanged(index(row_), index(row_), roles_);
         }
     }
 }

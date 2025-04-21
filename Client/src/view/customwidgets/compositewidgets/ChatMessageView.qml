@@ -38,10 +38,14 @@ Item {
         delegate: ChatMessageObject {
             required property bool companion
             required property string messages
+            required property string avatarPath
+            required property bool showAvatar
 
             width: listView.width
             isCompanion: companion
             message: messages
+            path: avatarPath
+            visibleAvatar: showAvatar
         }
 
         ScrollBar.vertical: ScrollBar {

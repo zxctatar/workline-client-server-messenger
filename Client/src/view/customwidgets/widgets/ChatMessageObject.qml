@@ -6,6 +6,8 @@ Item {
     id: chatMessageObject
     property string message
     property bool isCompanion
+    property string path
+    property bool visibleAvatar
 
     property string processedMessage: {
         const maxLen = 30
@@ -16,28 +18,42 @@ Item {
     width: parent ? parent.width : 100
     height: backgroundRect.height
 
-    Rectangle {
-        id: backgroundRect
-        color: chatMessageObject.isCompanion ? Colors.chatMessageCandidateColor : Colors.chatMessageUserColor
-        radius: Sizes.chatMessageObjectRadius // 5
+    Row {
         anchors.left: parent.left
-        anchors.leftMargin: 10
+        spacing: 10
+        anchors.leftMargin: chatMessageObject.visibleAvatar ? 10 : 70
 
-        width: Math.min(messageText.paintedWidth + 20, Sizes.maxChatMessageObjectWidth) // 400
-        height: messageText.paintedHeight + 20
+        ViewImage {
+            visible: chatMessageObject.visibleAvatar
+            width: 50
+            height: 50
+            radius: 24
+            path: chatMessageObject.path
+            anchors.bottom: backgroundRect.bottom
+        }
 
-        Text {
-            id: messageText
-            text: chatMessageObject.processedMessage
-            wrapMode: Text.WordWrap
-            width: Math.min(chatMessageObject.width - 40, Sizes.maxChatMessageObjectWidth - 20) // 380
+        Rectangle {
+            id: backgroundRect
+            color: chatMessageObject.isCompanion ? Colors.chatMessageCandidateColor : Colors.chatMessageUserColor
+            radius: Sizes.chatMessageObjectRadius // 5
 
-            x: 10
-            y: 10
+            width: Math.min(messageText.paintedWidth + 20, Sizes.maxChatMessageObjectWidth) // 400
+            height: messageText.paintedHeight + 20
 
-            font.family: Fonts.windowTextFont
-            font.pixelSize: Sizes.chatMessageTextSizes // 16
-            color: Colors.chatMessageTextColor
+            Text {
+                id: messageText
+                text: chatMessageObject.processedMessage
+                wrapMode: Text.WordWrap
+                width: Math.min(chatMessageObject.width - 40, Sizes.maxChatMessageObjectWidth - 20) // 380
+
+                x: 10
+                y: 10
+
+                font.family: Fonts.windowTextFont
+                font.pixelSize: Sizes.chatMessageTextSizes // 16
+                color: Colors.chatMessageTextColor
+            }
         }
     }
+
 }

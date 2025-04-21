@@ -6,6 +6,7 @@
 #include "JsonWorker.h"
 #include "ImageWorker.h"
 #include "UserAccountManager.h"
+#include "ChatsManager.h"
 
 class LoginPageController : public QObject
 {

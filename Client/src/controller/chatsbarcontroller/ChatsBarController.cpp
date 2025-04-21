@@ -14,7 +14,7 @@ void ChatsBarController::slotGetChats(const int serverId_)
 {
     if(chatModel_->getSize() > 0)
     {
-        chatModel_->deleteChats();
+        chatModel_->clearChats();
         emit serverChangedSignal();
     }
 
@@ -104,7 +104,7 @@ void ChatsBarController::slotAddUserInChatProcessing(const QJsonObject& jsonObj_
 
 void ChatsBarController::slotClearChat()
 {
-    chatModel_->clearChat();
+    chatModel_->clearChats();
 }
 
 void ChatsBarController::sendChatId(const int chatId_) const

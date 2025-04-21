@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import Qt5Compat.GraphicalEffects
 
-Image {
+Item {
     id: viewImage
 
     property int radius: 0

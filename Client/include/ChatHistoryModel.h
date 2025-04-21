@@ -6,6 +6,7 @@
 #include <QAbstractListModel>
 #include "SelectedChatManager.h"
 #include "SelectedServerManager.h"
+#include "ChatsManager.h"
 
 class ChatHistoryModel : public QAbstractListModel
 {
@@ -18,18 +19,22 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     QHash<int, QByteArray> roleNames() const;
-    void addMessage(const int serverId_, const int chatId_, const int messageId_, const QString& message_, const QString& time_, const bool isCompanion_, const bool viewed_);
+    void addMessage(const int senderId_, const int serverId_, const int chatId_, const int messageId_, const QString& message_, const QString& time_, const bool isCompanion_, const bool viewed_);
     void clearMessages();
 
 private:
     struct Message
     {
+        int senderId_;
         QString message_;
         QString time_;
+        QString avatarPath_;
         bool isCompanion_;
         bool viewed_;
+        bool showAvatar_;
     };
 
+    QMap<int, QString> avatars_;
     QVector<Message> messages_;
 };
 

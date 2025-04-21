@@ -39,6 +39,7 @@ void LoginPageController::slotResponseProcessing(const QJsonObject& jsonObj_) co
         int userId_ = jsonObj_["UserId"].toInt();
         QString userRole_ = jsonObj_["UserRole"].toString();
 
+        ChatsManager::instance().addAvatar(userId_, avatarPath_);
         UserAccountManager::instance().setUserData(avatarPath_, birthDate_, firstName_, lastName_, middleName_, email_, phoneNumber_, login_, password_, userId_, userRole_);
 
         emit accessAllowedSignal();

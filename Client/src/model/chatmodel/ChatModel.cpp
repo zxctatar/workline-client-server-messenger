@@ -63,6 +63,8 @@ void ChatModel::addChat(const int companionId_, const int chatId_, const QImage&
 {
     QString imagePath_ = imageWorker_.saveImageToTempFile(image_);
 
+    ChatsManager::instance().addAvatar(companionId_, imagePath_);
+
     QString displayName_ = lastName_ + ' ' + firstName_;
 
     beginInsertRows(QModelIndex(), chats_.size(), chats_.size());
@@ -73,13 +75,6 @@ void ChatModel::addChat(const int companionId_, const int chatId_, const QImage&
 int ChatModel::getSize()
 {
     return chats_.size();
-}
-
-void ChatModel::deleteChats()
-{
-    beginRemoveRows(QModelIndex(), 0, chats_.size() - 1);
-    chats_.clear();
-    endRemoveRows();
 }
 
 void ChatModel::chatCreated(const int serverId_, const int companionId_, const int chatId_)
@@ -107,7 +102,7 @@ void ChatModel::chatCreated(const int serverId_, const int companionId_, const i
     }
 }
 
-void ChatModel::clearChat()
+void ChatModel::clearChats()
 {
     if(chats_.isEmpty())
     {
@@ -115,6 +110,7 @@ void ChatModel::clearChat()
     }
     beginRemoveRows(QModelIndex(), 0, chats_.size() - 1);
     chats_.clear();
+    ChatsManager::instance().clearAvatars();
     endRemoveRows();
 }
 
@@ -138,6 +134,4 @@ void ChatModel::updateLastMessage(const int serverId_, const int chatId_, const 
             emit dataChanged(index(row_), index(row_), roles_);
         }
     }
-
-
 }
