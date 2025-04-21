@@ -8,7 +8,7 @@ Item {
     id: topBar
 
     width: Sizes.topBarWidth // 230
-    height: Sizes.topBarHeight // 60
+    height: Sizes.topBarHeight // 70
 
     property var controller // topBarController
 

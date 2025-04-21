@@ -219,6 +219,8 @@ void MainController::createChatHistoryController()
         connect(serverConnector_, &ServerConnector::sendSetChatDataSignal, chatHistoryController_, &ChatHistoryController::slotSetChatData);
         connect(chatHistoryController_, &ChatHistoryController::sendMessageSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendSetNewMessage, chatHistoryController_, &ChatHistoryController::slotSetNewMessage);
+        connect(chatHistoryController_, &ChatHistoryController::markMessageSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendMarkMessage, chatHistoryController_, &ChatHistoryController::slotMarkMessageProcessing);
     }
 }
 

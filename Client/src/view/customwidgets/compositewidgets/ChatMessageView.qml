@@ -35,17 +35,33 @@ Item {
 
         boundsBehavior: Flickable.StopAtBounds
 
+        header: Item {
+            width: 1
+            height: 10
+        }
+
         delegate: ChatMessageObject {
+            required property int messageId
             required property bool companion
             required property string messages
             required property string avatarPath
             required property bool showAvatar
+            required property bool isViewed
+            required property string time
 
             width: listView.width
             isCompanion: companion
             message: messages
             path: avatarPath
             visibleAvatar: showAvatar
+            messageTime: time
+            viewed: isViewed
+
+            Component.onCompleted: {
+                if (isCompanion && !viewed) {
+                    chatMessageView.controller.markMessageAsRead(messageId)
+                }
+            }
         }
 
         ScrollBar.vertical: ScrollBar {

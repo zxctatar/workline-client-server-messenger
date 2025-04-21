@@ -165,6 +165,10 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     {
         emit sendSetNewMessage(jsonObj_);
     }
+    else if(jsonObj_["Info"] == "Mark_Message")
+    {
+        emit sendMarkMessage(jsonObj_);
+    }
 }
 
 void ServerConnector::slotSendToServer(const QString& request_)

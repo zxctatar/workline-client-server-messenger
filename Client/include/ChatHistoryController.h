@@ -21,6 +21,7 @@ public:
     Q_INVOKABLE void sendMessage(const int chatId_, const QString& message_);
     Q_INVOKABLE void getChatData(const int chatId_);
     Q_INVOKABLE ChatHistoryModel* getModel();
+    Q_INVOKABLE void markMessageAsRead(const int messageId_);
 
 signals:
     void setChatIdSignal(const int chatId_);
@@ -28,12 +29,14 @@ signals:
     void sendMessageSignal(const QString& info_);
     void scrollDownSignal();
     void clearChatIdSignal();
+    void markMessageSignal(const QString& info_);
 
 public slots:
     void slotSetChatId(const int chatId_);
     void slotSetChatData(const QJsonObject& jsonObj_);
     void slotSetNewMessage(const QJsonObject& jsonObj_);
     void slotServerChanged(const int serverId_);
+    void slotMarkMessageProcessing(const QJsonObject& jsonObj_);
 
 private:
     JsonWorker jsonWorker_;

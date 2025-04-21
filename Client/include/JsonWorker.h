@@ -33,6 +33,7 @@ public:
     QString createJsonGetServerRole(const int userId_, const int serverId_) const;
     QString createJsonGetChatHistory(const int chatId_, const int serverId_, const int userId_) const;
     QString createJsonSendMessage(const int chatId_, const int userId_, const int serverId_, const QString& message_) const;
+    QString createJsonMarkMessageAsRead(const int messageId, const int userId, const int chatId_) const;
 
 private:
 };

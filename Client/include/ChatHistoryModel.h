@@ -21,10 +21,12 @@ public:
     QHash<int, QByteArray> roleNames() const;
     void addMessage(const int senderId_, const int serverId_, const int chatId_, const int messageId_, const QString& message_, const QString& time_, const bool isCompanion_, const bool viewed_);
     void clearMessages();
+    void markMessage(const int messageId_, const bool viewed_);
 
 private:
     struct Message
     {
+        int messageId_;
         int senderId_;
         QString message_;
         QString time_;

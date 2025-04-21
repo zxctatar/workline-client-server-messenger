@@ -31,7 +31,11 @@ QtObject {
     readonly property int maxAdminSwitcherButtonHeight: 35 // высота кнопки переключения админа
 
     // chat message object
-    readonly property int maxChatMessageObjectWidth: 400 // ширина сообщения
+    readonly property int maxChatMessageObjectWidth: 450 // ширина сообщения
+
+    readonly property int maxChatMessageObjectAvatarWidth: 45 // ширина аватарки в объекте сообщения
+    readonly property int maxChatMessageObjectAvatarHeight: 45 // высота автарки в объекте сообщения
+    readonly property int chatMessageObjectAvatarRadius: 24 // скругление углов аватарки в объекте сообщения
 
     //separator
     readonly property int radiusSeparator: 2 // скруглдение разделителя
@@ -202,7 +206,7 @@ QtObject {
 
     //top bar
     readonly property int topBarWidth: 230 // ширина вернего меню
-    readonly property int topBarHeight: 60 // высота верхнего меню
+    readonly property int topBarHeight: 70 // высота верхнего меню
 
     //popup
     readonly property int maxPopupWidth: 400 // ширина popup

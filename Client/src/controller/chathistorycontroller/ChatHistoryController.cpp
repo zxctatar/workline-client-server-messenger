@@ -70,11 +70,17 @@ void ChatHistoryController::slotSetChatData(const QJsonObject& jsonObj_)
             int senderId_ = mObj_["senderId"].toInt();
             int messageId_ = mObj_["messageId"].toInt();
             QString message_ = mObj_["message"].toString();
-            QString time_ = mObj_["time"].toString();
+            QString stringTime_ = mObj_["time"].toString();
+
+            QString trimmed_ = stringTime_.left(19);
+            QDateTime dateTime_ = QDateTime::fromString(trimmed_, "yyyy-MM-dd HH:mm:ss");
+            QTime time_ = dateTime_.time();
+            stringTime_ = time_.toString("HH:mm");
+
             bool isCompanion_ = mObj_["isCompanion"].toBool();
             bool viewed_ = mObj_["viewed"].toBool();
 
-            historyModel_->addMessage(senderId_, serverId_, chatId_, messageId_, message_, time_, isCompanion_, viewed_);
+            historyModel_->addMessage(senderId_, serverId_, chatId_, messageId_, message_, stringTime_, isCompanion_, viewed_);
         }
     }
 }
@@ -85,17 +91,21 @@ void ChatHistoryController::slotSetNewMessage(const QJsonObject& jsonObj_)
     int chatId_ = jsonObj_["chatId"].toInt();
     int senderId_ = jsonObj_["senderId"].toInt();
 
-    qDebug() << senderId_;
-
     if(serverId_ == SelectedServerManager::instance().getServerId() && chatId_ == SelectedChatManager::instance().getChatId())
     {
         int messageId_ = jsonObj_["messageId"].toInt();
         QString message_ = jsonObj_["message"].toString();
-        QString time_ = jsonObj_["time"].toString();
+        QString stringTime_ = jsonObj_["time"].toString();
+
+        QString trimmed_ = stringTime_.left(19);
+        QDateTime dateTime_ = QDateTime::fromString(trimmed_, "yyyy-MM-dd HH:mm:ss");
+        QTime time_ = dateTime_.time();
+        stringTime_ = time_.toString("HH:mm");
+
         bool isCompanion_ = jsonObj_["isCompanion"].toBool();
         bool viewed_ = jsonObj_["viewed"].toBool();
 
-        historyModel_->addMessage(senderId_, serverId_, chatId_, messageId_, message_, time_, isCompanion_, viewed_);
+        historyModel_->addMessage(senderId_, serverId_, chatId_, messageId_, message_, stringTime_, isCompanion_, viewed_);
     }
     if(!jsonObj_["isCompanion"].toBool())
     {
@@ -108,4 +118,27 @@ void ChatHistoryController::slotServerChanged(const int serverId_)
     Q_UNUSED(serverId_);
 
     emit clearChatIdSignal();
+}
+
+void ChatHistoryController::markMessageAsRead(const int messageId_)
+{
+    int chatId_ = SelectedChatManager::instance().getChatId();
+    int userId_ = UserAccountManager::instance().getUserId();
+
+    QString request_ = jsonWorker_.createJsonMarkMessageAsRead(messageId_, userId_, chatId_);
+
+    emit markMessageSignal(request_);
+}
+
+void ChatHistoryController::slotMarkMessageProcessing(const QJsonObject& jsonObj_)
+{
+    int messageId_ = jsonObj_["messageId"].toInt();
+    int chatId_ = jsonObj_["chatId"].toInt();
+    bool viewed_ = jsonObj_["viewed"].toBool();
+
+    if(SelectedChatManager::instance().getChatId() == chatId_)
+    {
+        qDebug() << "123123";
+        historyModel_->markMessage(messageId_, viewed_);
+    }
 }

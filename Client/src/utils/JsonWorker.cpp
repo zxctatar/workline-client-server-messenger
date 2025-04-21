@@ -241,3 +241,15 @@ QString JsonWorker::createJsonSendMessage(const int chatId_, const int userId_, 
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;
 }
+
+QString JsonWorker::createJsonMarkMessageAsRead(const int messageId_, const int userId_, const int chatId_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Mark_Message");
+    jsonObject_.insert("userId", userId_);
+    jsonObject_.insert("chatId", chatId_);
+    jsonObject_.insert("messageId", messageId_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}

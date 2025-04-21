@@ -8,6 +8,8 @@ Item {
     property bool isCompanion
     property string path
     property bool visibleAvatar
+    property bool viewed
+    property string messageTime
 
     property string processedMessage: {
         const maxLen = 30
@@ -19,15 +21,16 @@ Item {
     height: backgroundRect.height
 
     Row {
+        anchors.fill: parent
         anchors.left: parent.left
         spacing: 10
-        anchors.leftMargin: chatMessageObject.visibleAvatar ? 10 : 70
+        anchors.leftMargin: chatMessageObject.visibleAvatar ? 10 : 65
 
         ViewImage {
             visible: chatMessageObject.visibleAvatar
-            width: 50
-            height: 50
-            radius: 24
+            width: Sizes.maxChatMessageObjectAvatarWidth // 45
+            height: Sizes. maxChatMessageObjectAvatarHeight // 45
+            radius: Sizes.chatMessageObjectAvatarRadius // 24
             path: chatMessageObject.path
             anchors.bottom: backgroundRect.bottom
         }
@@ -37,14 +40,22 @@ Item {
             color: chatMessageObject.isCompanion ? Colors.chatMessageCandidateColor : Colors.chatMessageUserColor
             radius: Sizes.chatMessageObjectRadius // 5
 
-            width: Math.min(messageText.paintedWidth + 20, Sizes.maxChatMessageObjectWidth) // 400
+            property int checkWidth: chatMessageObject.isCompanion ? 0 : 26
+
+            width: Math.min(messageText.paintedWidth + messageTime.paintedWidth + 5 + 20 + checkWidth, Sizes.maxChatMessageObjectWidth) // 400
             height: messageText.paintedHeight + 20
 
             Text {
                 id: messageText
                 text: chatMessageObject.processedMessage
                 wrapMode: Text.WordWrap
-                width: Math.min(chatMessageObject.width - 40, Sizes.maxChatMessageObjectWidth - 20) // 380
+                width: Math.min(
+                    Math.min(
+                        Sizes.maxChatMessageObjectWidth - messageTime.implicitWidth - 20,
+                        chatMessageObject.width - 40 - 50 - messageTime.paintedWidth - 10 - 15
+                    ),
+                    implicitWidth
+                )
 
                 x: 10
                 y: 10
@@ -53,7 +64,32 @@ Item {
                 font.pixelSize: Sizes.chatMessageTextSizes // 16
                 color: Colors.chatMessageTextColor
             }
+
+            Text {
+                id: messageTime
+                text: chatMessageObject.messageTime
+                width: paintedWidth
+                anchors.right: chatMessageObject.isCompanion ? backgroundRect.right : check.left
+                anchors.rightMargin: 10
+                anchors.bottom: backgroundRect.bottom
+                anchors.bottomMargin: 5
+
+                font.family: Fonts.windowTextFont
+                font.pixelSize: 12
+                color: Colors.chatMessageTextColor
+            }
+
+            Image {
+                id: check
+                source: chatMessageObject.viewed ? "qrc:/resources/img/checkYesUser.svg" : "qrc:/resources/img/checkNoUser.svg"
+                visible: chatMessageObject.isCompanion ? false : true
+                width: 16
+                height: 16
+                anchors.right: backgroundRect.right
+                anchors.rightMargin: 10
+                anchors.bottom: backgroundRect.bottom
+                anchors.bottomMargin: 5
+            }
         }
     }
-
 }
