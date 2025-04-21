@@ -455,6 +455,10 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
 
             BOOST_LOG_TRIVIAL(info) << "Creating the chats_last_messages table successfully.";
         }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Chats_last_messages table already exists.";
+        }
     }
     catch (const pqxx::broken_connection& e)
     {

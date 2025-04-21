@@ -246,7 +246,7 @@ pqxx::result DatabaseQueries::checkChatAccess(pqxx::transaction_base& conn_, con
 pqxx::result DatabaseQueries::getChatHistory(pqxx::transaction_base& conn_, const int chatId_, const int userId_)
 {
     return conn_.exec_params(
-        R"(SELECT id, content, sent_at, sender_id <> $2 AS is_incoming
+        R"(SELECT id, content, sent_at, sender_id, sender_id <> $2 AS is_incoming
         FROM messages
         WHERE private_chat_id = $1
         ORDER BY sent_at ASC)", chatId_, userId_);
@@ -279,7 +279,7 @@ pqxx::result DatabaseQueries::addMessage(pqxx::transaction_base& conn_, const in
 pqxx::result DatabaseQueries::getCompanionData(pqxx::transaction_base& conn_, const int chatId_, const int serverId_, const int userId_)
 {
     return conn_.exec_params(R"(
-        SELECT u.firstname, u.lastname, u.middlename, u.email, u.birth_date, u.phone_number
+        SELECT u.user_id, u.firstname, u.lastname, u.middlename, u.email, u.birth_date, u.phone_number
         FROM private_chats pc
         JOIN users u
             ON u.user_id = (

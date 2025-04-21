@@ -549,12 +549,13 @@ std::string JsonWorker::createGetChatDataJson(const std::vector<ChatHistoryResul
     }
 }
 
-std::string JsonWorker::createSetMessageForSenderJson(const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_)
+std::string JsonWorker::createSetMessageForSenderJson(const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_)
 {
     try
     {
         nlohmann::json json_;
         json_["Info"] = "Set_New_Message";
+        json_["senderId"] = senderId_;
         json_["serverId"] = serverId_;
         json_["chatId"] = chatId_;
         json_["message"] = message_;
@@ -571,12 +572,13 @@ std::string JsonWorker::createSetMessageForSenderJson(const int messageId_, cons
     }
 }
 
-std::string JsonWorker::createSetMessageForCompanionJson(const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_)
+std::string JsonWorker::createSetMessageForCompanionJson(const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_)
 {
     try
     {
         nlohmann::json json_;
         json_["Info"] = "Set_New_Message";
+        json_["senderId"] = senderId_;
         json_["messageId"] = messageId_;
         json_["serverId"] = serverId_;
         json_["chatId"] = chatId_;

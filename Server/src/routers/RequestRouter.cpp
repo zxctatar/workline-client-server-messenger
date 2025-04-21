@@ -606,8 +606,8 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
 
         if(!response_.message_.empty())
         {
-            std::string responseJsonForSender_ = jsonWorker_.createSetMessageForSenderJson(response_.messageId_, receivedServerId_, receivedChatId_, receivedMessage_, response_.time_);
-            std::string responseJsonForCompanion_ = jsonWorker_.createSetMessageForCompanionJson(response_.messageId_, receivedServerId_, receivedChatId_, receivedMessage_, response_.time_);
+            std::string responseJsonForSender_ = jsonWorker_.createSetMessageForSenderJson(receivedUserId_, response_.messageId_, receivedServerId_, receivedChatId_, receivedMessage_, response_.time_);
+            std::string responseJsonForCompanion_ = jsonWorker_.createSetMessageForCompanionJson(receivedUserId_, response_.messageId_, receivedServerId_, receivedChatId_, receivedMessage_, response_.time_);
 
             std::weak_ptr<Session> companion_ = connUsers_.getUser(response_.companionId_);
 

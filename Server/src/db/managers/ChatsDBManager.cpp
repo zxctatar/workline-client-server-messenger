@@ -169,7 +169,8 @@ std::vector<ChatHistoryResult> ChatsDBManager::getChatHistory(std::shared_ptr<DB
                     messageH_.messageId_ = row[0].as<int>();
                     messageH_.message_ = row[1].as<std::string>();
                     messageH_.time_ = row[2].as<std::string>();
-                    messageH_.isCompanion_ = row[3].as<bool>();
+                    messageH_.senderId_ = row[3].as<int>();
+                    messageH_.isCompanion_ = row[4].as<bool>();
                     messageH_.viewed_ = true;
 
                     messages_.push_back(messageH_);
@@ -226,12 +227,13 @@ ChatDataResult ChatsDBManager::getChatData(std::shared_ptr<DBConnection> connect
                 pqxx::result result_get_chat_data_ = DatabaseQueries::getCompanionData(get_chat_data_, chatId_, serverId_, userId_);
                 get_chat_data_.commit();
 
-                result_.firstName_ = result_get_chat_data_[0][0].as<std::string>();
-                result_.lastName_ = result_get_chat_data_[0][1].as<std::string>();
-                result_.middleName_ = result_get_chat_data_[0][2].as<std::string>();
-                result_.email_ = result_get_chat_data_[0][3].as<std::string>();
-                result_.birthDate_ = result_get_chat_data_[0][4].as<std::string>();
-                result_.phoneNumber_ = result_get_chat_data_[0][5].as<std::string>();
+                result_.userId_ = result_get_chat_data_[0][0].as<int>();
+                result_.firstName_ = result_get_chat_data_[0][1].as<std::string>();
+                result_.lastName_ = result_get_chat_data_[0][2].as<std::string>();
+                result_.middleName_ = result_get_chat_data_[0][3].as<std::string>();
+                result_.email_ = result_get_chat_data_[0][4].as<std::string>();
+                result_.birthDate_ = result_get_chat_data_[0][5].as<std::string>();
+                result_.phoneNumber_ = result_get_chat_data_[0][6].as<std::string>();
 
                 return result_;
             }

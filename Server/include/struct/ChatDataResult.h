@@ -6,6 +6,7 @@
 
 struct ChatDataResult
 {
+    int userId_;
     std::string firstName_;
     std::string lastName_;
     std::string middleName_;
