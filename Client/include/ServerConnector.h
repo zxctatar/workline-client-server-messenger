@@ -48,6 +48,8 @@ signals:
     void sendSetChatDataSignal(const QJsonObject& jsonObj_);
     void sendSetNewMessage(const QJsonObject& jsonObj_);
     void sendMarkMessage(const QJsonObject& jsonObj_);
+    void sendIncreaseMessageCounter(const int chatId_);
+    void sendDecreaseMessageCounter(const int chatId_);
 
 private:
     void connectToServer();

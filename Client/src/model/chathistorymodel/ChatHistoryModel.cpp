@@ -90,7 +90,6 @@ void ChatHistoryModel::addMessage(const int senderId_, const int serverId_, cons
     {
         beginInsertRows(QModelIndex(), messages_.size(), messages_.size());
         messages_.append({messageId_, senderId_, message_, time_, avatarPath_, isCompanion_, viewed_, showAvatar_});
-        qDebug() << "append " << messageId_;
         endInsertRows();
     }
 }
@@ -107,8 +106,6 @@ void ChatHistoryModel::markMessage(const int messageId_, const bool viewed_)
     auto it_ = std::find_if(messages_.begin(), messages_.end(), [messageId_](const Message& mess_){
         return mess_.messageId_ == messageId_;
     });
-
-    qDebug() << it_->message_;
 
     if(it_ != messages_.end())
     {

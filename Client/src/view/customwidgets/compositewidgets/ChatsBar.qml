@@ -41,12 +41,14 @@ Item {
                 required property string lastMess
                 required property string imagePath
                 required property bool isGroupChat
+                required property int newMessageCount
 
                 chatId: id
                 displayName: name
                 lastMessage: lastMess
                 path: imagePath
                 isGroup: isGroupChat
+                messageCount: newMessageCount
 
                 selected: chatsBar.currentIndex == id ? true : false
 

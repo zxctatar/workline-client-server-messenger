@@ -206,6 +206,8 @@ void MainController::createChatsBarController()
         connect(serverTableController_, &ServerTableController::selectedServerDeletedSignal, chatsBarController_, &ChatsBarController::slotClearChat);
         connect(serverTableController_, &ServerTableController::serverSelectedSignal, chatsBarController_, &ChatsBarController::slotGetChats);
         connect(serverConnector_, &ServerConnector::sendSetNewMessage, chatsBarController_, &ChatsBarController::slotSetNewLastMessage);
+        connect(serverConnector_, &ServerConnector::sendIncreaseMessageCounter, chatsBarController_, &ChatsBarController::slotIncreaseMessageCount);
+        connect(serverConnector_, &ServerConnector::sendDecreaseMessageCounter, chatsBarController_, &ChatsBarController::slotDecreaseMessageCount);
     }
 }
 

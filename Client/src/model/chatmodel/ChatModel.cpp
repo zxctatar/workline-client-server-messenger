@@ -41,6 +41,8 @@ QVariant ChatModel::data(const QModelIndex& index_, int role_) const
         return chat_.avatarPath_;
     case Qt::UserRole + 6:
         return chat_.isGroupChat_;
+    case Qt::UserRole + 7:
+        return chat_.newMessagesCount_;
     default:
         return QVariant();
     }
@@ -56,10 +58,11 @@ QHash<int, QByteArray> ChatModel::roleNames() const
     roles_[Qt::UserRole + 4] = "companionId";
     roles_[Qt::UserRole + 5] = "imagePath";
     roles_[Qt::UserRole + 6] = "isGroupChat";
+    roles_[Qt::UserRole + 7] = "newMessageCount";
     return roles_;
 }
 
-void ChatModel::addChat(const int companionId_, const int chatId_, const QImage& image_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_, const bool isGroupChat_)
+void ChatModel::addChat(const int companionId_, const int chatId_, const QImage& image_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_, const bool isGroupChat_, const int newMessagesCount_)
 {
     QString imagePath_ = imageWorker_.saveImageToTempFile(image_);
 
@@ -68,7 +71,7 @@ void ChatModel::addChat(const int companionId_, const int chatId_, const QImage&
     QString displayName_ = lastName_ + ' ' + firstName_;
 
     beginInsertRows(QModelIndex(), chats_.size(), chats_.size());
-    chats_.append({displayName_, imagePath_, companionId_, chatId_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_, isGroupChat_});
+    chats_.append({displayName_, imagePath_, companionId_, chatId_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_, isGroupChat_, newMessagesCount_});
     endInsertRows();
 }
 
@@ -133,5 +136,47 @@ void ChatModel::updateLastMessage(const int serverId_, const int chatId_, const 
 
             emit dataChanged(index(row_), index(row_), roles_);
         }
+    }
+}
+
+void ChatModel::increaseMessageCount(const int chatId_)
+{
+    auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_](const Chat& chat_){
+        return chat_.chatId_ == chatId_;
+    });
+
+    if(it_ != chats_.end())
+    {
+        int row_ = std::distance(chats_.begin(), it_);
+
+        it_->newMessagesCount_++;
+
+        qDebug() << it_->newMessagesCount_;
+
+        QVector<int> roles_;
+        roles_ << Qt::UserRole + 7;
+
+        emit dataChanged(index(row_), index(row_), roles_);
+    }
+}
+
+void ChatModel::decreaseMessageCount(const int chatId_)
+{
+    auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_](const Chat& chat_){
+        return chat_.chatId_ == chatId_;
+    });
+
+    if(it_ != chats_.end())
+    {
+        int row_ = std::distance(chats_.begin(), it_);
+
+        it_->newMessagesCount_--;
+
+        qDebug() << it_->newMessagesCount_;
+
+        QVector<int> roles_;
+        roles_ << Qt::UserRole + 7;
+
+        emit dataChanged(index(row_), index(row_), roles_);
     }
 }

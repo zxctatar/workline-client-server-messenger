@@ -165,7 +165,17 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     {
         emit sendSetNewMessage(jsonObj_);
     }
-    else if(jsonObj_["Info"] == "Mark_Message")
+    else if(jsonObj_["Info"] == "Set_New_Message_Companion")
+    {
+        emit sendSetNewMessage(jsonObj_);
+        emit sendIncreaseMessageCounter(jsonObj_["chatId"].toInt());
+    }
+    else if(jsonObj_["Info"] == "Mark_Message_For_User")
+    {
+        emit sendMarkMessage(jsonObj_);
+        emit sendDecreaseMessageCounter(jsonObj_["chatId"].toInt());
+    }
+    else if(jsonObj_["Info"] == "Mark_Message_For_Companion")
     {
         emit sendMarkMessage(jsonObj_);
     }

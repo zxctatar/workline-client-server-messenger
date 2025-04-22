@@ -138,7 +138,6 @@ void ChatHistoryController::slotMarkMessageProcessing(const QJsonObject& jsonObj
 
     if(SelectedChatManager::instance().getChatId() == chatId_)
     {
-        qDebug() << "123123";
         historyModel_->markMessage(messageId_, viewed_);
     }
 }

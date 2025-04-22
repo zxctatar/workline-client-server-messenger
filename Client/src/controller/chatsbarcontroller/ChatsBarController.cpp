@@ -38,6 +38,7 @@ void ChatsBarController::slotChatsProcessing(const QJsonObject& jsonObj_)
                 continue;
             }
 
+
             QJsonObject chat_ = val.toObject();
 
             int compaonionId_ = chat_["compaonionId"].toInt();
@@ -51,8 +52,9 @@ void ChatsBarController::slotChatsProcessing(const QJsonObject& jsonObj_)
             QString lastMessage_ = chat_["lastMessage"].toString();
             QString messageTime_ = chat_["messageTime"].toString();
             bool isChat_ = chat_["isChat"].toBool();
+            int newMessagesCount_ = chat_["newMessagesCount"].toInt();
 
-            chatModel_->addChat(compaonionId_, chatId_, image_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_, false);
+            chatModel_->addChat(compaonionId_, chatId_, image_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_, false, newMessagesCount_);
         }
     }
 }
@@ -98,7 +100,7 @@ void ChatsBarController::slotAddUserInChatProcessing(const QJsonObject& jsonObj_
         QString lastName_ = jsonObj_["lastName"].toString();
         QString middleName_ = jsonObj_["middleName"].toString();
 
-        chatModel_->addChat(userId_, 0, image_, firstName_, lastName_, middleName_, "", "", false, false);
+        chatModel_->addChat(userId_, 0, image_, firstName_, lastName_, middleName_, "", "", false, false, 0);
     }
 }
 
@@ -132,4 +134,14 @@ void ChatsBarController::setChatAvatar(const QString& avatarPath_)
 void ChatsBarController::clearChatData()
 {
     SelectedChatManager::instance().clearChatData();
+}
+
+void ChatsBarController::slotIncreaseMessageCount(const int chatId_)
+{
+    chatModel_->increaseMessageCount(chatId_);
+}
+
+void ChatsBarController::slotDecreaseMessageCount(const int chatId_)
+{
+    chatModel_->decreaseMessageCount(chatId_);
 }

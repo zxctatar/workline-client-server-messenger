@@ -16,6 +16,7 @@ Button {
     property string displayName
     property string lastMessage
     property string path
+    property int messageCount
 
     property string processedLastMessage: {
         const words = lastMessage.split("\n")
@@ -60,7 +61,7 @@ Button {
         Column {
             spacing: Sizes.chatObjectTextSpacing // 8
             anchors.verticalCenter: parent.verticalCenter
-            width: rowLayout.width - avatar.width - rowLayout.spacing
+            width: rowLayout.width - avatar.width - rowLayout.spacing - notif.width - 10
 
             ChatNameText {
                 id: nameText
@@ -72,6 +73,28 @@ Button {
                 id: messageText
                 text: chatObject.processedLastMessage
                 width: parent.width
+            }
+        }
+
+        Rectangle {
+            id: notif
+            anchors.verticalCenter: parent.verticalCenter
+            radius: 30
+            clip: true
+
+            visible: chatObject.messageCount > 0 ? true : false
+            color: "#969BFF"
+
+            width: 30
+            height: 30
+
+            Text {
+                text: chatObject.messageCount
+                anchors.centerIn: parent
+                font.family: Fonts.windowTextFont
+                font.pixelSize: Sizes.chatNameTextSize // 16
+                elide: Text.ElideRight
+                color: Colors.chatNameTextColor
             }
         }
     }

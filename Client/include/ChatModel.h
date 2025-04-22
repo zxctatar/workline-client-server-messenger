@@ -20,11 +20,13 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
-    void addChat(const int companionId_, const int chatId_, const QImage& image_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_, const bool isGroupChat_);
+    void addChat(const int companionId_, const int chatId_, const QImage& image_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& lastMessage_, const QString& messageTime_, const bool isChat_, const bool isGroupChat_, const int newMessagesCount_);
     int getSize();
     void chatCreated(const int serverId_, const int companionId_, const int chatId_);
     void clearChats();
     void updateLastMessage(const int serverId_, const int chatId_, const QString& lastMessage_);
+    void increaseMessageCount(const int chatId_);
+    void decreaseMessageCount(const int chatId_);
 
 private:
     struct Chat {
@@ -39,6 +41,7 @@ private:
         QString messageTime_;
         bool isChat_;
         bool isGroupChat_;
+        int newMessagesCount_;
     };
 
     QVector<Chat> chats_;

@@ -38,6 +38,8 @@ public slots:
     void slotAddUserInChatProcessing(const QJsonObject& jsonObj_);
     void slotClearChat();
     void slotSetNewLastMessage(const QJsonObject& jsonObj_);
+    void slotIncreaseMessageCount(const int chatId_);
+    void slotDecreaseMessageCount(const int chatId_);
 
 private:
     JsonWorker jsonWorker_;
