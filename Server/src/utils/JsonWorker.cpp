@@ -578,7 +578,7 @@ std::string JsonWorker::createSetMessageForCompanionJson(const int senderId_, co
     try
     {
         nlohmann::json json_;
-        json_["Info"] = "Set_New_Message";
+        json_["Info"] = "Set_New_Message_Companion";
         json_["senderId"] = senderId_;
         json_["messageId"] = messageId_;
         json_["serverId"] = serverId_;
@@ -597,12 +597,31 @@ std::string JsonWorker::createSetMessageForCompanionJson(const int senderId_, co
     }
 }
 
-std::string JsonWorker::createMarkMessageJson(const int messageId_, const int chatId_)
+std::string JsonWorker::createMarkMessageForUserJson(const int messageId_, const int chatId_)
 {
     try
     {
         nlohmann::json json_;
-        json_["Info"] = "Mark_Message";
+        json_["Info"] = "Mark_Message_For_User";
+        json_["messageId"] = messageId_;
+        json_["chatId"] = chatId_;
+        json_["viewed"] = true;
+
+        return json_.dump();
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createMarkMessageForCompanionJson(const int messageId_, const int chatId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Mark_Message_For_Companion";
         json_["messageId"] = messageId_;
         json_["chatId"] = chatId_;
         json_["viewed"] = true;

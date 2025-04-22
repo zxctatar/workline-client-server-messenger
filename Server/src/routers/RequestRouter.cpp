@@ -637,17 +637,19 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         int companionId_ = messageManager_.markMessage(connection_, receivedUserId_, receivedChatId_, receivedMessageId_);
         connectionPool_.returnConnection(connection_);
 
-        std::string response_ = jsonWorker_.createMarkMessageJson(receivedMessageId_, receivedChatId_);
+
+        std::string responseForUser_ = jsonWorker_.createMarkMessageForUserJson(receivedMessageId_, receivedChatId_);
+        std::string responseForCompanion_ = jsonWorker_.createMarkMessageForCompanionJson(receivedMessageId_, receivedChatId_);
 
         std::weak_ptr<Session> companion_ = connUsers_.getUser(companionId_);
 
-        boost::asio::post(executor_, [this, session_, response_, companion_](){
+        boost::asio::post(executor_, [this, session_, responseForUser_, responseForCompanion_, companion_](){
             if(auto s_ = companion_.lock())
             {
-                s_->do_write(response_);
+                s_->do_write(responseForCompanion_);
             }
 
-            session_.lock()->do_write(response_);
+            session_.lock()->do_write(responseForUser_);
         });
     }
 }

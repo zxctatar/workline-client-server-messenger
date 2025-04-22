@@ -164,7 +164,8 @@ pqxx::result DatabaseQueries::getChats(pqxx::transaction_base& conn_, const int 
         CASE
             WHEN p.id IS NOT NULL THEN TRUE
             ELSE FALSE
-        END AS has_chat
+        END AS has_chat,
+        COALESCE(unread.count, 0) AS unread_count
     FROM users u
     LEFT JOIN private_chats p
         ON (
@@ -174,6 +175,16 @@ pqxx::result DatabaseQueries::getChats(pqxx::transaction_base& conn_, const int 
         AND p.server_id = $2
     LEFT JOIN chats_last_messages clm ON clm.chat_id = p.id
     LEFT JOIN messages m ON m.id = clm.last_message_id
+    LEFT JOIN LATERAL (
+        SELECT COUNT(*) AS count
+        FROM messages msg
+        WHERE msg.private_chat_id = p.id
+          AND msg.sender_id != $1
+          AND NOT EXISTS (
+              SELECT 1 FROM viewed_messages vm
+              WHERE vm.message_id = msg.id AND vm.user_id = $1
+          )
+    ) AS unread ON TRUE
     WHERE u.user_id != $1
     AND u.user_id IN (
         SELECT user_id FROM users_on_servers WHERE server_id = $2

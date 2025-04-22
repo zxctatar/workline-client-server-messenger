@@ -15,6 +15,7 @@ struct PrivateChatStruct
     std::string lastMessage_;
     std::string messageTime_;
     bool isChat_;
+    int newMessagesCount_;
 
     void to_json(nlohmann::json& j) const {
         j = nlohmann::json{
@@ -26,7 +27,8 @@ struct PrivateChatStruct
             {"middleName", middleName_},
             {"lastMessage", lastMessage_},
             {"messageTime", messageTime_},
-            {"isChat", isChat_}
+            {"isChat", isChat_},
+            {"newMessagesCount", newMessagesCount_}
         };
     }
 };

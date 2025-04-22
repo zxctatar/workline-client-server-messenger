@@ -47,7 +47,8 @@ public:
     std::string createGetChatDataJson(const std::vector<ChatHistoryResult>& history_, const ChatDataResult& data_, const int userId_, const int serverId_, const int chatId_);
     std::string createSetMessageForSenderJson(const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_);
     std::string createSetMessageForCompanionJson(const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_);
-    std::string createMarkMessageJson(const int messageId_, const int chatId_);
+    std::string createMarkMessageForUserJson(const int messageId_, const int chatId_);
+    std::string createMarkMessageForCompanionJson(const int messageId_, const int chatId_);
 
     ~JsonWorker();
 

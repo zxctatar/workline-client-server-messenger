@@ -61,6 +61,7 @@ std::vector<PrivateChatStruct> ChatsDBManager::getPrivateChats(std::shared_ptr<D
                 std::string messageTime_ = row[6].as<std::string>();
                 int chatId_ = row[7].as<int>();
                 bool hasChat_ = row[8].as<bool>();
+                int newMessagesCount_ = row[9].as<int>();
 
                 PrivateChatStruct chat_;
                 chat_.chatId_ = chatId_;
@@ -72,6 +73,7 @@ std::vector<PrivateChatStruct> ChatsDBManager::getPrivateChats(std::shared_ptr<D
                 chat_.middleName_ = middleName_;
                 chat_.messageTime_ = messageTime_;
                 chat_.isChat_ = hasChat_;
+                chat_.newMessagesCount_ = newMessagesCount_;
 
                 privateChats_.push_back(chat_);
             }

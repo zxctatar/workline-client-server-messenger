@@ -2,7 +2,7 @@
 #define CHATHISTORYRESULT_H
 
 #include <string>
-#include "nlohmann/json.hpp""
+#include "nlohmann/json.hpp"
 
 struct ChatHistoryResult
 {
