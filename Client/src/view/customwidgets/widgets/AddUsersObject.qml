@@ -5,26 +5,26 @@ import Qt5Compat.GraphicalEffects
 import "../../../resources"
 
 Item {
-    id: configureAdminObject
-    height: Sizes.maxConfigureAdminObjectHeight // 50
+    id: addUsersObject
+    height: Sizes.maxAddUserObjectHeight // 50
 
     property string displayName
     property string path
 
-    property bool isAdmin
+    property bool isSelected
 
-    signal addAdminSignal()
-    signal removeAdminSignal()
+    signal addUserSignal()
+    signal removeUserSignal()
 
     RowLayout {
         anchors.fill: parent
-        spacing: Sizes.spacingConfigureAdminObject // 10
+        spacing: Sizes.spacingAddUserObject // 10
 
         Rectangle {
             id: recta
             radius: 24
-            Layout.preferredWidth: Sizes.maxConfigureAdminObjectImageWidth // 40
-            Layout.preferredHeight: Sizes.maxConfigureAdminObjectImageHeight // 40
+            Layout.preferredWidth: Sizes.maxAddUserObjectImageWidth // 40
+            Layout.preferredHeight: Sizes.maxAddUserObjectImageHeight // 40
             Layout.alignment: Qt.AlignVCenter
             color: "transparent"
 
@@ -41,32 +41,32 @@ Item {
                 id: avatar
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectCrop
-                source: configureAdminObject.path == "" ? "qrc:/resources/img/avatar.svg" : configureAdminObject.path
+                source: addUsersObject.path == "" ? "qrc:/resources/img/avatar.svg" : addUsersObject.path
             }
         }
 
         MenuText {
-            text: configureAdminObject.displayName
+            text: addUsersObject.displayName
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
         }
 
         SwitcherButton {
-            Layout.preferredWidth: Sizes.maxSwitcherButtonWidth // 35
-            Layout.preferredHeight: Sizes.maxSwitcherButtonHeight // 35
-            Layout.rightMargin: Sizes.rightMargineSwitcherButton // 5
+            Layout.preferredWidth: Sizes.maxAddUserButtonWidth // 35
+            Layout.preferredHeight: Sizes.maxAddUserButtonHeight // 35
+            Layout.rightMargin: Sizes.rightMargineAddUserButton // 5
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
 
-            isSelected: configureAdminObject.isAdmin
+            isSelected: addUsersObject.isSelected
 
             onClicked: {
-                if(configureAdminObject.isAdmin)
+                if(addUsersObject.isSelected)
                 {
-                    configureAdminObject.removeAdminSignal()
+                    addUsersObject.removeUserSignal()
                 }
                 else
                 {
-                    configureAdminObject.addAdminSignal()
+                    addUsersObject.addUserSignal()
                 }
             }
         }

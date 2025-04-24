@@ -25,11 +25,11 @@ QtObject {
     readonly property color chatMessageCandidateColor: "#729EC6" // цвет сообщения собеседника
     readonly property color chatMessageUserColor: "#D3E3F1" // цвет собственного сообщения
 
-    //admin switcher button
-    readonly property color adminSwitcherYesButtonNormal: Qt.rgba(85/255, 206/255, 94/255, 0.50) // обычный цвет кнопки добавить
-    readonly property color adminSwitcherYesButtonHovered: Qt.rgba(85/255, 206/255, 94/255, 1) // цвет кнопки добавить когда навелись
-    readonly property color adminSwitcherNoButtonNormal: Qt.rgba(255, 0, 0, 0.5) // обычный цвет кнопки убрать
-    readonly property color adminSwitcherNoButtonHovered: Qt.rgba(255, 0, 0) // цвет кнопки убрать когда навелись
+    //switcher button
+    readonly property color switcherYesButtonNormal: Qt.rgba(85/255, 206/255, 94/255, 0.50) // обычный цвет кнопки добавить
+    readonly property color switcherYesButtonHovered: Qt.rgba(85/255, 206/255, 94/255, 1) // цвет кнопки добавить когда навелись
+    readonly property color switcherNoButtonNormal: Qt.rgba(255, 0, 0, 0.5) // обычный цвет кнопки убрать
+    readonly property color switcherNoButtonHovered: Qt.rgba(255, 0, 0) // цвет кнопки убрать когда навелись
 
     //chat message text
     readonly property color chatMessageTextColor: "#373737" // цвет сообщения чата

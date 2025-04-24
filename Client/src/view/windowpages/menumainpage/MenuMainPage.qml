@@ -15,6 +15,7 @@ Page {
     signal applicationButtonClicked()
     signal addUserOnServerButtonClicked()
     signal configureAdminButtonClicked()
+    signal createGroupChatClicked()
 
     background: Rectangle {
         color: Colors.menuWindowBackgroundColor
@@ -89,6 +90,24 @@ Page {
 
             onClicked: {
                 menuMainPage.configureAdminButtonClicked();
+            }
+        }
+
+        Separator {
+            Layout.fillWidth: true
+            visible: menuMainPage.serverSelected ? true : false
+        }
+
+        MenuWidget {
+            Layout.preferredWidth: menuMainPage.width
+            Layout.preferredHeight: Sizes.maxMenuWidgetHeight // 50
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            text: "Создать групповой чат"
+
+            visible: menuMainPage.serverSelected ? true : false
+
+            onClicked: {
+                menuMainPage.createGroupChatClicked()
             }
         }
     }

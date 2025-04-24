@@ -6,6 +6,7 @@ TopBarController::TopBarController(QObject* parent)
     , applicationPageController_(nullptr)
     , addUserController_(nullptr)
     , configureAdminController_(nullptr)
+    , addUserInChatController_(nullptr)
 {
 }
 
@@ -15,6 +16,7 @@ TopBarController::~TopBarController()
     deleteApplicationPageController();
     deleteAddUserOnServerController();
     deleteConfigureAdminController();
+    deleteAddUserInChatController();
 }
 
 void TopBarController::slotSetNewServerRole()
@@ -82,6 +84,14 @@ void TopBarController::deleteConfigureAdminController()
     }
 }
 
+void TopBarController::deleteAddUserInChatController()
+{
+    if(addUserInChatController_)
+    {
+        addUserController_.reset();
+    }
+}
+
 void TopBarController::checkServerSelected()
 {
     bool selected = SelectedServerManager::instance().getServerSelected();
@@ -135,6 +145,15 @@ ConfigureAdminController* TopBarController::getConfigureAdminController()
     return configureAdminController_.get();
 }
 
+AddUserInChatController* TopBarController::getAddUserInChatController()
+{
+    if(addUserInChatController_)
+    {
+        createAddUserInChatController();
+    }
+    return addUserInChatController_.get();
+}
+
 void TopBarController::createProfilePageController()
 {
     if(!profilePageController_)
@@ -184,5 +203,13 @@ void TopBarController::createConfigureAdminController()
         connect(configureAdminController_.get(), &ConfigureAdminController::sendRemoveAdminSignal, this, &TopBarController::handOverRemoveAdminOnServerSignal);
         connect(this, &TopBarController::handOverResponseAddAdminOnServerSignal, configureAdminController_.get(), &ConfigureAdminController::slotAddAdminOnServerPreparing);
         connect(this, &TopBarController::handOverResponseRemoveAdminOnServerSignal, configureAdminController_.get(), &ConfigureAdminController::slotRemoveAdminOnServerPreparing);
+    }
+}
+
+void TopBarController::createAddUserInChatController()
+{
+    if(addUserInChatController_)
+    {
+        addUserInChatController_ = std::make_shared<AddUserInChatController>(this);
     }
 }

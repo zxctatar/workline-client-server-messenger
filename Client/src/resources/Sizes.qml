@@ -11,8 +11,19 @@ QtObject {
     // login page
     readonly property int loginPageWidgetsSpacing: 18 // расстояние между виджетами в окне логина
 
-    // add admin object
-    readonly property int maxAddAdminObjectHeight: 50 // высота объекта добавления админа
+    // configure admin object
+    readonly property int maxConfigureAdminObjectHeight: 50 // высота объекта настрйки админа
+    readonly property int spacingConfigureAdminObject: 10 // отсуп между объектами настройки админа
+
+    readonly property int maxConfigureAdminObjectImageWidth: 40 // ширина иконки объекта настройки админа
+    readonly property int maxConfigureAdminObjectImageHeight: 40 // высота иконки объекта настройки админа
+
+    // add user object
+    readonly property int maxAddUserObjectHeight: 50 // высота объекта добавления пользователя
+    readonly property int spacingAddUserObject: 10 // отступ между объектами добавления пользователя
+
+    readonly property int maxAddUserObjectImageWidth: 40 // ширина иконки объекта добавления пользователя
+    readonly property int maxAddUserObjectImageHeight: 40 // высота иконки объекта добавления пользователя
 
     //chat message input
     readonly property int chatMessageLeftPadding: 30 // левый отступ текст поля ввода сообщения
@@ -26,9 +37,11 @@ QtObject {
     //chat message object
     readonly property int chatMessageObjectRadius: 5 // скругление углов объекта сообщения
 
-    // admin switcher button
-    readonly property int maxAdminSwitcherButtonWidth: 35 // ширина кнопки переключения админа
-    readonly property int maxAdminSwitcherButtonHeight: 35 // высота кнопки переключения админа
+    // switcher button
+    readonly property int maxSwitcherButtonWidth: 35 // ширина кнопки переключения
+    readonly property int maxSwitcherButtonHeight: 35 // высота кнопки переключения
+
+    readonly property int rightMargineSwitcherButton: 5 // правый отступ в кнопке переключения
 
     // chat message object
     readonly property int maxChatMessageObjectWidth: 450 // ширина сообщения

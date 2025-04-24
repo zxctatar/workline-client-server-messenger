@@ -5,11 +5,12 @@
 #include <qqml.h>
 #include <memory>
 #include "UserAccountManager.h"
+#include "SelectedServerManager.h"
 #include "ProfilePageController.h"
 #include "ApplicationPageController.h"
 #include "AddUserOnServerController.h"
-#include "SelectedServerManager.h"
 #include "ConfigureAdminController.h"
+#include "AddUserInChatController.h"
 
 class TopBarController : public QObject
 {
@@ -20,6 +21,7 @@ class TopBarController : public QObject
     Q_PROPERTY(ProfilePageController* profilePageController READ getProfilePageController NOTIFY profilePageControllerChanged FINAL)
     Q_PROPERTY(AddUserOnServerController* addUserController READ getAddUserController NOTIFY addUserControllerChanged FINAL)
     Q_PROPERTY(ConfigureAdminController* configureAdminController READ getConfigureAdminController NOTIFY configureAdminControllerChanged FINAL)
+    Q_PROPERTY(AddUserInChatController* addUserInChatController READ getAddUserInChatController NOTIFY addUserInChatControllerChanged FINAL)
 
 public:
     explicit TopBarController(QObject* parent = nullptr);
@@ -29,11 +31,13 @@ public:
     Q_INVOKABLE ApplicationPageController* getApplicationPageController();
     Q_INVOKABLE AddUserOnServerController* getAddUserController();
     Q_INVOKABLE ConfigureAdminController* getConfigureAdminController();
+    Q_INVOKABLE AddUserInChatController* getAddUserInChatController();
     Q_INVOKABLE void getUserRole() const;
     Q_INVOKABLE void deleteApplicationPageController();
     Q_INVOKABLE void deleteProfilePageController();
     Q_INVOKABLE void deleteAddUserOnServerController();
     Q_INVOKABLE void deleteConfigureAdminController();
+    Q_INVOKABLE void deleteAddUserInChatController();
     Q_INVOKABLE void checkServerSelected();
     Q_INVOKABLE void accessToServerDenied(const int serverId_);
     Q_INVOKABLE void getServerId();
@@ -44,6 +48,7 @@ signals:
     void applicationPageControllerChanged();
     void addUserControllerChanged();
     void configureAdminControllerChanged();
+    void addUserInChatControllerChanged();
 
     void setServerId(const int serverId_) const;
     void setUserRoleSignal(const QString& userRole_) const;
@@ -80,11 +85,13 @@ private:
     void createApplicationPageController();
     void createAddUserOnServerController();
     void createConfigureAdminController();
+    void createAddUserInChatController();
 
     std::shared_ptr<ProfilePageController> profilePageController_;
     std::shared_ptr<ApplicationPageController> applicationPageController_;
     std::shared_ptr<AddUserOnServerController> addUserController_;
     std::shared_ptr<ConfigureAdminController> configureAdminController_;
+    std::shared_ptr<AddUserInChatController> addUserInChatController_;
 };
 
 #endif // TOPBARCONTROLLER_H

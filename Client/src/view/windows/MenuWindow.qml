@@ -7,6 +7,7 @@ import "../customwidgets/widgets"
 import "../windowpages/menumainpage"
 import "../windowpages/menuprofilepage"
 import "../windowpages/menuapplicationpage"
+import "../windowpages/selectuserspage"
 
 Popup {
     id: menuWindow
@@ -235,6 +236,61 @@ Popup {
                             if(typeof menuWindow !== 'undefined' && menuWindow) {
                                 menuWindow.controller.deleteConfigureAdminController()
                             }
+                        })
+                    }
+                }
+
+                onCreateGroupChatClicked: {
+                    menuWindow.width = 475
+                    menuWindow.height = 270
+
+                    var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menucreategroupchatpage/MenuCreateGroupChatPage.qml"), {
+                        width: parent.width,
+                        height: parent.height,
+                        controller: menuWindow.controller.addUserInChatController
+                    })
+
+                    if(page) {
+                        var selectUsersPage = null
+
+                        page.backButtonClicked.connect(function() {
+                            stackView.pop()
+
+                            if(selectUsersPage)
+                            {
+                                selectUsersPage.destroy()
+                                selectUsersPage = null
+                            }
+
+                            menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                            menuWindow.height = Sizes.maxMenuWindowHeight // 550
+                        })
+
+                        page.nextButtonClicked.connect(function() {
+                            menuWindow.width = 230
+                            menuWindow.height = 400
+
+                            if(!selectUsersPage)
+                            {
+                                var component = Qt.createComponent("qrc:/view/windowpages/selectuserspage/SelectUsersPage.qml")
+
+                                if(component.status == Component.Ready)
+                                {
+                                    selectUsersPage = component.createObject(stackView)
+
+                                    if(selectUsersPage)
+                                    {
+                                        selectUsersPage.backButtonClicked.connect(function() {
+                                            menuWindow.width = 475
+                                            menuWindow.height = 270
+                                            stackView.pop()
+                                        })
+                                    }
+                                }
+                            }
+
+                            stackView.push(selectUsersPage)
+
                         })
                     }
                 }

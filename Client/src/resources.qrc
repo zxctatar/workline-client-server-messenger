@@ -71,7 +71,7 @@
         <file>view/windows/CreateChatWindow.qml</file>
         <file>view/customwidgets/widgets/CreateChatButton.qml</file>
         <file>view/customwidgets/widgets/ConfigureAdminObject.qml</file>
-        <file>view/customwidgets/widgets/AdminSwitcherButton.qml</file>
+        <file>view/customwidgets/widgets/SwitcherButton.qml</file>
         <file>view/windowpages/menuconfigureadminpage/qmldir</file>
         <file>view/windowpages/menuconfigureadminpage/MenuConfigureAdminPage.qml</file>
         <file>view/customwidgets/compositewidgets/ChatHistory.qml</file>
@@ -87,5 +87,11 @@
         <file>view/windows/ChatInfoWindow.qml</file>
         <file>resources/img/checkYesUser.svg</file>
         <file>resources/img/checkNoUser.svg</file>
+        <file>view/windowpages/menucreategroupchatpage/MenuCreateGroupChatPage.qml</file>
+        <file>view/windowpages/menucreategroupchatpage/qmldir</file>
+        <file>view/windows/AddUsersWindow.qml</file>
+        <file>view/windowpages/selectuserspage/qmldir</file>
+        <file>view/windowpages/selectuserspage/SelectUsersPage.qml</file>
+        <file>view/customwidgets/widgets/AddUsersObject.qml</file>
     </qresource>
 </RCC>

@@ -3,3 +3,4 @@ AddServerWindow 1.0 AddServerWindow.qml
 MenuWindow 1.0 MenuWindow.qml
 CreateChatWindow 1.0 CreateChatWindow.qml
 ChatInfoWindow 1.0 ChatInfoWindow.qml
+AddUsersWindow 1.0 AddUsersWindow.qml

@@ -4,7 +4,7 @@ project(Client VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Qml Widgets)
+find_package(Qt6 6.8.1 REQUIRED COMPONENTS Quick Qml Widgets Core)
 
 set(CMAKE_AUTORCC ON)
 
@@ -69,11 +69,12 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/widgets/ChatMessageText.qml
     QML_FILES src/view/customwidgets/widgets/CreateChatButton.qml
     QML_FILES src/view/customwidgets/widgets/ConfigureAdminObject.qml
-    QML_FILES src/view/customwidgets/widgets/AdminSwitcherButton.qml
+    QML_FILES src/view/customwidgets/widgets/SwitcherButton.qml
     QML_FILES src/view/customwidgets/widgets/ChatMessageInput.qml
     QML_FILES src/view/customwidgets/widgets/ChatMessageObject.qml
     QML_FILES src/view/customwidgets/widgets/AddImage.qml
     QML_FILES src/view/customwidgets/widgets/ViewImage.qml
+    QML_FILES src/view/customwidgets/widgets/AddUsersObject.qml
     RESOURCES src/view/customwidgets/widgets/qmldir
 
     QML_FILES src/view/windowpages/menuprofilepage/MenuProfilePage.qml
@@ -92,10 +93,17 @@ qt_add_qml_module(appClient
     QML_FILES src/view/windows/MenuWindow.qml
     QML_FILES src/view/windows/CreateChatWindow.qml
     QML_FILES src/view/windows/ChatInfoWindow.qml
+    QML_FILES src/view/windows/AddUsersWindow.qml
     RESOURCES src/view/windows/qmldir
 
     QML_FILES src/view/windowpages/menuconfigureadminpage/MenuConfigureAdminPage.qml
     RESOURCES src/view/windowpages/menuconfigureadminpage/qmldir
+
+    QML_FILES src/view/windowpages/menucreategroupchatpage/MenuCreateGroupChatPage.qml
+    RESOURCES src/view/windowpages/menucreategroupchatpage/qmldir
+
+    QML_FILES src/view/windowpages/selectuserspage/SelectUsersPage.qml
+    RESOURCES src/view/windowpages/selectuserspage/qmldir
 
     QML_FILES src/view/apppages/loginpage/LoginPage.qml
     RESOURCES src/view/apppages/loginpage/qmldir
@@ -174,6 +182,8 @@ qt_add_qml_module(appClient
     SOURCES src/controller/chatinfobarcontroller/ChatInfoBarController.cpp
     SOURCES src/manager/chatsmanager/ChatsManager.cpp
     SOURCES include/ChatsManager.h
+    SOURCES src/controller/adduserinchatcontroller/AddUserInChatController.cpp
+    SOURCES include/AddUserInChatController.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -191,6 +201,7 @@ target_link_libraries(appClient
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Qml
     PRIVATE Qt6::Widgets
+    PRIVATE Qt6::Core
 )
 
 include(GNUInstallDirs)
