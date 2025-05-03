@@ -71,7 +71,18 @@ void ChatModel::addChat(const int companionId_, const int chatId_, const QImage&
     QString displayName_ = lastName_ + ' ' + firstName_;
 
     beginInsertRows(QModelIndex(), chats_.size(), chats_.size());
-    chats_.append({displayName_, imagePath_, companionId_, chatId_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_, isGroupChat_, newMessagesCount_});
+    chats_.append({displayName_, imagePath_, companionId_, chatId_, -1, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_, isGroupChat_, newMessagesCount_});
+    endInsertRows();
+}
+
+void ChatModel::addGroupChat(const int chatId_, const QString& chatName_, const QImage& image_, const QString& messageTime_, const QString& lastMessage_, const int newMessagesCount_)
+{
+    QString imagePath_ = imageWorker_.saveImageToTempFile(image_);
+
+    ChatsManager::instance().addChatAvatar(chatId_, imagePath_);
+
+    beginInsertRows(QModelIndex(), chats_.size(), chats_.size());
+    chats_.append({chatName_, imagePath_, -1, chatId_, -1, "", "", "", lastMessage_, messageTime_, true, true, newMessagesCount_});
     endInsertRows();
 }
 
@@ -117,12 +128,12 @@ void ChatModel::clearChats()
     endRemoveRows();
 }
 
-void ChatModel::updateLastMessage(const int serverId_, const int chatId_, const QString& lastMessage_)
+void ChatModel::updateLastMessage(const int serverId_, const int chatId_, const QString& lastMessage_, const bool isGroup_)
 {
     if(SelectedServerManager::instance().getServerId() == serverId_)
     {
-        auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_](const Chat& chat_){
-            return chat_.chatId_ == chatId_;
+        auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_, isGroup_](const Chat& chat_){
+            return chat_.chatId_ == chatId_ && chat_.isGroupChat_ == isGroup_;
         });
 
         if(it_ != chats_.end())
@@ -139,10 +150,10 @@ void ChatModel::updateLastMessage(const int serverId_, const int chatId_, const 
     }
 }
 
-void ChatModel::increaseMessageCount(const int chatId_)
+void ChatModel::increaseMessageCount(const int chatId_, const bool isGroup_)
 {
-    auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_](const Chat& chat_){
-        return chat_.chatId_ == chatId_;
+    auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_, isGroup_](const Chat& chat_){
+        return chat_.chatId_ == chatId_ && chat_.isGroupChat_ == isGroup_;
     });
 
     if(it_ != chats_.end())
@@ -151,8 +162,6 @@ void ChatModel::increaseMessageCount(const int chatId_)
 
         it_->newMessagesCount_++;
 
-        qDebug() << it_->newMessagesCount_;
-
         QVector<int> roles_;
         roles_ << Qt::UserRole + 7;
 
@@ -160,10 +169,10 @@ void ChatModel::increaseMessageCount(const int chatId_)
     }
 }
 
-void ChatModel::decreaseMessageCount(const int chatId_)
+void ChatModel::decreaseMessageCount(const int chatId_, const bool isGroup_)
 {
-    auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_](const Chat& chat_){
-        return chat_.chatId_ == chatId_;
+    auto it_ = std::find_if(chats_.begin(), chats_.end(), [this, chatId_, isGroup_](const Chat& chat_){
+        return chat_.chatId_ == chatId_ && chat_.isGroupChat_ == isGroup_;
     });
 
     if(it_ != chats_.end())
@@ -172,11 +181,21 @@ void ChatModel::decreaseMessageCount(const int chatId_)
 
         it_->newMessagesCount_--;
 
-        qDebug() << it_->newMessagesCount_;
-
         QVector<int> roles_;
         roles_ << Qt::UserRole + 7;
 
         emit dataChanged(index(row_), index(row_), roles_);
+    }
+}
+
+void ChatModel::addNewGroupChat(const int chatId_, const int serverId_, const int ownerId_, const QString& groupName_, const QImage& groupAvatar_)
+{
+    if(serverId_ == SelectedServerManager::instance().getServerId())
+    {
+        QString avatarPath_ = imageWorker_.saveImageToTempFile(groupAvatar_);
+
+        beginInsertRows(QModelIndex(), chats_.size(), chats_.size());
+        chats_.append({groupName_, avatarPath_, -1, chatId_, ownerId_, "", "", "", "", "", true, true, 0});
+        endInsertRows();
     }
 }

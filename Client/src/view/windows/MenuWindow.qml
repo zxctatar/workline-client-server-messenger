@@ -247,7 +247,7 @@ Popup {
                     var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menucreategroupchatpage/MenuCreateGroupChatPage.qml"), {
                         width: parent.width,
                         height: parent.height,
-                        controller: menuWindow.controller.addUserInChatController
+                        controller: menuWindow.controller.createGroupChatController
                     })
 
                     if(page) {
@@ -266,6 +266,13 @@ Popup {
                             menuWindow.height = Sizes.maxMenuWindowHeight // 550
                         })
 
+                        page.deleteController.connect(function() {
+                            if(typeof menuWindow !== "undefined" && menuWindow)
+                            {
+                                menuWindow.controller.deleteCreateGroupChatController()
+                            }
+                        })
+
                         page.nextButtonClicked.connect(function() {
                             menuWindow.width = 230
                             menuWindow.height = 400
@@ -276,13 +283,25 @@ Popup {
 
                                 if(component.status == Component.Ready)
                                 {
-                                    selectUsersPage = component.createObject(stackView)
+                                    selectUsersPage = component.createObject(stackView, {
+                                        width: parent.width,
+                                        height: parent.height,
+                                        controller: menuWindow.controller.createGroupChatController,
+                                        notificationManager: menuWindow.notificationManager
+                                    })
 
                                     if(selectUsersPage)
                                     {
                                         selectUsersPage.backButtonClicked.connect(function() {
                                             menuWindow.width = 475
                                             menuWindow.height = 270
+                                            stackView.pop()
+                                        })
+
+                                        selectUsersPage.groupCreated.connect(function () {
+                                            menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                                            menuWindow.height = Sizes.maxMenuWindowHeight // 550
+                                            stackView.pop()
                                             stackView.pop()
                                         })
                                     }

@@ -11,7 +11,7 @@ Item {
     property string displayName
     property string path
 
-    property bool isSelected
+    property bool isSelected: false
 
     signal addUserSignal()
     signal removeUserSignal()

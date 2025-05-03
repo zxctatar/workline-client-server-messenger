@@ -81,7 +81,6 @@
         <file>resources/img/WindowIcon.ico</file>
         <file>resources/img/WindowIcon.png</file>
         <file>view/customwidgets/widgets/AddImage.qml</file>
-        <file>resources/img/images.jpeg</file>
         <file>view/customwidgets/compositewidgets/ChatInfoBar.qml</file>
         <file>view/customwidgets/widgets/ViewImage.qml</file>
         <file>view/windows/ChatInfoWindow.qml</file>
@@ -93,5 +92,7 @@
         <file>view/windowpages/selectuserspage/qmldir</file>
         <file>view/windowpages/selectuserspage/SelectUsersPage.qml</file>
         <file>view/customwidgets/widgets/AddUsersObject.qml</file>
+        <file>resources/img/groupAvatar.svg</file>
+        <file>view/windows/GroupChatInfoWindow.qml</file>
     </qresource>
 </RCC>

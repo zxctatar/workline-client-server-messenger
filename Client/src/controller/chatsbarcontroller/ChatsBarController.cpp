@@ -38,7 +38,6 @@ void ChatsBarController::slotChatsProcessing(const QJsonObject& jsonObj_)
                 continue;
             }
 
-
             QJsonObject chat_ = val.toObject();
 
             int compaonionId_ = chat_["compaonionId"].toInt();
@@ -55,6 +54,29 @@ void ChatsBarController::slotChatsProcessing(const QJsonObject& jsonObj_)
             int newMessagesCount_ = chat_["newMessagesCount"].toInt();
 
             chatModel_->addChat(compaonionId_, chatId_, image_, firstName_, lastName_, middleName_, lastMessage_, messageTime_, isChat_, false, newMessagesCount_);
+        }
+
+        QJsonArray groupChatArray_ = jsonObj_["GroupChats"].toArray();
+
+        for(const QJsonValue& val : groupChatArray_)
+        {
+            if(!val.isObject())
+            {
+                continue;
+            }
+
+            QJsonObject groupChat_ = val.toObject();
+
+            int chatId_ = groupChat_["chatId"].toInt();
+            QString chatName_ = groupChat_["chatName"].toString();
+
+            QImage image_ = imageWorker_.decodeImage(groupChat_["avatar"].toString());
+
+            QString lastMessage_ = groupChat_["lastMessage"].toString();
+            QString messageTime_ = groupChat_["messageTime"].toString();
+            int newMessagesCount_ = groupChat_["newMessagesCount"].toInt();
+
+            chatModel_->addGroupChat(chatId_, chatName_, image_, messageTime_, lastMessage_, newMessagesCount_);
         }
     }
 }
@@ -77,13 +99,29 @@ void ChatsBarController::createChat(const int companionId_) const
 void ChatsBarController::slotChatCreatedProcessing(const QJsonObject& jsonObj_)
 {
     int serverId_ = jsonObj_["serverId"].toInt();
-    int chatId_ = jsonObj_["chatId"].toInt();
 
     if(serverId_ == SelectedServerManager::instance().getServerId())
     {
+        int chatId_ = jsonObj_["chatId"].toInt();
         int companionId_ = jsonObj_["companionId"].toInt();
 
         chatModel_->chatCreated(serverId_, companionId_, chatId_);
+    }
+}
+
+void ChatsBarController::slotAddNewGroupChat(const QJsonObject& jsonObj_)
+{
+    int serverId_ = jsonObj_["serverId"].toInt();
+
+    if(serverId_  == SelectedServerManager::instance().getServerId())
+    {
+        int groupChatId_ = jsonObj_["groupId"].toInt();
+        int ownerId_ = jsonObj_["ownerId"].toInt();
+        QString groupName_ = jsonObj_["groupName"].toString();
+
+        QImage groupAvatar_ = imageWorker_.decodeImage(jsonObj_["groupAvatar"].toString());
+
+        chatModel_->addNewGroupChat(groupChatId_, serverId_, ownerId_, groupName_, groupAvatar_);
     }
 }
 
@@ -109,8 +147,9 @@ void ChatsBarController::slotClearChat()
     chatModel_->clearChats();
 }
 
-void ChatsBarController::sendChatId(const int chatId_) const
+void ChatsBarController::sendNewChatData(const int chatId_, const bool isGroup_)
 {
+    SelectedChatManager::instance().setIsGroup(isGroup_);
     SelectedChatManager::instance().setChatId(chatId_);
 }
 
@@ -119,10 +158,11 @@ void ChatsBarController::slotSetNewLastMessage(const QJsonObject& jsonObj_)
     int serverId_ = jsonObj_["serverId"].toInt();
     int chatId_ = jsonObj_["chatId"].toInt();
     QString lastMessage_ = jsonObj_["message"].toString();
+    bool isGroup_ = jsonObj_["isGroup"].toBool();
 
     if(SelectedServerManager::instance().getServerId() == serverId_)
     {
-        chatModel_->updateLastMessage(serverId_, chatId_, lastMessage_);
+        chatModel_->updateLastMessage(serverId_, chatId_, lastMessage_, isGroup_);
     }
 }
 
@@ -136,12 +176,12 @@ void ChatsBarController::clearChatData()
     SelectedChatManager::instance().clearChatData();
 }
 
-void ChatsBarController::slotIncreaseMessageCount(const int chatId_)
+void ChatsBarController::slotIncreaseMessageCount(const int chatId_, const bool isGroup_)
 {
-    chatModel_->increaseMessageCount(chatId_);
+    chatModel_->increaseMessageCount(chatId_, isGroup_);
 }
 
-void ChatsBarController::slotDecreaseMessageCount(const int chatId_)
+void ChatsBarController::slotDecreaseMessageCount(const int chatId_, const bool isGroup_)
 {
-    chatModel_->decreaseMessageCount(chatId_);
+    chatModel_->decreaseMessageCount(chatId_, isGroup_);
 }

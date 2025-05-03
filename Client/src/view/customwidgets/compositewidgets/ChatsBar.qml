@@ -12,7 +12,8 @@ Item {
 
     property var controller // chatsBarController
 
-    property var currentIndex: -1
+    property int currentIndex: -1
+    property bool currentIsGroup
 
     Connections {
         target: chatsBar.controller
@@ -50,7 +51,7 @@ Item {
                 isGroup: isGroupChat
                 messageCount: newMessageCount
 
-                selected: chatsBar.currentIndex == id ? true : false
+                selected: chatsBar.currentIndex == id && chatsBar.currentIsGroup == isGroupChat? true : false
 
                 width: parent ? parent.width : null
                 height: Sizes.maxChatObjectHeight // 70
@@ -61,12 +62,13 @@ Item {
                         createChatWindow.companionId = companionId
                         createChatWindow.open()
                     }
-                    else if(chatsBar.currentIndex != id)
+                    else if(!selected)
                     {
+                        chatsBar.currentIsGroup = isGroupChat
                         chatsBar.currentIndex = id
                         chatsBar.controller.clearChatData()
                         chatsBar.controller.setChatAvatar(imagePath)
-                        chatsBar.controller.sendChatId(id)
+                        chatsBar.controller.sendNewChatData(id, isGroupChat)
                     }
                 }
             }

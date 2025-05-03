@@ -9,6 +9,7 @@ ScrollView {
 
     property var controller // chatHistory chatHistoryController
     property int selectedChat: -1
+    property bool selectedIsGroup: false
 
     clip: true
     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
@@ -60,7 +61,7 @@ ScrollView {
                 }
                 else if (trimmedText.length > 0)
                 {
-                    chatScrollView.controller.sendMessage(chatScrollView.selectedChat, chatMessageInput.text)
+                    chatScrollView.controller.sendMessage(chatScrollView.selectedChat, chatScrollView.selectedIsGroup, chatMessageInput.text)
                     chatMessageInput.text = ""
                 }
             }

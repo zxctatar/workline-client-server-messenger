@@ -15,12 +15,12 @@ ChatHistoryModel* ChatHistoryController::getModel()
     return historyModel_;
 }
 
-void ChatHistoryController::sendMessage(const int chatId_, const QString& message_)
+void ChatHistoryController::sendMessage(const int chatId_, const bool isGroup_, const QString& message_)
 {
     int userId_ = UserAccountManager::instance().getUserId();
     int serverId_ = SelectedServerManager::instance().getServerId();
 
-    QString request_ = jsonWorker_.createJsonSendMessage(chatId_, userId_, serverId_, message_);
+    QString request_ = jsonWorker_.createJsonSendMessage(chatId_, isGroup_, userId_, serverId_, message_);
 
     emit sendMessageSignal(request_);
 }
@@ -28,15 +28,17 @@ void ChatHistoryController::sendMessage(const int chatId_, const QString& messag
 void ChatHistoryController::slotSetChatId(const int chatId_)
 {
     historyModel_->clearMessages();
-    emit setChatIdSignal(chatId_);
+    bool isGroup_ = SelectedChatManager::instance().getGroup();
+
+    emit setChatIdAndGroupSignal(chatId_, isGroup_);
 }
 
-void ChatHistoryController::getChatData(const int chatId_)
+void ChatHistoryController::getChatData(const int chatId_, const bool isGroup_)
 {
     int userId_ = UserAccountManager::instance().getUserId();
     int serverId_ = SelectedServerManager::instance().getServerId();
 
-    QString request_ = jsonWorker_.createJsonGetChatHistory(chatId_, serverId_, userId_);
+    QString request_ = jsonWorker_.createJsonGetChatHistory(chatId_, serverId_, userId_, isGroup_);
     emit getChatDataSignal(request_);
 }
 
@@ -45,14 +47,26 @@ void ChatHistoryController::slotSetChatData(const QJsonObject& jsonObj_)
     int serverId_ = jsonObj_["serverId"].toInt();
     int chatId_ = jsonObj_["chatId"].toInt();
 
-    QString receivedFirstName_ = jsonObj_["firstName"].toString();
-    QString receivedLastName_ = jsonObj_["lastName"].toString();
-    QString receivedMiddleName_ = jsonObj_["middleName"].toString();
-    QString receivedEmail_ = jsonObj_["email"].toString();
-    QString receivedBirthDate_ = jsonObj_["birthDate"].toString();
-    QString receivedPhoneNumber_ = jsonObj_["phoneNumber"].toString();
+    bool isGroup_ = SelectedChatManager::instance().getGroup();
 
-    SelectedChatManager::instance().setChatData(receivedFirstName_, receivedLastName_, receivedMiddleName_, receivedBirthDate_, receivedEmail_, receivedPhoneNumber_);
+    if(isGroup_)
+    {
+        QString receivedGroupName_ = jsonObj_["groupName"].toString();
+        int receivedUsersCount_ = jsonObj_["usersCount"].toInt();
+
+        SelectedChatManager::instance().setGroupChatData(receivedGroupName_, receivedUsersCount_);
+    }
+    else
+    {
+        QString receivedFirstName_ = jsonObj_["firstName"].toString();
+        QString receivedLastName_ = jsonObj_["lastName"].toString();
+        QString receivedMiddleName_ = jsonObj_["middleName"].toString();
+        QString receivedEmail_ = jsonObj_["email"].toString();
+        QString receivedBirthDate_ = jsonObj_["birthDate"].toString();
+        QString receivedPhoneNumber_ = jsonObj_["phoneNumber"].toString();
+
+        SelectedChatManager::instance().setChatData(receivedFirstName_, receivedLastName_, receivedMiddleName_, receivedBirthDate_, receivedEmail_, receivedPhoneNumber_);
+    }
 
     if(serverId_ == SelectedServerManager::instance().getServerId() && chatId_ == SelectedChatManager::instance().getChatId())
     {
@@ -90,8 +104,9 @@ void ChatHistoryController::slotSetNewMessage(const QJsonObject& jsonObj_)
     int serverId_ = jsonObj_["serverId"].toInt();
     int chatId_ = jsonObj_["chatId"].toInt();
     int senderId_ = jsonObj_["senderId"].toInt();
+    bool isGroup_ = jsonObj_["isGroup"].toBool();
 
-    if(serverId_ == SelectedServerManager::instance().getServerId() && chatId_ == SelectedChatManager::instance().getChatId())
+    if(serverId_ == SelectedServerManager::instance().getServerId() && chatId_ == SelectedChatManager::instance().getChatId() && isGroup_ == SelectedChatManager::instance().getGroup())
     {
         int messageId_ = jsonObj_["messageId"].toInt();
         QString message_ = jsonObj_["message"].toString();
@@ -124,8 +139,9 @@ void ChatHistoryController::markMessageAsRead(const int messageId_)
 {
     int chatId_ = SelectedChatManager::instance().getChatId();
     int userId_ = UserAccountManager::instance().getUserId();
+    bool isGroup_ = SelectedChatManager::instance().getGroup();
 
-    QString request_ = jsonWorker_.createJsonMarkMessageAsRead(messageId_, userId_, chatId_);
+    QString request_ = jsonWorker_.createJsonMarkMessageAsRead(messageId_, userId_, chatId_, isGroup_);
 
     emit markMessageSignal(request_);
 }

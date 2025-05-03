@@ -73,7 +73,7 @@ Page {
             required property string imagePath
 
             width: parent ? parent.width : undefined
-            height: 50
+            height: Sizes.maxConfigureAdminObjectHeight // 50
 
             displayName: name
             isAdmin: isServerAdmin

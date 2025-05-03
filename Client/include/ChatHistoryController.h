@@ -18,13 +18,13 @@ public:
     explicit ChatHistoryController(QObject* parent = nullptr);
     ~ChatHistoryController();
 
-    Q_INVOKABLE void sendMessage(const int chatId_, const QString& message_);
-    Q_INVOKABLE void getChatData(const int chatId_);
+    Q_INVOKABLE void sendMessage(const int chatId_, const bool isGroup_, const QString& message_);
+    Q_INVOKABLE void getChatData(const int chatId_, const bool isGroup_);
     Q_INVOKABLE ChatHistoryModel* getModel();
     Q_INVOKABLE void markMessageAsRead(const int messageId_);
 
 signals:
-    void setChatIdSignal(const int chatId_);
+    void setChatIdAndGroupSignal(const int chatId_, const bool isGroup_);
     void getChatDataSignal(const QString& info_);
     void sendMessageSignal(const QString& info_);
     void scrollDownSignal();

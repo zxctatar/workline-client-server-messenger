@@ -9,11 +9,12 @@ Item {
     property var controller // chatHistory chatHistoryController
     property var notificationManager
     property int selectedChat: -1
+    property bool selectedIsGroup: false
 
     clip: true
 
-    onSelectedChatChanged: {
-        chatMessageView.controller.getChatData(chatMessageView.selectedChat)
+    function getChatData() {
+        chatMessageView.controller.getChatData(chatMessageView.selectedChat, chatMessageView.selectedIsGroup)
     }
 
     Connections {

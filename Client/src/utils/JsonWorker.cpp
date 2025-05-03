@@ -174,10 +174,10 @@ QString JsonWorker::createJsonCreateChat(const int serverId_, const int userId_,
     return jsonString_;
 }
 
-QString JsonWorker::createJsonGetUsersOnServer(const int serverId_) const
+QString JsonWorker::createJsonGetUsersOnServer(const QString& info_, const int serverId_) const
 {
     QJsonObject jsonObject_;
-    jsonObject_.insert("Info", "Get_Users_On_Server");
+    jsonObject_.insert("Info", info_);
     jsonObject_.insert("serverId", serverId_);
     QJsonDocument json_(jsonObject_);
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
@@ -217,23 +217,25 @@ QString JsonWorker::createJsonGetServerRole(const int userId_, const int serverI
     return jsonString_;
 }
 
-QString JsonWorker::createJsonGetChatHistory(const int chatId_, const int serverId_, const int userId_) const
+QString JsonWorker::createJsonGetChatHistory(const int chatId_, const int serverId_, const int userId_, const bool isGroup_) const
 {
     QJsonObject jsonObject_;
     jsonObject_.insert("Info", "Get_Chat_Data");
     jsonObject_.insert("userId", userId_);
     jsonObject_.insert("serverId", serverId_);
     jsonObject_.insert("chatId", chatId_);
+    jsonObject_.insert("isGroup", isGroup_);
     QJsonDocument json_(jsonObject_);
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;
 }
 
-QString JsonWorker::createJsonSendMessage(const int chatId_, const int userId_, const int serverId_, const QString& message_) const
+QString JsonWorker::createJsonSendMessage(const int chatId_, const bool isGroup_, const int userId_, const int serverId_, const QString& message_) const
 {
     QJsonObject jsonObject_;
     jsonObject_.insert("Info", "Send_Message");
     jsonObject_.insert("userId", userId_);
+    jsonObject_.insert("isGroup", isGroup_);
     jsonObject_.insert("serverId", serverId_);
     jsonObject_.insert("chatId", chatId_);
     jsonObject_.insert("message", message_);
@@ -242,13 +244,35 @@ QString JsonWorker::createJsonSendMessage(const int chatId_, const int userId_, 
     return jsonString_;
 }
 
-QString JsonWorker::createJsonMarkMessageAsRead(const int messageId_, const int userId_, const int chatId_) const
+QString JsonWorker::createJsonMarkMessageAsRead(const int messageId_, const int userId_, const int chatId_, const bool isGroup_) const
 {
     QJsonObject jsonObject_;
     jsonObject_.insert("Info", "Mark_Message");
     jsonObject_.insert("userId", userId_);
     jsonObject_.insert("chatId", chatId_);
     jsonObject_.insert("messageId", messageId_);
+    jsonObject_.insert("isGroup", isGroup_);
+    QJsonDocument json_(jsonObject_);
+    QString jsonString_ = json_.toJson(QJsonDocument::Indented);
+    return jsonString_;
+}
+
+QString JsonWorker::createJsonCreateGroupChat(const int serverId_, const int userId_, const QString& chatAvatar_, const QString& chatName_, const QVector<int>& addedUsers_) const
+{
+    QJsonObject jsonObject_;
+    jsonObject_.insert("Info", "Create_Group_Chat");
+    jsonObject_.insert("serverId", serverId_);
+    jsonObject_.insert("userId", userId_);
+    jsonObject_.insert("groupName", chatName_);
+    jsonObject_.insert("groupAvatar", chatAvatar_);
+
+    QJsonArray jsonArray_;
+    for(const auto& i : addedUsers_)
+    {
+        jsonArray_.append(i);
+    }
+
+    jsonObject_.insert("addedUsers", jsonArray_);
     QJsonDocument json_(jsonObject_);
     QString jsonString_ = json_.toJson(QJsonDocument::Indented);
     return jsonString_;

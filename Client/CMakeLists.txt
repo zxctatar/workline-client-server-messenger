@@ -4,7 +4,7 @@ project(Client VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.8.1 REQUIRED COMPONENTS Quick Qml Widgets Core)
+find_package(Qt6 6.8.0 REQUIRED COMPONENTS Quick Qml Widgets Core)
 
 set(CMAKE_AUTORCC ON)
 
@@ -94,6 +94,7 @@ qt_add_qml_module(appClient
     QML_FILES src/view/windows/CreateChatWindow.qml
     QML_FILES src/view/windows/ChatInfoWindow.qml
     QML_FILES src/view/windows/AddUsersWindow.qml
+    QML_FILES src/view/windows/GroupChatInfoWindow.qml
     RESOURCES src/view/windows/qmldir
 
     QML_FILES src/view/windowpages/menuconfigureadminpage/MenuConfigureAdminPage.qml
@@ -182,8 +183,8 @@ qt_add_qml_module(appClient
     SOURCES src/controller/chatinfobarcontroller/ChatInfoBarController.cpp
     SOURCES src/manager/chatsmanager/ChatsManager.cpp
     SOURCES include/ChatsManager.h
-    SOURCES src/controller/adduserinchatcontroller/AddUserInChatController.cpp
-    SOURCES include/AddUserInChatController.h
+    SOURCES src/controller/creategroupchatcontroller/CreateGroupChatController.cpp
+    SOURCES include/CreateGroupChatController.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -21,6 +21,7 @@ signals:
     void getChatDataSignal(const QString& info_);
 
     void setChatDataSignal(const QString& firstName_, const QString& lastName_, const QString& middleName_, const QString& email, const QString& phoneNumber_, const QString& birthDate_, const bool isGroupChat_);
+    void setGroupChatDataSignal(const QString& groupName_, const int usersCount_, const bool isGroup_);
     void setChatAvatarSignal(const QString& avatarPath_);
     void clearChatDataSignal();
     void setChatIdSignal(const int chatId_);

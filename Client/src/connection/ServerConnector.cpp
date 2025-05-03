@@ -125,9 +125,13 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     {
         emit sendChatCreatedSignal(jsonObj_);
     }
-    else if(jsonObj_["Info"] == "Get_Users_On_Server")
+    else if(jsonObj_["Info"] == "Get_Users_On_Server_For_Configure_Admin")
     {
-        emit sendUsersOnServerSignal(jsonObj_);
+        emit sendUsersOnServerForConfigureAdminSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Get_Users_On_Server_For_Add_User_In_Chat")
+    {
+        emit sendUsersOnServerForAddUserInChatSignal(jsonObj_);
     }
     else if(jsonObj_["Info"] == "Add_User_In_Chat")
     {
@@ -163,21 +167,29 @@ void ServerConnector::workingWithResponse(const QJsonObject& jsonObj_)
     }
     else if(jsonObj_["Info"] == "Set_New_Message")
     {
-        emit sendSetNewMessage(jsonObj_);
+        emit sendSetNewMessageSignal(jsonObj_);
     }
     else if(jsonObj_["Info"] == "Set_New_Message_Companion")
     {
-        emit sendSetNewMessage(jsonObj_);
-        emit sendIncreaseMessageCounter(jsonObj_["chatId"].toInt());
+        emit sendSetNewMessageSignal(jsonObj_);
+        emit sendIncreaseMessageCounterSignal(jsonObj_["chatId"].toInt(), jsonObj_["isGroup"].toBool());
     }
     else if(jsonObj_["Info"] == "Mark_Message_For_User")
     {
-        emit sendMarkMessage(jsonObj_);
-        emit sendDecreaseMessageCounter(jsonObj_["chatId"].toInt());
+        emit sendMarkMessageSignal(jsonObj_);
+        emit sendDecreaseMessageCounterSignal(jsonObj_["chatId"].toInt(), jsonObj_["isGroup"].toBool());
     }
     else if(jsonObj_["Info"] == "Mark_Message_For_Companion")
     {
-        emit sendMarkMessage(jsonObj_);
+        emit sendMarkMessageSignal(jsonObj_);
+    }
+    else if(jsonObj_["Info"] == "Create_New_Group_Chat_Code")
+    {
+        emit sendCodeCreateNewGroupChatSignal(jsonObj_["code"].toString());
+    }
+    else if(jsonObj_["Info"] == "Add_New_Group_Chat")
+    {
+        emit sendCreateNewGroupChatSignal(jsonObj_);
     }
 }
 

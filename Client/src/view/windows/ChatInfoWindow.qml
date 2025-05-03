@@ -32,7 +32,7 @@ Popup {
     }
 
     background: Rectangle {
-        color: Colors.addServerWindowBackgroundColor
+        color: "#D3E3F1"
         radius: Sizes.radiusChatInfoWindow // 5
     }
 

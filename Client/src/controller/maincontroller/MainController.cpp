@@ -178,13 +178,16 @@ void MainController::createTopBarController()
         connect(serverConnector_, &ServerConnector::sendAddUserOnServerSignal, topBarController_, &TopBarController::handOverAddUserOnServerSignal);
         connect(serverConnector_, &ServerConnector::sendDeleteUserOnServerSignal, topBarController_, &TopBarController::handOverDeleteUserOnServerSignal);
         connect(topBarController_, &TopBarController::handOverGetUsersOnServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
-        connect(serverConnector_, &ServerConnector::sendUsersOnServerSignal, topBarController_, &TopBarController::handOverSendUsersOnServerSignal);
+        connect(serverConnector_, &ServerConnector::sendUsersOnServerForConfigureAdminSignal, topBarController_, &TopBarController::handOverSendUsersOnServerForConfigureAdminSignal);
         connect(topBarController_, &TopBarController::handOverAddAdminOnServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(topBarController_, &TopBarController::handOverRemoveAdminOnServerSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendAddAdminOnServerSignal, topBarController_, &TopBarController::handOverResponseAddAdminOnServerSignal);
         connect(serverConnector_, &ServerConnector::sendRemoveAdminOnServerSignal, topBarController_, &TopBarController::handOverResponseRemoveAdminOnServerSignal);
         connect(topBarController_, &TopBarController::accessToServerDeniedSignal, serverTableController_, &ServerTableController::slotDeleteServer);
         connect(&SelectedServerManager::instance(), &SelectedServerManager::serverRoleChangedSignal, topBarController_, &TopBarController::slotSetNewServerRole);
+        connect(serverConnector_, &ServerConnector::sendUsersOnServerForAddUserInChatSignal, topBarController_, &TopBarController::handOverSendUsersOnServerForAddUserInChatSignal);
+        connect(topBarController_, &TopBarController::handOverCreateGroupChatSignal, serverConnector_, &ServerConnector::slotSendToServer);
+        connect(serverConnector_, &ServerConnector::sendCodeCreateNewGroupChatSignal, topBarController_, &TopBarController::handOverCodeCreateGroupChatSignal);
     }
 }
 
@@ -205,9 +208,10 @@ void MainController::createChatsBarController()
         connect(serverConnector_, &ServerConnector::sendUserAddInChatSignal, chatsBarController_, &ChatsBarController::slotAddUserInChatProcessing);
         connect(serverTableController_, &ServerTableController::selectedServerDeletedSignal, chatsBarController_, &ChatsBarController::slotClearChat);
         connect(serverTableController_, &ServerTableController::serverSelectedSignal, chatsBarController_, &ChatsBarController::slotGetChats);
-        connect(serverConnector_, &ServerConnector::sendSetNewMessage, chatsBarController_, &ChatsBarController::slotSetNewLastMessage);
-        connect(serverConnector_, &ServerConnector::sendIncreaseMessageCounter, chatsBarController_, &ChatsBarController::slotIncreaseMessageCount);
-        connect(serverConnector_, &ServerConnector::sendDecreaseMessageCounter, chatsBarController_, &ChatsBarController::slotDecreaseMessageCount);
+        connect(serverConnector_, &ServerConnector::sendSetNewMessageSignal, chatsBarController_, &ChatsBarController::slotSetNewLastMessage);
+        connect(serverConnector_, &ServerConnector::sendIncreaseMessageCounterSignal, chatsBarController_, &ChatsBarController::slotIncreaseMessageCount);
+        connect(serverConnector_, &ServerConnector::sendDecreaseMessageCounterSignal, chatsBarController_, &ChatsBarController::slotDecreaseMessageCount);
+        connect(serverConnector_, &ServerConnector::sendCreateNewGroupChatSignal, chatsBarController_, &ChatsBarController::slotAddNewGroupChat);
     }
 }
 
@@ -220,9 +224,9 @@ void MainController::createChatHistoryController()
         connect(chatHistoryController_, &ChatHistoryController::getChatDataSignal, serverConnector_, &ServerConnector::slotSendToServer);
         connect(serverConnector_, &ServerConnector::sendSetChatDataSignal, chatHistoryController_, &ChatHistoryController::slotSetChatData);
         connect(chatHistoryController_, &ChatHistoryController::sendMessageSignal, serverConnector_, &ServerConnector::slotSendToServer);
-        connect(serverConnector_, &ServerConnector::sendSetNewMessage, chatHistoryController_, &ChatHistoryController::slotSetNewMessage);
+        connect(serverConnector_, &ServerConnector::sendSetNewMessageSignal, chatHistoryController_, &ChatHistoryController::slotSetNewMessage);
         connect(chatHistoryController_, &ChatHistoryController::markMessageSignal, serverConnector_, &ServerConnector::slotSendToServer);
-        connect(serverConnector_, &ServerConnector::sendMarkMessage, chatHistoryController_, &ChatHistoryController::slotMarkMessageProcessing);
+        connect(serverConnector_, &ServerConnector::sendMarkMessageSignal, chatHistoryController_, &ChatHistoryController::slotMarkMessageProcessing);
     }
 }
 

@@ -27,13 +27,14 @@ public:
     QString createJsonAddUserOnServer(const int userId_, const int serverId_) const;
     QString createJsonGetChats(const int serverId_, const int userId_) const;
     QString createJsonCreateChat(const int serverId_, const int userId_, const int companionId_) const;
-    QString createJsonGetUsersOnServer(const int serverId_) const;
+    QString createJsonGetUsersOnServer(const QString& info_, const int serverId_) const;
     QString createJsonAddAdminOnServer(const int serverId_, const int userId_) const;
     QString createJsonRemoveAdminOnServer(const int serverId_, const int userId_) const;
     QString createJsonGetServerRole(const int userId_, const int serverId_) const;
-    QString createJsonGetChatHistory(const int chatId_, const int serverId_, const int userId_) const;
-    QString createJsonSendMessage(const int chatId_, const int userId_, const int serverId_, const QString& message_) const;
-    QString createJsonMarkMessageAsRead(const int messageId, const int userId, const int chatId_) const;
+    QString createJsonGetChatHistory(const int chatId_, const int serverId_, const int userId_, const bool isGroup_) const;
+    QString createJsonSendMessage(const int chatId_, const bool isGroup_, const int userId_, const int serverId_, const QString& message_) const;
+    QString createJsonMarkMessageAsRead(const int messageId, const int userId, const int chatId_, const bool isGroup_) const;
+    QString createJsonCreateGroupChat(const int serverId_, const int userId_, const QString& chatAvatar_, const QString& chatName_, const QVector<int>& addedUsers_) const;
 
 private:
 };

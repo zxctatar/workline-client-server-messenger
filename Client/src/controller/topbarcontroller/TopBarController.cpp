@@ -6,7 +6,7 @@ TopBarController::TopBarController(QObject* parent)
     , applicationPageController_(nullptr)
     , addUserController_(nullptr)
     , configureAdminController_(nullptr)
-    , addUserInChatController_(nullptr)
+    , createGroupChatController_(nullptr)
 {
 }
 
@@ -16,7 +16,7 @@ TopBarController::~TopBarController()
     deleteApplicationPageController();
     deleteAddUserOnServerController();
     deleteConfigureAdminController();
-    deleteAddUserInChatController();
+    deleteCreateGroupChatController();
 }
 
 void TopBarController::slotSetNewServerRole()
@@ -84,11 +84,11 @@ void TopBarController::deleteConfigureAdminController()
     }
 }
 
-void TopBarController::deleteAddUserInChatController()
+void TopBarController::deleteCreateGroupChatController()
 {
-    if(addUserInChatController_)
+    if(createGroupChatController_)
     {
-        addUserController_.reset();
+        createGroupChatController_.reset();
     }
 }
 
@@ -145,13 +145,13 @@ ConfigureAdminController* TopBarController::getConfigureAdminController()
     return configureAdminController_.get();
 }
 
-AddUserInChatController* TopBarController::getAddUserInChatController()
+CreateGroupChatController* TopBarController::getCreateGroupChatController()
 {
-    if(addUserInChatController_)
+    if(!createGroupChatController_)
     {
-        createAddUserInChatController();
+        createCreateGroupChatController();
     }
-    return addUserInChatController_.get();
+    return createGroupChatController_.get();
 }
 
 void TopBarController::createProfilePageController()
@@ -198,7 +198,7 @@ void TopBarController::createConfigureAdminController()
     {
         configureAdminController_ = std::make_shared<ConfigureAdminController>(this);
         connect(configureAdminController_.get(), &ConfigureAdminController::getUsersOnServerSignal, this, &TopBarController::handOverGetUsersOnServerSignal);
-        connect(this, &TopBarController::handOverSendUsersOnServerSignal, configureAdminController_.get(), &ConfigureAdminController::slotSetUsersOnServerPreparing);
+        connect(this, &TopBarController::handOverSendUsersOnServerForConfigureAdminSignal, configureAdminController_.get(), &ConfigureAdminController::slotSetUsersOnServerPreparing);
         connect(configureAdminController_.get(), &ConfigureAdminController::sendAddAdminSignal, this, &TopBarController::handOverAddAdminOnServerSignal);
         connect(configureAdminController_.get(), &ConfigureAdminController::sendRemoveAdminSignal, this, &TopBarController::handOverRemoveAdminOnServerSignal);
         connect(this, &TopBarController::handOverResponseAddAdminOnServerSignal, configureAdminController_.get(), &ConfigureAdminController::slotAddAdminOnServerPreparing);
@@ -206,10 +206,14 @@ void TopBarController::createConfigureAdminController()
     }
 }
 
-void TopBarController::createAddUserInChatController()
+void TopBarController::createCreateGroupChatController()
 {
-    if(addUserInChatController_)
+    if(!createGroupChatController_)
     {
-        addUserInChatController_ = std::make_shared<AddUserInChatController>(this);
+        createGroupChatController_ = std::make_shared<CreateGroupChatController>(this);
+        connect(this, &TopBarController::handOverSendUsersOnServerForAddUserInChatSignal, createGroupChatController_.get(), &CreateGroupChatController::slotSetUsersOnServerPreparing);
+        connect(createGroupChatController_.get(), &CreateGroupChatController::getUsersOnServerSignal, this, &TopBarController::handOverGetUsersOnServerSignal);
+        connect(createGroupChatController_.get(), &CreateGroupChatController::createGroupChatSignal, this, &TopBarController::handOverCreateGroupChatSignal);
+        connect(this, &TopBarController::handOverCodeCreateGroupChatSignal, createGroupChatController_.get(), &CreateGroupChatController::slotCodeProcessing);
     }
 }

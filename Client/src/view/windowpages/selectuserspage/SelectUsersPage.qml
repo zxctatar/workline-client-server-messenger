@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
@@ -8,20 +9,41 @@ Page {
     id: selectUsersPage
 
     signal backButtonClicked()
-    signal buttonDoneClicked()
+    signal groupCreated()
 
-    property var controller
+    property var controller // CreateGroupChatController
+    property var notificationManager
 
     background: Rectangle {
         color: "#D3E3F1"
     }
 
     Component.onCompleted: {
-
+        selectUsersPage.controller.getUsers()
     }
 
-    Component.onDestruction: {
+    Connections {
+        target: selectUsersPage.controller
 
+        function onNoUsersSignal() {
+            selectUsersPage.notificationManager.showNotificationManager("Добавьте пользователей.")
+        }
+
+        function onCodeErrorSignal() {
+            selectUsersPage.notificationManager.showNotificationManager("Ошибка на сервере.")
+        }
+
+        function onCodeAccessDeniedSignal() {
+            selectUsersPage.notificationManager.showNotificationManager("Доступ запрещён.")
+        }
+
+        function conCodeGroupNameExistsSignal() {
+            selectUsersPage.notificationManager.showNotificationManager("Название группы занято.")
+        }
+
+        function onCodeGroupCreatedSignal() {
+            selectUsersPage.groupCreated()
+        }
     }
 
     BackButton {
@@ -39,15 +61,6 @@ Page {
         }
     }
 
-    ListModel {
-        id: modell
-        ListElement {name: "123"}
-        ListElement {name: "123"}
-        ListElement {name: "123"}
-        ListElement {name: "123"}
-        ListElement {name: "123"}
-    }
-
     ListView {
         id: listView
         anchors.left: parent.left
@@ -56,12 +69,26 @@ Page {
         anchors.top: backButton.bottom
         clip: true
         spacing: 10
-        model: modell
+        model: selectUsersPage.controller.getUsersModel()
 
         delegate: AddUsersObject {
-            displayName: "123"
+            required property int id
+            required property string name
+            required property string imagePath
+
+            displayName: name
+            path: imagePath
             width: parent.width
             height: 40
+
+            onAddUserSignal: {
+                selectUsersPage.controller.addUser(id)
+                isSelected = true
+            }
+            onRemoveUserSignal: {
+                selectUsersPage.controller.removeUser(id)
+                isSelected = false
+            }
         }
     }
 
@@ -75,7 +102,7 @@ Page {
         text: "Готово"
 
         onClicked: {
-            selectUsersPage.buttonDoneClicked()
+            selectUsersPage.controller.createChat()
         }
     }
 }

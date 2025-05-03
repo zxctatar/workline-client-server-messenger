@@ -23,7 +23,8 @@ void ConfigureAdminController::getUsersOnServer() const
 {
     int serverId_ = SelectedServerManager::instance().getServerId();
 
-    QString request_ = jsonWorker_.createJsonGetUsersOnServer(serverId_);
+    QString requestInfo_ = "Get_Users_On_Server_For_Configure_Admin";
+    QString request_ = jsonWorker_.createJsonGetUsersOnServer(requestInfo_, serverId_);
 
     emit getUsersOnServerSignal(request_);
 }
@@ -32,10 +33,10 @@ void ConfigureAdminController::slotSetUsersOnServerPreparing(const QJsonObject& 
 {
     int serverId_ = jsonObj_["serverId"].toInt();
 
-    QJsonArray jsonArray_ = jsonObj_["users"].toArray();
-
     if(SelectedServerManager::instance().getServerId() == serverId_)
     {
+        QJsonArray jsonArray_ = jsonObj_["users"].toArray();
+
         for(const auto& i : jsonArray_)
         {
             if(!i.isObject())

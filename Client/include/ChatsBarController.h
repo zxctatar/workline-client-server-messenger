@@ -21,7 +21,7 @@ public:
 
     Q_INVOKABLE ChatModel* getChatModel();
     Q_INVOKABLE void createChat(const int companionId_) const;
-    Q_INVOKABLE void sendChatId(const int chatId_) const;
+    Q_INVOKABLE void sendNewChatData(const int chatId_, const bool isGroup_);
     Q_INVOKABLE void setChatAvatar(const QString& avatarPath_);
     Q_INVOKABLE void clearChatData();
 
@@ -35,11 +35,12 @@ public slots:
     void slotGetChats(const int serverId_);
     void slotChatsProcessing(const QJsonObject& jsonObj_);
     void slotChatCreatedProcessing(const QJsonObject& jsonObj_);
+    void slotAddNewGroupChat(const QJsonObject& jsonObj_);
     void slotAddUserInChatProcessing(const QJsonObject& jsonObj_);
     void slotClearChat();
     void slotSetNewLastMessage(const QJsonObject& jsonObj_);
-    void slotIncreaseMessageCount(const int chatId_);
-    void slotDecreaseMessageCount(const int chatId_);
+    void slotIncreaseMessageCount(const int chatId_, const bool isGroup_);
+    void slotDecreaseMessageCount(const int chatId_, const bool isGroup_);
 
 private:
     JsonWorker jsonWorker_;

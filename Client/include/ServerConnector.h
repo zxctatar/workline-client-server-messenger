@@ -37,7 +37,8 @@ signals:
     void sendDeleteUserOnServerSignal(const int userId_, const int serverId_);
     void sendChatsSignal(const QJsonObject& jsonObj_);
     void sendChatCreatedSignal(const QJsonObject& jsonObj_);
-    void sendUsersOnServerSignal(const QJsonObject& jsonObj_);
+    void sendUsersOnServerForConfigureAdminSignal(const QJsonObject& jsonObj_);
+    void sendUsersOnServerForAddUserInChatSignal(const QJsonObject& jsonObj_);
     void sendUserAddInChatSignal(const QJsonObject& jsonObj_);
     void sendAddNewServerSignal(const QJsonObject& jsonObj_);
     void sendAddAdminOnServerSignal(const QJsonObject& jsonObj_);
@@ -46,10 +47,12 @@ signals:
     void sendServerRoleAddSignal(const QJsonObject& jsonObj_);
     void sendServerRoleRemovedSignal(const QJsonObject& jsonObj_);
     void sendSetChatDataSignal(const QJsonObject& jsonObj_);
-    void sendSetNewMessage(const QJsonObject& jsonObj_);
-    void sendMarkMessage(const QJsonObject& jsonObj_);
-    void sendIncreaseMessageCounter(const int chatId_);
-    void sendDecreaseMessageCounter(const int chatId_);
+    void sendSetNewMessageSignal(const QJsonObject& jsonObj_);
+    void sendMarkMessageSignal(const QJsonObject& jsonObj_);
+    void sendIncreaseMessageCounterSignal(const int chatId_, const bool isGroup_);
+    void sendDecreaseMessageCounterSignal(const int chatId_, const bool isGroup_);
+    void sendCodeCreateNewGroupChatSignal(const QString& code_);
+    void sendCreateNewGroupChatSignal(const QJsonObject& jsonObj_);
 
 private:
     void connectToServer();

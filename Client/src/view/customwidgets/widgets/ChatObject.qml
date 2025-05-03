@@ -54,7 +54,7 @@ Button {
                 id: avatar
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectCrop
-                source: chatObject.path == "" ? "qrc:/resources/img/avatar.svg" : chatObject.path // сделать под групповой
+                source: chatObject.isGroup ? (chatObject.path == "" ? "qrc:/resources/img/groupAvatar.svg" : chatObject.path) : (chatObject.path == "" ? "qrc:/resources/img/avatar.svg" : chatObject.path)
             }
         }
 

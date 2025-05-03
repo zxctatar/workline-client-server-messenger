@@ -7,13 +7,17 @@ Item {
     property var controller // chatHistoryController
     property var notificationManager
 
-    property var selectedChat: -1
+    property int selectedChat: -1
+    property bool selectedIsGroup: false
 
     Connections {
         target: chatHistory.controller
 
-        function onSetChatIdSignal(id) {
+        function onSetChatIdAndGroupSignal(id, isGroup) {
+            chatHistory.selectedIsGroup = isGroup
             chatHistory.selectedChat = id
+
+            chatMessageView.getChatData()
         }
 
         function onClearChatIdSignal() {
@@ -22,9 +26,11 @@ Item {
     }
 
     ChatMessageView {
+        id: chatMessageView
         controller: chatHistory.controller
         notificationManager: chatHistory.notificationManager
         selectedChat: chatHistory.selectedChat
+        selectedIsGroup: chatHistory.selectedIsGroup
 
         anchors.bottom: chatInput.top
         anchors.right: parent.right
@@ -38,6 +44,7 @@ Item {
         id: chatInput
         controller: chatHistory.controller
         selectedChat: chatHistory.selectedChat
+        selectedIsGroup: chatHistory.selectedIsGroup
 
         anchors.bottom: parent.bottom
         anchors.left: parent.left

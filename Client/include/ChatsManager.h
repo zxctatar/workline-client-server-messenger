@@ -12,6 +12,7 @@ public:
     static ChatsManager& instance();
 
     void addAvatar(const int userId_, const QString& avatarPath_);
+    void addChatAvatar(const int chatId_, const QString& avatarPath_);
     QString getAvatar(const int userId_);
     void clearAvatars();
 
@@ -20,6 +21,7 @@ private:
     ~ChatsManager();
 
     QMap<int, QString> avatars_;
+    QMap<int, QString> chatAvatars_;
 };
 
 #endif // CHATSMANAGER_H

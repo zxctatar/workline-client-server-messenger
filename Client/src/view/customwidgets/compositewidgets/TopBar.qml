@@ -46,6 +46,7 @@ Item {
                         topBar.controller.deleteApplicationPageController()
                         topBar.controller.deleteAddUserOnServerController()
                         topBar.controller.deleteConfigureAdminController()
+                        topBar.controller.deleteCreateGroupChatController()
                     });
                 }
 

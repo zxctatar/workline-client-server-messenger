@@ -20,6 +20,11 @@ void ChatsManager::addAvatar(const int userId_, const QString& avatarPath_)
     avatars_.insert(userId_, avatarPath_);
 }
 
+void ChatsManager::addChatAvatar(const int chatId_, const QString& avatarPath_)
+{
+    chatAvatars_.insert(chatId_, avatarPath_);
+}
+
 QString ChatsManager::getAvatar(const int userId_)
 {
     auto it_ = avatars_.find(userId_);
@@ -33,4 +38,5 @@ QString ChatsManager::getAvatar(const int userId_)
 void ChatsManager::clearAvatars()
 {
     avatars_.clear();
+    chatAvatars_.clear();
 }

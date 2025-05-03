@@ -1,22 +1,26 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
-import Qt5Compat.GraphicalEffects
 import "../../customwidgets/widgets"
 import "../../../resources"
-import "../selectuserspage"
 
 Page {
     id: createGropChatPage
 
     property int serverId
-    property var controller // addUserInChatController
+    property var controller // CreateGroupChatController
 
     signal backButtonClicked()
     signal nextButtonClicked()
 
+    signal deleteController()
+
     background: Rectangle {
         color: Colors.menuWindowBackgroundColor
+    }
+
+    Component.onDestruction: {
+        createGropChatPage.deleteController()
     }
 
     BackButton {
@@ -67,6 +71,13 @@ Page {
             font.pixelSize: Sizes.addServerWindowFontSize // 16
             placeholderText: "Название чата"
         }
+
+        ErrorText {
+            id: errorText
+            visible: false
+            Layout.preferredWidth: 375
+            Layout.alignment: Qt.AlignHCenter
+        }
     }
 
     MyButton {
@@ -79,6 +90,15 @@ Page {
         text: "Далее"
 
         onClicked: {
+            if(inputFieldName.length == 0)
+            {
+                errorText.text = "Введите название чата"
+                errorText.visible = true
+                return
+            }
+
+            errorText.visible = false
+            createGropChatPage.controller.saveAvatarAndName(addImage.base64Image, inputFieldName.text)
             createGropChatPage.nextButtonClicked()
         }
     }

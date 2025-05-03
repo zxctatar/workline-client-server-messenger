@@ -10,7 +10,6 @@ Button {
     property var controller // chatInfoBarController
     property int selectedChatId: -1
 
-    property string groupChatName: ""
     property string firstName: ""
     property string lastName: ""
     property string middleName: ""
@@ -19,6 +18,9 @@ Button {
     property string birthDate: ""
     property string avatarPath: ""
     property bool isGroupChat: false
+
+    property string groupChatName: ""
+    property int usersCount: 0
 
     visible: selectedChatId == -1 ? false : true
 
@@ -30,6 +32,9 @@ Button {
         }
 
         function onSetChatDataSignal(firstName, lastName, middleName, email, phoneNumber, birthDate, isGroupChat) {
+            chatInfoBar.groupChatName = ""
+            chatInfoBar.usersCount = 0
+
             chatInfoBar.isGroupChat = isGroupChat
             chatInfoBar.firstName = firstName
             chatInfoBar.lastName = lastName
@@ -39,12 +44,26 @@ Button {
             chatInfoBar.birthDate = birthDate
         }
 
+        function onSetGroupChatDataSignal(groupName, usersCount, isGroupChat) {
+            chatInfoBar.groupChatName = ""
+            chatInfoBar.firstName = ""
+            chatInfoBar.lastName = ""
+            chatInfoBar.middleName = ""
+            chatInfoBar.email = ""
+            chatInfoBar.phoneNumber = ""
+            chatInfoBar.birthDate = ""
+
+            chatInfoBar.isGroupChat = isGroupChat
+            chatInfoBar.groupChatName = groupName
+            chatInfoBar.usersCount = usersCount
+        }
+
         function onSetChatAvatarSignal(avatarPath) {
             chatInfoBar.avatarPath = avatarPath
         }
 
         function onClearChatDataSignal() {
-            chatInfoBar.avatarPath = ""
+            chatInfoBar.groupChatName = ""
             chatInfoBar.firstName = ""
             chatInfoBar.lastName = ""
             chatInfoBar.middleName = ""
@@ -96,6 +115,10 @@ Button {
             {
                 chatInfoWindow.open()
             }
+            else
+            {
+                groupChatInfoWindow.open()
+            }
         }
     }
 
@@ -111,5 +134,15 @@ Button {
         email: chatInfoBar.email
         phoneNumber: chatInfoBar.phoneNumber
         birthDate: chatInfoBar.birthDate
+    }
+
+    GroupChatInfoWindow {
+        id: groupChatInfoWindow
+        parent: Overlay.overlay
+        anchors.centerIn: parent
+
+        avatarPath: chatInfoBar.avatarPath
+        groupName: chatInfoBar.groupChatName
+        usersCount: chatInfoBar.usersCount
     }
 }
