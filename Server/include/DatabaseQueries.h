@@ -38,9 +38,18 @@ public:
     static pqxx::result getServerRole(pqxx::transaction_base& conn_, const int serverId_, const int userId_);
     static pqxx::result checkChatAccess(pqxx::transaction_base& conn_, const int chatId_, const int userId_);
     static pqxx::result getChatHistory(pqxx::transaction_base& conn_, const int chatId_, const int userId_);
-    static pqxx::result addMessage(pqxx::transaction_base& conn_, const int chatId_, const int userId_, const int serverId_, const std::string& message_);
+    static pqxx::result addMessage(pqxx::transaction_base& conn_, const int chatId_, const int userId_, const std::string& message_);
     static pqxx::result getCompanionData(pqxx::transaction_base& conn_, const int chatId_, const int serverId_, const int userId_);
     static pqxx::result addViewedMessage(pqxx::transaction_base& conn_, const int userId_, const int messageId_);
+    static pqxx::result checkGroupChatName(pqxx::transaction_base& conn_, const std::string& groupName_);
+    static pqxx::result createGroupChat(pqxx::transaction_base& conn_, const int userId_, const int serverId_, const std::string& groupName_, const std::vector<uint8_t>& groupAvatar_);
+    static pqxx::result addUserInGroup(pqxx::transaction_base& conn_, const int groupId_, const int usersId_);
+    static pqxx::result getGroupChats(pqxx::transaction_base& conn_, const int serverId_, const int userId_);
+    static pqxx::result checkGroupChatAccess(pqxx::transaction_base& conn_, const int chatId_, const int userId_);
+    static pqxx::result getGroupChatHistory(pqxx::transaction_base& conn_, const int chatId_, const int userId_);
+    static pqxx::result getGroupChatData(pqxx::transaction_base& conn_, const int serverId_, const int chatId_);
+    static pqxx::result addGroupMessage(pqxx::transaction_base& conn_, const int chatId_, const int userId_, const std::string& message_);
+    static pqxx::result addViewedGroupMessage(pqxx::transaction_base& conn_, const int userId_, const int messageId_);
 };
 
 #endif // DATABASEQUERIES_H

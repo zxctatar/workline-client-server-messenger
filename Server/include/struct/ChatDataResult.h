@@ -2,7 +2,6 @@
 #define CHATDATARESULT_H
 
 #include <string>
-#include "nlohmann/json.hpp"
 
 struct ChatDataResult
 {

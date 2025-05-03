@@ -303,7 +303,7 @@ std::string JsonWorker::createDeleteUserOnServerJson(const int userId_, const in
     }
 }
 
-std::string JsonWorker::createGetChatsJson(const int serverId_, std::vector<PrivateChatStruct>& chats_)
+std::string JsonWorker::createGetChatsJson(const int serverId_, std::vector<PrivateChatStruct>& chats_, std::vector<GroupChatStruct>& groupChats_)
 {
     try
     {
@@ -316,6 +316,13 @@ std::string JsonWorker::createGetChatsJson(const int serverId_, std::vector<Priv
             nlohmann::json jsonChat_;
             i.to_json(jsonChat_);
             json_["PrivateChats"].push_back(jsonChat_);
+        }
+
+        for(const auto& i : groupChats_)
+        {
+            nlohmann::json jsonGroupChat_;
+            i.to_json(jsonGroupChat_);
+            json_["GroupChats"].push_back(jsonGroupChat_);
         }
 
         return json_.dump();
@@ -365,12 +372,12 @@ std::string JsonWorker::createChatCreateForCompanionJson(const int serverId_, co
     }
 }
 
-std::string JsonWorker::createGetUsersOnServerJson(const int serverId_, const std::vector<UsersOnServerStruct>& users_)
+std::string JsonWorker::createGetUsersOnServerJson(const std::string& info_, const int serverId_, const std::vector<UsersOnServerStruct>& users_)
 {
     try
     {
         nlohmann::json json_;
-        json_["Info"] = "Get_Users_On_Server";
+        json_["Info"] = info_;
         json_["serverId"] = serverId_;
 
         for(const auto& i : users_)
@@ -517,6 +524,34 @@ std::string JsonWorker::createGetServerRoleJson(const std::string& code_, const 
     }
 }
 
+std::string JsonWorker::createGetChatDataJson(const std::vector<ChatHistoryResult>& history_, const GroupChatDataResult& data_, const int userId_, const int serverId_, const int chatId_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Get_Chat_Data";
+        json_["userId"] = userId_;
+        json_["serverId"] = serverId_;
+        json_["chatId"] = chatId_;
+        json_["groupName"] = data_.groupName_;
+        json_["usersCount"] = data_.usersCount_;
+
+        for(const auto& i : history_)
+        {
+            nlohmann::json jsonMessage_;
+            i.to_json(jsonMessage_);
+            json_["messages"].push_back(jsonMessage_);
+        }
+
+        return json_.dump();
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
 std::string JsonWorker::createGetChatDataJson(const std::vector<ChatHistoryResult>& history_, const ChatDataResult& data_, const int userId_, const int serverId_, const int chatId_)
 {
     try
@@ -549,7 +584,7 @@ std::string JsonWorker::createGetChatDataJson(const std::vector<ChatHistoryResul
     }
 }
 
-std::string JsonWorker::createSetMessageForSenderJson(const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_)
+std::string JsonWorker::createSetMessageForSenderJson(const bool isGroup_, const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_)
 {
     try
     {
@@ -557,6 +592,7 @@ std::string JsonWorker::createSetMessageForSenderJson(const int senderId_, const
         json_["Info"] = "Set_New_Message";
         json_["messageId"] = messageId_;
         json_["senderId"] = senderId_;
+        json_["isGroup"] = isGroup_;
         json_["serverId"] = serverId_;
         json_["chatId"] = chatId_;
         json_["message"] = message_;
@@ -573,13 +609,14 @@ std::string JsonWorker::createSetMessageForSenderJson(const int senderId_, const
     }
 }
 
-std::string JsonWorker::createSetMessageForCompanionJson(const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_)
+std::string JsonWorker::createSetMessageForCompanionJson(const bool isGroup_, const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_)
 {
     try
     {
         nlohmann::json json_;
         json_["Info"] = "Set_New_Message_Companion";
         json_["senderId"] = senderId_;
+        json_["isGroup"] = isGroup_;
         json_["messageId"] = messageId_;
         json_["serverId"] = serverId_;
         json_["chatId"] = chatId_;
@@ -597,13 +634,14 @@ std::string JsonWorker::createSetMessageForCompanionJson(const int senderId_, co
     }
 }
 
-std::string JsonWorker::createMarkMessageForUserJson(const int messageId_, const int chatId_)
+std::string JsonWorker::createMarkMessageForUserJson(const int messageId_, const int chatId_, const bool isGroup_)
 {
     try
     {
         nlohmann::json json_;
         json_["Info"] = "Mark_Message_For_User";
         json_["messageId"] = messageId_;
+        json_["isGroup"] = isGroup_;
         json_["chatId"] = chatId_;
         json_["viewed"] = true;
 
@@ -616,16 +654,54 @@ std::string JsonWorker::createMarkMessageForUserJson(const int messageId_, const
     }
 }
 
-std::string JsonWorker::createMarkMessageForCompanionJson(const int messageId_, const int chatId_)
+std::string JsonWorker::createMarkMessageForCompanionJson(const int messageId_, const int chatId_, const bool isGroup_)
 {
     try
     {
         nlohmann::json json_;
         json_["Info"] = "Mark_Message_For_Companion";
         json_["messageId"] = messageId_;
+        json_["isGroup"] = isGroup_;
         json_["chatId"] = chatId_;
         json_["viewed"] = true;
 
+        return json_.dump();
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createSendCreateGroupChatCodeJson(const std::string& code_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Create_New_Group_Chat_Code";
+        json_["code"] = code_;
+
+        return json_.dump();
+    }
+    catch(const std::exception& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what();
+        return nullptr;
+    }
+}
+
+std::string JsonWorker::createCreateGroupChatJson(const int groupId_, const int serverId_, const int userId_, const std::string& groupName_, const std::string& groupAvatar_)
+{
+    try
+    {
+        nlohmann::json json_;
+        json_["Info"] = "Add_New_Group_Chat";
+        json_["groupId"] = groupId_;
+        json_["serverId"] = serverId_;
+        json_["ownerId"] = userId_;
+        json_["groupName"] = groupName_;
+        json_["groupAvatar"] = groupAvatar_;
         return json_.dump();
     }
     catch(const std::exception& e)

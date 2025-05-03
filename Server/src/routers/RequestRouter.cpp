@@ -386,10 +386,11 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         int receivedServerId_ = json_["serverId"].get<int>();
 
         auto connection_ = connectionPool_.getConnection();
-        std::vector<PrivateChatStruct> response_ = chatManager_.getPrivateChats(connection_, receivedServerId_, receivedUserId_);
+        std::vector<PrivateChatStruct> responsePrivate_ = chatManager_.getPrivateChats(connection_, receivedServerId_, receivedUserId_);
+        std::vector<GroupChatStruct> responseGroup_ = chatManager_.getGroupChats(connection_, receivedServerId_, receivedUserId_);
         connectionPool_.returnConnection(connection_);
 
-        std::string responseJson_ = jsonWorker_.createGetChatsJson(receivedServerId_, response_);
+        std::string responseJson_ = jsonWorker_.createGetChatsJson(receivedServerId_, responsePrivate_, responseGroup_);
 
         boost::asio::post(executor_, [this, session_, responseJson_](){
             session_.lock()->do_write(responseJson_);
@@ -429,20 +430,21 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
             });
         }
     }
-    else if(json_["Info"] == "Get_Users_On_Server")
+    else if(json_["Info"] == "Get_Users_On_Server_For_Configure_Admin" || json_["Info"] == "Get_Users_On_Server_For_Add_User_In_Chat")
     {
         if(!json_.contains("serverId"))
         {
             throw std::runtime_error("Lost the value in the json document");
         }
 
+        std::string receivedInfo_ = json_["Info"].get<std::string>();
         int receivedServerId_ = json_["serverId"].get<int>();
 
         auto connection_ = connectionPool_.getConnection();
         std::vector<UsersOnServerStruct> response_ = userManager_.getUsersOnServer(connection_, receivedServerId_);
         connectionPool_.returnConnection(connection_);
 
-        std::string responseJson_ = jsonWorker_.createGetUsersOnServerJson(receivedServerId_, response_);
+        std::string responseJson_ = jsonWorker_.createGetUsersOnServerJson(receivedInfo_, receivedServerId_, response_);
 
         boost::asio::post(executor_, [this, session_, responseJson_](){
             session_.lock()->do_write(responseJson_);
@@ -567,7 +569,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
     }
     else if(json_["Info"] == "Get_Chat_Data")
     {
-        if(!json_.contains("userId") || !json_.contains("serverId") || !json_.contains("chatId"))
+        if(!json_.contains("userId") || !json_.contains("serverId") || !json_.contains("chatId") || !json_.contains("isGroup"))
         {
             throw std::runtime_error("Lost the value in the json document");
         }
@@ -575,22 +577,39 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         int receivedUserId_ = json_["userId"].get<int>();
         int receivedServerId_ = json_["serverId"].get<int>();
         int receivedChatId_ = json_["chatId"].get<int>();
+        bool receivedIsGroup_ = json_["isGroup"].get<bool>();
 
         auto connection_ = connectionPool_.getConnection();
-        std::vector<ChatHistoryResult> responseHistory_ = chatManager_.getChatHistory(connection_, receivedServerId_, receivedUserId_, receivedChatId_);
-        ChatDataResult responseData_ = chatManager_.getChatData(connection_, receivedServerId_, receivedUserId_, receivedChatId_);
-        connectionPool_.returnConnection(connection_);
+        std::vector<ChatHistoryResult> responseHistory_ = chatManager_.getChatHistory(connection_, receivedServerId_, receivedUserId_, receivedChatId_, receivedIsGroup_);
 
-        std::string responseJson_ = jsonWorker_.createGetChatDataJson(responseHistory_, responseData_, receivedUserId_, receivedServerId_, receivedChatId_);
+        std::string responseJson_;
 
-        boost::asio::post(executor_, [this, session_, responseJson_](){
-            session_.lock()->do_write(responseJson_);
-        });
+        if(receivedIsGroup_)
+        {
+            GroupChatDataResult responseData_ = chatManager_.getGroupChatData(connection_, receivedServerId_, receivedUserId_, receivedChatId_);
+            connectionPool_.returnConnection(connection_);
+            responseJson_ = jsonWorker_.createGetChatDataJson(responseHistory_, responseData_, receivedUserId_, receivedServerId_, receivedChatId_);
+            boost::asio::post(executor_, [this, session_, responseJson_](){
+                session_.lock()->do_write(responseJson_);
+            });
+        }
+        else
+        {
+            ChatDataResult responseData_ = chatManager_.getChatData(connection_, receivedServerId_, receivedUserId_, receivedChatId_);
+            connectionPool_.returnConnection(connection_);
+            responseJson_ = jsonWorker_.createGetChatDataJson(responseHistory_, responseData_, receivedUserId_, receivedServerId_, receivedChatId_);
+            boost::asio::post(executor_, [this, session_, responseJson_](){
+                session_.lock()->do_write(responseJson_);
+            });
+        }
+
+
     }
     else if(json_["Info"] == "Send_Message")
     {
         if(!json_.contains("userId") || !json_.contains("serverId") ||
-           !json_.contains("chatId") || !json_.contains("message"))
+           !json_.contains("chatId") || !json_.contains("message")  ||
+           !json_.contains("isGroup"))
         {
             throw std::runtime_error("Lost the value in the json document");
         }
@@ -598,33 +617,45 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         int receivedUserId_ = json_["userId"].get<int>();
         int receivedServerId_ = json_["serverId"].get<int>();
         int receivedChatId_ = json_["chatId"].get<int>();
+        bool receivedIsGroup_ = json_["isGroup"].get<bool>();
         std::string receivedMessage_ = json_["message"].get<std::string>();
 
         auto connection_ = connectionPool_.getConnection();
-        SetMessageResult response_ = messageManager_.setNewMessage(connection_, receivedServerId_, receivedUserId_, receivedChatId_, receivedMessage_);
+        SetMessageResult response_ = messageManager_.setNewMessage(connection_, receivedUserId_, receivedChatId_, receivedMessage_, receivedIsGroup_);
         connectionPool_.returnConnection(connection_);
 
         if(!response_.message_.empty())
         {
-            std::string responseJsonForSender_ = jsonWorker_.createSetMessageForSenderJson(receivedUserId_, response_.messageId_, receivedServerId_, receivedChatId_, receivedMessage_, response_.time_);
-            std::string responseJsonForCompanion_ = jsonWorker_.createSetMessageForCompanionJson(receivedUserId_, response_.messageId_, receivedServerId_, receivedChatId_, receivedMessage_, response_.time_);
+            std::string responseJsonForSender_ = jsonWorker_.createSetMessageForSenderJson(receivedIsGroup_, receivedUserId_, response_.messageId_, receivedServerId_, receivedChatId_, receivedMessage_, response_.time_);
+            std::string responseJsonForCompanion_ = jsonWorker_.createSetMessageForCompanionJson(receivedIsGroup_, receivedUserId_, response_.messageId_, receivedServerId_, receivedChatId_, receivedMessage_, response_.time_);
 
-            std::weak_ptr<Session> companion_ = connUsers_.getUser(response_.companionId_);
-
-            boost::asio::post(executor_, [this, session_, responseJsonForSender_, responseJsonForCompanion_, &connUsers_, companion_](){
+            boost::asio::post(executor_, [this, session_, responseJsonForSender_](){
                 session_.lock()->do_write(responseJsonForSender_);
-
-                if(auto s_ = companion_.lock())
-                {
-                    s_->do_write(responseJsonForCompanion_);
-                }
             });
+
+            for(const auto& i : response_.companions_)
+            {
+
+                std::weak_ptr<Session> companion_ = connUsers_.getUser(i);
+
+                if(!companion_.owner_before(session_) && !session_.owner_before(companion_))
+                {
+                    continue;
+                }
+
+                boost::asio::post(executor_, [this, responseJsonForCompanion_, companion_, session_](){
+                    if(auto s_ = companion_.lock())
+                    {
+                        s_->do_write(responseJsonForCompanion_);
+                    }
+                });
+            }
         }
     }
     else if(json_["Info"] == "Mark_Message")
     {
         if(!json_.contains("userId") || !json_.contains("chatId") ||
-            !json_.contains("messageId"))
+            !json_.contains("messageId") || !json_.contains("isGroup"))
         {
             throw std::runtime_error("Lost the value in the json document");
         }
@@ -632,25 +663,67 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         int receivedUserId_ = json_["userId"].get<int>();
         int receivedChatId_ = json_["chatId"].get<int>();
         int receivedMessageId_ = json_["messageId"].get<int>();
+        bool receivedIsGroup_ = json_["isGroup"].get<bool>();
 
         auto connection_ = connectionPool_.getConnection();
-        int companionId_ = messageManager_.markMessage(connection_, receivedUserId_, receivedChatId_, receivedMessageId_);
+        int companionId_ = messageManager_.markMessage(connection_, receivedUserId_, receivedChatId_, receivedMessageId_, receivedIsGroup_);
         connectionPool_.returnConnection(connection_);
 
+        std::string responseJsonForUser_ = jsonWorker_.createMarkMessageForUserJson(receivedMessageId_, receivedChatId_, receivedIsGroup_);
+        std::string responseJsonForCompanion_ = jsonWorker_.createMarkMessageForCompanionJson(receivedMessageId_, receivedChatId_, receivedIsGroup_);
 
-        std::string responseForUser_ = jsonWorker_.createMarkMessageForUserJson(receivedMessageId_, receivedChatId_);
-        std::string responseForCompanion_ = jsonWorker_.createMarkMessageForCompanionJson(receivedMessageId_, receivedChatId_);
+        boost::asio::post(executor_, [this, session_, responseJsonForUser_](){
+            session_.lock()->do_write(responseJsonForUser_);
+        });
 
         std::weak_ptr<Session> companion_ = connUsers_.getUser(companionId_);
 
-        boost::asio::post(executor_, [this, session_, responseForUser_, responseForCompanion_, companion_](){
+        boost::asio::post(executor_, [this, responseJsonForCompanion_, companion_, session_](){
             if(auto s_ = companion_.lock())
             {
-                s_->do_write(responseForCompanion_);
+                s_->do_write(responseJsonForCompanion_);
             }
-
-            session_.lock()->do_write(responseForUser_);
         });
+    }
+    else if(json_["Info"] == "Create_Group_Chat")
+    {
+        if(!json_.contains("userId") || !json_.contains("serverId") || !json_.contains("addedUsers") ||
+            !json_.contains("groupName") || !json_.contains("groupAvatar"))
+        {
+            throw std::runtime_error("Lost the value in the json document");
+        }
+
+        int receivedUserId_ = json_["userId"].get<int>();
+        int receivedServerId_ = json_["serverId"].get<int>();
+        std::vector<int> receivedAddedUsers_ = json_["addedUsers"].get<std::vector<int>>();
+        std::string receivedGroupName_ = json_["groupName"].get<std::string>();
+        std::vector<uint8_t> receivedGroupAvatar_ = imageWorker_.base64_decode(json_["groupAvatar"].get<std::string>());
+
+        auto connection_ = connectionPool_.getConnection();
+        CreateGroupChatResult response_ = chatManager_.createGroupChat(connection_, receivedServerId_, receivedServerId_, receivedGroupName_, receivedGroupAvatar_, receivedAddedUsers_);
+        connectionPool_.returnConnection(connection_);
+
+        std::string responseJson_ = jsonWorker_.createCreateGroupChatJson(response_.groupId_, receivedServerId_, receivedUserId_, receivedGroupName_, json_["groupAvatar"].get<std::string>());
+        std::string responseJsonCode_ = jsonWorker_.createSendCreateGroupChatCodeJson(response_.code_);
+
+        boost::asio::post(executor_, [this, responseJsonCode_, session_](){
+            session_.lock()->do_write(responseJsonCode_);
+        });
+
+        if(response_.code_ == "ADD_NEW_GROUP_CHAT")
+        {
+            for(const auto& i : receivedAddedUsers_)
+            {
+                std::weak_ptr<Session> user_  = connUsers_.getUser(i);
+
+                boost::asio::post(executor_, [this, user_, responseJson_](){
+                    if(auto s_ = user_.lock())
+                    {
+                        s_->do_write(responseJson_);
+                    }
+                });
+            }
+        }
     }
 }
 

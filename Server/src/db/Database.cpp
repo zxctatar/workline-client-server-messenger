@@ -253,6 +253,41 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                 AND table_name = 'viewed_messages'
             )");
 
+        pqxx::result result_check_group_chats_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'group_chats'
+        )");
+
+        pqxx::result result_check_group_chats_users_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'group_chats_users'
+        )");
+
+        pqxx::result result_check_group_chats_last_messages_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'group_chats_last_messages'
+        )");
+
+        pqxx::result result_check_group_chats_messages_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'group_chats_messages'
+        )");
+
+        pqxx::result result_check_group_chats_viewed_messages_ = check_tables_.exec(R"(
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_schema = 'public'
+                AND table_name = 'group_chats_viewed_messages'
+        )");
+
         check_tables_.commit();
 
         if(result_check_users_table_.empty())
@@ -408,7 +443,6 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                     id SERIAL PRIMARY KEY,
                     sender_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
                     private_chat_id INTEGER NOT NULL REFERENCES private_chats(id) ON DELETE CASCADE,
-                    server_id INTEGER NOT NULL REFERENCES servers(server_id) ON DELETE CASCADE,
                     content TEXT NOT NULL,
                     sent_at TIMESTAMP DEFAULT NOW()
                     ))");
@@ -481,10 +515,128 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                 ))");
 
             create_viewed_messages_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the viewed_messages table successfully.";
         }
         else
         {
             BOOST_LOG_TRIVIAL(info) << "Viewed_messages table already exists.";
+        }
+
+        if(result_check_group_chats_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Group_chats table not found. Creating table...";
+
+            pqxx::work create_group_chats_(connection_to_worklinedatabase_);
+
+            create_group_chats_.exec(R"(
+                CREATE TABLE group_chats(
+                    id SERIAL PRIMARY KEY,
+                    server_id INTEGER NOT NULL REFERENCES servers(server_id) ON DELETE CASCADE,
+                    owner_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    group_name VARCHAR(255) NOT NULL,
+                    group_avatar BYTEA
+                ))");
+
+            create_group_chats_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the group_chats table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Group_chats table already exists.";
+        }
+
+        if(result_check_group_chats_users_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Group_chat_users table not found. Creating table...";
+
+            pqxx::work create_group_chat_users_(connection_to_worklinedatabase_);
+
+            create_group_chat_users_.exec(R"(
+                CREATE TABLE group_chats_users(
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    group_chat_id INTEGER NOT NULL REFERENCES group_chats(id) ON DELETE CASCADE,
+                    CONSTRAINT unique_user_in_group UNIQUE (user_id, group_chat_id)
+                ))");
+
+            create_group_chat_users_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the group_chat_users table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Group_chat_users table already exists.";
+        }
+
+        if(result_check_group_chats_messages_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Group_chats_messages table not found. Creating table...";
+
+            pqxx::work create_group_chats_messages_(connection_to_worklinedatabase_);
+
+            create_group_chats_messages_.exec(R"(
+                CREATE TABLE group_chats_messages(
+                    id SERIAL PRIMARY KEY,
+                    sender_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    group_chat_id INTEGER NOT NULL REFERENCES group_chats(id) ON DELETE CASCADE,
+                    content TEXT NOT NULL,
+                    sent_at TIMESTAMP DEFAULT NOW()
+                ))");
+
+            create_group_chats_messages_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the group_chat_messages table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Group_chat_messages table already exists.";
+        }
+
+        if(result_check_group_chats_last_messages_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Group_chats_last_messages table not found. Creating table...";
+
+            pqxx::work create_group_chats_last_messages_(connection_to_worklinedatabase_);
+
+            create_group_chats_last_messages_.exec(R"(
+                CREATE TABLE group_chats_last_messages(
+                    id SERIAL PRIMARY KEY,
+                    group_chat_id INTEGER NOT NULL REFERENCES group_chats(id) ON DELETE CASCADE,
+                    last_message_id INTEGER NOT NULL REFERENCES group_chats_messages(id) ON DELETE CASCADE,
+                    CONSTRAINT unique_group_chat_id UNIQUE (group_chat_id)
+                ))");
+
+            create_group_chats_last_messages_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the group_chats_last_messages table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Group_chats_last_messages table already exists.";
+        }
+
+        if(result_check_group_chats_viewed_messages_.empty())
+        {
+            BOOST_LOG_TRIVIAL(info) << "Group_chats_viewed_messages table not found. Creating table...";
+
+            pqxx::work create_group_chats_viewed_messages_(connection_to_worklinedatabase_);
+
+            create_group_chats_viewed_messages_.exec(R"(
+                CREATE TABLE group_chats_viewed_messages(
+                    id SERIAL PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    message_id INTEGER NOT NULL REFERENCES group_chats_messages(id) ON DELETE CASCADE
+                ))");
+
+            create_group_chats_viewed_messages_.commit();
+
+            BOOST_LOG_TRIVIAL(info) << "Creating the group_chats_viewed_messages table successfully.";
+        }
+        else
+        {
+            BOOST_LOG_TRIVIAL(info) << "Group_chats_viewed_messages table already exists.";
         }
     }
     catch (const pqxx::broken_connection& e)
@@ -578,6 +730,16 @@ void Database::setPrivileges(pqxx::connection& connection_to_worklinedatabase_)
 
         set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE viewed_messages_id_seq TO wluser;");
 
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE group_chats_messages_id_seq TO wluser;");
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE group_chats_last_messages_id_seq TO wluser;");
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE group_chats_users_id_seq TO wluser;");
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE group_chats_id_seq TO wluser;");
+
+        set_privileges_.exec("GRANT USAGE, SELECT ON SEQUENCE group_chats_viewed_messages_id_seq TO wluser;");
+
         set_privileges_.commit();
 
         BOOST_LOG_TRIVIAL(info) << "Privileges have been set successfully.";
@@ -606,6 +768,24 @@ void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
 
         create_trigger.exec("DROP TRIGGER IF EXISTS trigger_set_verified ON admins;");
         create_trigger.exec("DROP FUNCTION IF EXISTS set_verified_on_admin_insert;");
+
+        create_trigger.exec("DROP TRIGGER IF EXISTS trigger_set_verified_on_rejected ON rejected_users;");
+        create_trigger.exec("DROP FUNCTION IF EXISTS set_verified_on_rejected_users_insert;");
+
+        create_trigger.exec("DROP TRIGGER IF EXISTS update_trigger_set_verified ON users;");
+        create_trigger.exec("DROP FUNCTION IF EXISTS user_verified_update;");
+
+        create_trigger.exec("DROP TRIGGER IF EXISTS trigger_add_admins_to_new_server ON servers;");
+        create_trigger.exec("DROP FUNCTION IF EXISTS add_admins_to_new_server;");
+
+        create_trigger.exec("DROP TRIGGER IF EXISTS trigger_add_admin_to_all_servers ON admins;");
+        create_trigger.exec("DROP FUNCTION IF EXISTS add_admin_to_all_servers;");
+
+        create_trigger.exec("DROP TRIGGER IF EXISTS trigger_update_chats_last_messages_ ON messages;");
+        create_trigger.exec("DROP FUNCTION IF EXISTS update_chats_last_messages_;");
+
+        create_trigger.exec("DROP TRIGGER IF EXISTS trigger_update_group_chats_last_messages ON group_chats_messages;");
+        create_trigger.exec("DROP FUNCTION IF EXISTS update_group_chats_last_messages;");
 
         // тригер обноваить verifed_user = true если стал админом
         create_trigger.exec(R"(
@@ -663,7 +843,7 @@ void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
     )");
 
         create_trigger.exec(R"(
-    CREATE TRIGGER trigger_set_verified
+    CREATE TRIGGER update_trigger_set_verified
     AFTER UPDATE ON users
     FOR EACH ROW
     EXECUTE FUNCTION user_verified_update();
@@ -711,7 +891,7 @@ void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
 
         // Функция для обновления или создание записи последнего сообщения в чате
         create_trigger.exec(R"(
-    CREATE OR REPLACE FUNCTION update_chats_last_messages_last_message()
+    CREATE OR REPLACE FUNCTION update_chats_last_messages_()
     RETURNS TRIGGER AS $$
     BEGIN
         INSERT INTO chats_last_messages (chat_id, last_message_id)
@@ -725,11 +905,34 @@ void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
     )");
 
         create_trigger.exec(R"(
-    CREATE TRIGGER trigger_update_chats_last_messages_last_message
+    CREATE TRIGGER trigger_update_chats_last_messages_
     AFTER INSERT ON messages
     FOR EACH ROW
-    EXECUTE FUNCTION update_chats_last_messages_last_message();
+    EXECUTE FUNCTION update_chats_last_messages_();
     )");
+
+                // Функция для обновления записи последнего сообщения в групповом чате
+                create_trigger.exec(R"(
+    CREATE OR REPLACE FUNCTION update_group_chats_last_messages()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        -- Вставляем или обновляем запись в group_chats_last_messages
+        INSERT INTO group_chats_last_messages (group_chat_id, last_message_id)
+        VALUES (NEW.group_chat_id, NEW.id)
+        ON CONFLICT (group_chat_id)
+        DO UPDATE SET last_message_id = EXCLUDED.last_message_id;
+
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+            )");
+
+        create_trigger.exec(R"(
+    CREATE TRIGGER trigger_update_group_chats_last_messages
+    AFTER INSERT ON group_chats_messages
+    FOR EACH ROW
+    EXECUTE FUNCTION update_group_chats_last_messages();
+            )");
 
         create_trigger.commit();
         BOOST_LOG_TRIVIAL(info) << "Trigger created successfully.";

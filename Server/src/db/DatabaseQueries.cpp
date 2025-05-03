@@ -289,13 +289,13 @@ pqxx::result DatabaseQueries::getChatHistory(pqxx::transaction_base& conn_, cons
         )", chatId_, userId_);
 }
 
-pqxx::result DatabaseQueries::addMessage(pqxx::transaction_base& conn_, const int chatId_, const int userId_, const int serverId_, const std::string& message_)
+pqxx::result DatabaseQueries::addMessage(pqxx::transaction_base& conn_, const int chatId_, const int userId_, const std::string& message_)
 {
     return conn_.exec_params(
         R"(
             WITH inserted AS (
-                INSERT INTO messages (sender_id, private_chat_id, server_id, content, sent_at)
-                VALUES ($1, $2, $3, $4, NOW())
+                INSERT INTO messages (sender_id, private_chat_id, content, sent_at)
+                VALUES ($1, $2, $3, NOW())
                 RETURNING id, content, sent_at
             )
             SELECT
@@ -309,7 +309,7 @@ pqxx::result DatabaseQueries::addMessage(pqxx::transaction_base& conn_, const in
             FROM inserted i
             JOIN private_chats pc ON pc.id = $2
         )",
-        userId_, chatId_, serverId_, message_
+        userId_, chatId_, message_
         );
 }
 
@@ -353,5 +353,156 @@ pqxx::result DatabaseQueries::addViewedMessage(pqxx::transaction_base& conn_, co
             JOIN message_info mi ON pc.id = mi.private_chat_id
         )
         SELECT * FROM chat_info;
+    )", userId_, messageId_);
+}
+
+pqxx::result DatabaseQueries::checkGroupChatName(pqxx::transaction_base& conn_, const std::string& groupName_)
+{
+    return conn_.exec_params("SELECT 1 FROM group_chats WHERE group_name = $1", groupName_);
+}
+
+pqxx::result DatabaseQueries::createGroupChat(pqxx::transaction_base& conn_, const int userId_, const int serverId_, const std::string& groupName_, const std::vector<uint8_t>& groupAvatar_)
+{
+    pqxx::binarystring image_(groupAvatar_.data(), groupAvatar_.size());
+
+    return conn_.exec_params(R"(
+        INSERT INTO group_chats (server_id, owner_id, group_name, group_avatar)
+        VALUES($1,$2,$3,$4)
+        RETURNING id
+    )", serverId_, userId_, groupName_, image_);
+}
+
+pqxx::result DatabaseQueries::addUserInGroup(pqxx::transaction_base& conn_, const int groupId_, const int userId_)
+{
+    return conn_.exec_params(R"(
+        INSERT INTO group_chats_users (user_id, group_chat_id)
+        VALUES ($1, $2)
+        ON CONFLICT (user_id, group_chat_id) DO NOTHING
+    )", userId_, groupId_);
+}
+
+pqxx::result DatabaseQueries::getGroupChats(pqxx::transaction_base& conn_, const int serverId_, const int userId_)
+{
+    return conn_.exec_params(R"(
+        SELECT
+            gc.id,
+            gc.group_name,
+            gc.group_avatar,
+            m.content AS last_message_content,
+            m.sent_at AS last_message_time,
+            COALESCE((
+                SELECT COUNT(*)
+                FROM group_chats_messages gm
+                WHERE gm.group_chat_id = gc.id
+                AND gm.sender_id != $2
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM group_chats_viewed_messages vm
+                    WHERE vm.message_id = gm.id
+                    AND vm.user_id = $2
+                )
+            ), 0) AS unread_count
+        FROM
+            group_chats gc
+        JOIN
+            group_chats_users gcu ON gc.id = gcu.group_chat_id AND gcu.user_id = $2
+        LEFT JOIN
+            group_chats_last_messages lm ON gc.id = lm.group_chat_id
+        LEFT JOIN
+            group_chats_messages m ON lm.last_message_id = m.id
+        WHERE
+            gc.server_id = $1
+        ORDER BY
+            COALESCE(m.sent_at) DESC
+    )", serverId_, userId_);
+}
+
+pqxx::result DatabaseQueries::checkGroupChatAccess(pqxx::transaction_base& conn_, const int chatId_, const int userId_)
+{
+    return conn_.exec_params(R"(SELECT 1 FROM group_chats_users WHERE group_chat_id = $1 AND user_id = $2)", chatId_, userId_);
+}
+
+pqxx::result DatabaseQueries::getGroupChatHistory(pqxx::transaction_base& conn_, const int chatId_, const int userId_)
+{
+    return conn_.exec_params(
+        R"(
+        SELECT
+            gm.id,
+            gm.content,
+            gm.sent_at,
+            gm.sender_id,
+            gm.sender_id <> $2 AS is_incoming,
+            CASE
+                WHEN gm.sender_id = $2 THEN
+                    EXISTS (
+                        SELECT 1
+                        FROM group_chats_viewed_messages gvm
+                        WHERE gvm.message_id = gm.id AND gvm.user_id != $2
+                    )
+                ELSE
+                    EXISTS (
+                        SELECT 1
+                        FROM group_chats_viewed_messages gvm
+                        WHERE gvm.message_id = gm.id AND gvm.user_id = $2
+                    )
+            END AS is_viewed
+        FROM group_chats_messages gm
+        WHERE gm.group_chat_id = $1
+        ORDER BY gm.sent_at ASC
+        )", chatId_, userId_);
+}
+
+pqxx::result DatabaseQueries::getGroupChatData(pqxx::transaction_base& conn_, const int serverId_, const int chatId_)
+{
+    return conn_.exec_params(
+        R"(
+        SELECT
+            gc.group_name AS chat_name,
+            (SELECT COUNT(*)
+             FROM group_chats_users gcu
+             WHERE gcu.group_chat_id = $2) AS members_count
+        FROM group_chats gc
+        WHERE gc.server_id = $1 AND gc.id = $2
+        )", serverId_, chatId_);
+}
+
+pqxx::result DatabaseQueries::addGroupMessage(pqxx::transaction_base& conn_, const int chatId_, const int userId_, const std::string& message_)
+{
+    return conn_.exec_params(
+        R"(
+        WITH inserted AS (
+            INSERT INTO group_chats_messages (sender_id, group_chat_id, content, sent_at)
+            VALUES ($1, $2, $3, NOW())
+            RETURNING id, content, sent_at
+            )
+        SELECT
+            i.id,
+            i.content,
+            i.sent_at,
+            ARRAY(
+                SELECT gcu.user_id
+                FROM group_chats_users gcu
+                WHERE gcu.group_chat_id = $2
+            ) AS companion_ids
+        FROM inserted i;
+        )", userId_, chatId_, message_);
+}
+
+pqxx::result DatabaseQueries::addViewedGroupMessage(pqxx::transaction_base& conn_, const int userId_, const int messageId_)
+{
+    return conn_.exec_params(R"(
+        WITH inserted AS (
+            INSERT INTO group_chats_viewed_messages (user_id, message_id)
+            VALUES ($1, $2)
+            ON CONFLICT DO NOTHING
+            RETURNING message_id
+        ),
+        sender_info AS (
+            SELECT gcm.sender_id
+            FROM group_chats_messages gcm
+            WHERE gcm.id = $2
+            AND gcm.sender_id != $1
+        )
+        SELECT * FROM sender_info;
     )", userId_, messageId_);
 }

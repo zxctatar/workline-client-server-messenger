@@ -10,6 +10,8 @@
 #include "struct/UsersOnServerStruct.h"
 #include "struct/ChatHistoryResult.h"
 #include "struct/ChatDataResult.h"
+#include "struct/GroupChatStruct.h"
+#include "struct/GroupChatDataStruct.h"
 
 class JsonWorker
 {
@@ -33,10 +35,10 @@ public:
     std::string createCandidateUsersJson(const std::vector<CandidateUserStruct>& candidateUsers_, const int serverId_);
     std::string createUserAddedOnServerJson(const std::string& response_, const int userId_, const int serverId_);
     std::string createDeleteUserOnServerJson(const int userId_, const int serverId_);
-    std::string createGetChatsJson(const int serverId_, std::vector<PrivateChatStruct>& chats);
+    std::string createGetChatsJson(const int serverId_, std::vector<PrivateChatStruct>& chats, std::vector<GroupChatStruct>& groupChats_);
     std::string createChatCreateForSenderJson(const int serverId_, const int userId_, const int companionId_, const int chatId_);
     std::string createChatCreateForCompanionJson(const int serverId_, const int userId_, const int companionId_, const int chatId_);
-    std::string createGetUsersOnServerJson(const int serverId_, const std::vector<UsersOnServerStruct>& users_);
+    std::string createGetUsersOnServerJson(const std::string& info_, const int serverId_, const std::vector<UsersOnServerStruct>& users_);
     std::string createAddInChatJson(const int serverId_, const std::string& avatar_, const int userId_, const std::string& lastName_, const std::string& firstName_, const std::string& middleName_);
     std::string createForAddedUserJson(const int serverId_, const std::string& serverImage_,  const std::string& serverName_, const std::string& serverDescription_);
     std::string createAddAdminOnServerJson(const std::string& code_, const int serverId_, const int userId_);
@@ -44,11 +46,14 @@ public:
     std::string createAddAdminOnServerForUserJson(const std::string& code_, const int serverId_);
     std::string createRemoveAdminOnServerForUserJson(const std::string& code_, const int serverId_);
     std::string createGetServerRoleJson(const std::string& code_, const int serverId_, const int userId_);
+    std::string createGetChatDataJson(const std::vector<ChatHistoryResult>& history_, const GroupChatDataResult& data_, const int userId_, const int serverId_, const int chatId_);
     std::string createGetChatDataJson(const std::vector<ChatHistoryResult>& history_, const ChatDataResult& data_, const int userId_, const int serverId_, const int chatId_);
-    std::string createSetMessageForSenderJson(const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_);
-    std::string createSetMessageForCompanionJson(const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_);
-    std::string createMarkMessageForUserJson(const int messageId_, const int chatId_);
-    std::string createMarkMessageForCompanionJson(const int messageId_, const int chatId_);
+    std::string createSetMessageForSenderJson(const bool isGroup_, const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_);
+    std::string createSetMessageForCompanionJson(const bool isGroup_, const int senderId_, const int messageId_, const int serverId_, const int chatId_, const std::string& message_, const std::string& time_);
+    std::string createMarkMessageForUserJson(const int messageId_, const int chatId_, const bool isGroup_);
+    std::string createMarkMessageForCompanionJson(const int messageId_, const int chatId_, const bool isGroup_);
+    std::string createSendCreateGroupChatCodeJson(const std::string& code_);
+    std::string createCreateGroupChatJson(const int groupId_, const int serverId_, const int userId_, const std::string& groupName_, const std::string& groupAvatar_);
 
     ~JsonWorker();
 
