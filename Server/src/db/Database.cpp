@@ -55,7 +55,7 @@ void Database::initializing()
             case 4:
                 createTrigger(connection_to_worklinedatabase_.getConnection());
                 stage_++;
-                break;
+                //break;
                 // no break: intentionally falling through
             case 5:
                 insertAdmin(connection_to_worklinedatabase_.getConnection());
@@ -375,7 +375,8 @@ void Database::createTables(pqxx::connection& connection_to_worklinedatabase_)
                 CREATE TABLE users_on_servers(
                     id SERIAL PRIMARY KEY,
                     user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-                    server_id INTEGER NOT NULL REFERENCES servers(server_id) ON DELETE CASCADE
+                    server_id INTEGER NOT NULL REFERENCES servers(server_id) ON DELETE CASCADE,
+                    UNIQUE (user_id, server_id)  -- Вот это гарантирует уникальность пары
                     ))");
 
             create_users_on_servers_table_.commit();
@@ -856,7 +857,13 @@ void Database::createTrigger(pqxx::connection& connection_to_worklinedatabase_)
     BEGIN
         INSERT INTO users_on_servers (user_id, server_id)
         SELECT a.user_id, NEW.server_id
-        FROM admins a;
+        FROM admins a
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM users_on_servers us
+            WHERE us.user_id = a.user_id
+            AND us.server_id = NEW.server_id
+        );
         RETURN NEW;
     END;
     $$ LANGUAGE plpgsql;
