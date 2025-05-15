@@ -96,7 +96,7 @@ Button {
             width: 50
             height: 50
             radius: 24
-            path: chatInfoBar.avatarPath
+            path: chatInfoBar.avatarPath == "" ? (chatInfoBar.isGroupChat ? "qrc:/resources/img/groupAvatar.svg" : "qrc:/resources/img/avatar.svg") : chatInfoBar.avatarPath
         }
 
         ChatNameText {

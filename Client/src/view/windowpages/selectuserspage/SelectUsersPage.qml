@@ -37,7 +37,7 @@ Page {
             selectUsersPage.notificationManager.showNotificationManager("Доступ запрещён.")
         }
 
-        function conCodeGroupNameExistsSignal() {
+        function onCodeGroupNameExistsSignal() {
             selectUsersPage.notificationManager.showNotificationManager("Название группы занято.")
         }
 

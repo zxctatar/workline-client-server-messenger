@@ -57,7 +57,6 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/widgets/MenuButton.qml
     QML_FILES src/view/customwidgets/widgets/MenuWidget.qml
     QML_FILES src/view/customwidgets/widgets/Separator.qml
-    QML_FILES src/view/customwidgets/widgets/MenuPageInputField.qml
     QML_FILES src/view/customwidgets/widgets/MenuText.qml
     QML_FILES src/view/customwidgets/widgets/MenuPageLabel.qml
     QML_FILES src/view/customwidgets/widgets/ApplicationObject.qml

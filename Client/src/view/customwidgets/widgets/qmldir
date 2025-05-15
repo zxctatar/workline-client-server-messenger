@@ -13,7 +13,6 @@ AddServerButton 1.0 AddServerButton.qml
 MenuButton 1.0 MenuButton.qml
 MenuWidget 1.0 MenuWidget.qml
 Separator 1.0 Separator.qml
-MenuPageInputField 1.0 MenuPageInputField.qml
 MenuText 1.0 MenuText.qml
 MenuPageLabel 1.0 MenuPageLabel.qml
 ApplicationObject 1.0 ApplicationObject.qml

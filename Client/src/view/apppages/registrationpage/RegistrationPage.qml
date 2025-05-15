@@ -50,21 +50,34 @@ Page {
 
     WindowText {
         id: regText
-        anchors.bottom: fields.top
+        anchors.topMargin: Sizes.textTopMargin // 20
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottomMargin: 16
+        anchors.top: parent.top
         text: "Регистрация"
     }
 
+    Separator {
+        id: sep
+        anchors.top: regText.bottom
+        anchors.topMargin: 20
+        width: parent.width - 50
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
 
     Item {
         id: fields
+        anchors.top: sep.bottom
+        anchors.topMargin: 20
+        anchors.bottom: regButton.top
+        anchors.bottomMargin: 20 + (errorText.visible ? errorText.height : 0)
         anchors.centerIn: parent
-        anchors.bottom: errorText.top
-        width: Sizes.maxInputFieldWidth + 20  // например: 410 + 20 = 430
-        height: (Sizes.maxInputFieldHeight * 6) + (16 * 5) + 10 // 6 полей и 5 промежутков
+        width: Sizes.maxInputFieldWidth + 20
 
-        ScrollView {
+        height: Math.min(
+            parent.height - sep.y - sep.height - 60 - regButton.height - (errorText.visible ? errorText.height : 0),
+            coll.implicitHeight) // sep.y (высота до sep)
+
+            ScrollView {
             anchors.fill: parent
             width: parent.width
             height: parent.height
@@ -231,7 +244,6 @@ Page {
                         id: inputFieldConfirmPassword
                         Layout.alignment: Qt.AlignHCenter
                         Layout.leftMargin: 10
-                        Layout.bottomMargin: 5
                         Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
                         Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
                         placeholderText: "Повторите пароль"
@@ -241,12 +253,13 @@ Page {
                 }
             }
         }
+
     }
 
     ErrorText {
         id: errorText
+        anchors.topMargin: 20
         anchors.top: fields.bottom
-        anchors.topMargin: 16
         width: 410
         anchors.horizontalCenter: parent.horizontalCenter
         visible: false
@@ -256,7 +269,7 @@ Page {
 
     MyButton {
         id: regButton
-        anchors.topMargin: 16
+        anchors.topMargin: 20
         anchors.top: errorText.visible ? errorText.bottom : fields.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         width: Sizes.maxButtonWidth // 410
@@ -337,6 +350,8 @@ Page {
             registrationPage.controller.prepareRegistrationRequest(addAvatar.encodedFilePath, inputFieldLastName.text, inputFieldFirstName.text, inputFieldMiddleName.text, inputFieldBirthDate.text, inputFieldLogin.text, inputFieldPhoneNumber.text, inputFieldEmail.text, inputFieldPassword.text)
         }
     }
+
+
 
     Connections {
         target: registrationPage.controller

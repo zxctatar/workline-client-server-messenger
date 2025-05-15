@@ -24,13 +24,13 @@ Button {
     font.weight: Fonts.normalWeight
 
     background: Rectangle {
-        radius: Sizes.serverObjectRadius // 28
+        radius: Sizes.serverTableWidgetRadius // 28
         color: "#F2F2F2"
     }
 
     Rectangle {
         id: recta
-        radius: Sizes.serverObjectRadius // 28
+        radius: Sizes.serverTableWidgetRadius // 28
         anchors.fill: parent
         anchors.verticalCenter: parent.verticalCenter
         color: "transparent"
@@ -55,7 +55,7 @@ Button {
         // Рамка поверх изображения
         Rectangle {
             anchors.fill: parent
-            radius: Sizes.serverObjectRadius // 28
+            radius: Sizes.serverTableWidgetRadius // 28
             color: "transparent"
             border.color: serverObject.selected ? "#1AED77" : "transparent"
             border.width: serverObject.selected ? 6 : 0

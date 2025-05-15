@@ -52,8 +52,8 @@ Item {
         }
 
         SwitcherButton {
-            Layout.preferredWidth: Sizes.maxSwitcherButtonWidth // 35
-            Layout.preferredHeight: Sizes.maxSwitcherButtonHeight // 35
+            Layout.preferredWidth: Sizes.switcherButtonWidth // 35
+            Layout.preferredHeight: Sizes.switcherButtonHeight // 35
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
 
             isSelected: configureAdminObject.isAdmin

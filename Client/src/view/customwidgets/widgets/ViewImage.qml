@@ -26,7 +26,7 @@ Item {
         Image {
             anchors.fill: parent
             fillMode: Image.PreserveAspectCrop
-            source: viewImage.path == "" ? "qrc:/resources/img/avatar.svg" : viewImage.path
+            source: viewImage.path
         }
     }
 }

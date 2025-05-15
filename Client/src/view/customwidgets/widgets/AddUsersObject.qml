@@ -17,7 +17,7 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: Sizes.spacingAddUserObject // 10
+        spacing: Sizes.addUserObjectSpacing // 10
 
         Rectangle {
             id: recta
@@ -51,8 +51,8 @@ Item {
         }
 
         SwitcherButton {
-            Layout.preferredWidth: Sizes.maxSwitcherButtonWidth // 35
-            Layout.preferredHeight: Sizes.maxSwitcherButtonHeight // 35
+            Layout.preferredWidth: Sizes.switcherButtonWidth // 35
+            Layout.preferredHeight: Sizes.switcherButtonHeight // 35
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
 
             isSelected: addUsersObject.isSelected

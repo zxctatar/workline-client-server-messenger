@@ -77,12 +77,14 @@ QtObject {
 
     readonly property int candidateUserObjectSpacing: 10 // отступ в объекте кандидата на добавление
 
+    readonly property int addUserObjectSpacing: 10
+
     readonly property int chatObjectTextSpacing: 8 // расстояние между текстом в объекте чата
 
     //radius
     readonly property int imageRadius: 24
 
-    readonly property int serverTableWidetRadius: 28 // радиус виджетов объекта сервера
+    readonly property int serverTableWidgetRadius: 28 // радиус виджетов объекта сервера
 
     readonly property int separatorRadius: 2 // скруглдение разделителя
 

@@ -68,7 +68,7 @@ Popup {
             radius: 50
             Layout.preferredWidth: 100
             Layout.preferredHeight: 100
-            path: groupChatInfoWindow.avatarPath
+            path: groupChatInfoWindow.avatarPath == "" ? "qrc:/resources/img/groupAvatar.svg" : groupChatInfoWindow.avatarPath
         }
 
         MenuText {

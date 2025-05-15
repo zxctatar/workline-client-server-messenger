@@ -46,7 +46,6 @@
         <file>view/windowpages/menumainpage/MenuMainPage.qml</file>
         <file>view/windowpages/menumainpage/qmldir</file>
         <file>view/windowpages/menuprofilepage/MenuProfilePage.qml</file>
-        <file>view/customwidgets/widgets/MenuPageInputField.qml</file>
         <file>view/customwidgets/widgets/MenuText.qml</file>
         <file>view/customwidgets/widgets/MenuPageLabel.qml</file>
         <file>view/windowpages/menuapplicationpage/MenuApplicationPage.qml</file>

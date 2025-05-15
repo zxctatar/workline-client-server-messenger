@@ -10,7 +10,7 @@ Button {
 
     background: Rectangle {
         color: Colors.addServerButtonBackgroundColor
-        radius: Sizes.addServerButtonRadius // 28
+        radius: Sizes.serverTableWidgetRadius // 28
     }
 
     Image {

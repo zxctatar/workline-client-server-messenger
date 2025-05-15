@@ -15,7 +15,7 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: Sizes.spacingCandidateUserObject // 1
+        spacing: Sizes.candidateUserObjectSpacing // 10
 
         Rectangle {
             id: recta

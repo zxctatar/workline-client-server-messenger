@@ -31,7 +31,7 @@ Item {
             width: Sizes. chatMessageObjectImageWidth // 45
             height: Sizes. chatMessageObjectImageHeight // 45
             radius: Sizes.imageRadius // 24
-            path: chatMessageObject.path
+            path: chatMessageObject.path == "" ? "qrc:/resources/img/avatar.svg" : chatMessageObject.path
             anchors.bottom: backgroundRect.bottom
         }
 
