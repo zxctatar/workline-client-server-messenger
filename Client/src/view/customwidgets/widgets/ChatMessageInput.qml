@@ -1,70 +1,115 @@
+pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import Qt5Compat.GraphicalEffects
 import "../../../resources"
 
-ScrollView {
-    id: chatScrollView
+Item {
+    id: chatInput
     width: parent.width
-    height: Math.min(200, Math.max(56, chatMessageInput.implicitHeight))
+    height: Math.min(200, Math.max(52, chatMessageInput.implicitHeight + 20))
 
     property var controller // chatHistory chatHistoryController
     property int selectedChat: -1
     property bool selectedIsGroup: false
 
-    clip: true
-    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-    ScrollBar.vertical.policy: ScrollBar.AlwaysOff
+    Rectangle {
+        id: chatInputBackground
+        anchors.fill: parent
+        color: "#383C45"
 
-    contentItem: Flickable {
-        id: flickable
-        boundsBehavior: Flickable.StopAtBounds  // Отключает перескок
-    }
+        radius: 0 // Убираем общий радиус
+        clip: true // Обрезка содержимого по маске
 
-    Component.onCompleted: {
-        chatScrollView.ScrollBar.vertical.position = 0
-    }
+        // Используем маску, чтобы закруглить только верхние углы
+        layer.enabled: true
+        layer.effect: OpacityMask {
+            maskSource: Item {
+                width: chatInputBackground.width
+                height: chatInputBackground.height
 
-    TextArea {
-        id: chatMessageInput
-        wrapMode: TextArea.Wrap
-        placeholderText: "Напишите сообщение..."
-
-        background: Rectangle {
-            color: "#ADD8FC"
+                Rectangle {
+                    anchors.fill: parent
+                    color: "white"
+                    radius: 25
+                    antialiasing: true
+                    anchors.bottomMargin: -25 // тянем вниз, чтобы только верх был закруглён
+                }
+            }
         }
 
-        leftPadding: Sizes.chatMessageLeftPadding // 30
-        rightPadding: Sizes.chatMessageRightPadding // 30
+        Rectangle {
+            radius: 25
+            color: "#576172"
+            anchors.fill: parent
+            anchors.margins: 10
 
-        topPadding: Sizes.chatMessageTopPadding // 5
-        bottomPadding: Sizes.chatMessageBottomPadding // 5
+            ScrollView {
+                id: chatScrollView
+                anchors.fill: parent
+                clip: true
+                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                ScrollBar.vertical.policy: ScrollBar.AlwaysOff
 
-        verticalAlignment: TextInput.AlignVCenter
-        horizontalAlignment: TextInput.AlignLeft
+                contentItem: Flickable {
+                    id: flickable
+                    boundsBehavior: Flickable.StopAtBounds  // Отключает перескок
+                    anchors.centerIn: parent
+                    contentWidth: width
+                    contentHeight: chatMessageInput.implicitHeight
 
-        font.family: Fonts.windowTextFont
-        font.pixelSize: Sizes.chatMessageTextSizes // 16
-        color: Colors.chatMessageTextColor
+                    TextArea {
+                        id: chatMessageInput
+                        width: parent.width
+                        height: parent.height
+                        anchors.centerIn: parent
+                        wrapMode: TextArea.Wrap
+                        placeholderText: "Напишите сообщение..."
 
-        Keys.onPressed: function(event) {
-            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter)
-            {
-                event.accepted = true
-                const trimmedText = chatMessageInput.text.trim()
+                        leftPadding: Sizes.chatMessageLeftPadding // 30
+                        rightPadding: Sizes.chatMessageRightPadding // 30
 
-                if (event.modifiers & Qt.ShiftModifier)
-                {
-                    if (trimmedText.length > 0)
-                    {
-                        chatMessageInput.insert(chatMessageInput.cursorPosition, '\n');
+                        topPadding: Sizes.chatMessageTopPadding // 5
+                        bottomPadding: Sizes.chatMessageBottomPadding // 5
+
+                        verticalAlignment: TextInput.AlignVCenter
+                        horizontalAlignment: TextInput.AlignLeft
+
+                        font.family: Fonts.textFont
+                        font.weight: Fonts.normalWeight
+                        font.pixelSize: Sizes.standartTextSize // 16
+                        color: Colors.chatMessageTextColor
+
+                        onTextChanged: {
+                            flickable.contentY = flickable.contentHeight - flickable.height
+                        }
+
+                        Keys.onPressed: function(event) {
+                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                event.accepted = true
+                                const trimmedText = chatMessageInput.text.trim()
+
+                                if (event.modifiers & Qt.ShiftModifier) {
+                                    if (trimmedText.length > 0) {
+                                        chatMessageInput.insert(chatMessageInput.cursorPosition, '\n');
+                                    }
+                                } else if (trimmedText.length > 0) {
+                                    chatInput.controller.sendMessage(chatInput.selectedChat, chatInput.selectedIsGroup, chatMessageInput.text)
+                                    chatMessageInput.text = ""
+                                }
+                            }
+                        }
                     }
+
                 }
-                else if (trimmedText.length > 0)
-                {
-                    chatScrollView.controller.sendMessage(chatScrollView.selectedChat, chatScrollView.selectedIsGroup, chatMessageInput.text)
-                    chatMessageInput.text = ""
+
+                Component.onCompleted: {
+                    chatScrollView.ScrollBar.vertical.position = 0
                 }
+
             }
         }
     }
 }
+
+

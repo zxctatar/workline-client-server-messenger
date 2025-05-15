@@ -8,7 +8,7 @@ import "../../windows"
 Item {
     id: chatsBar
 
-    width: Sizes.maxChatBarHeight // 230
+    width: Sizes.chatBarHeight // 230
 
     property var controller // chatsBarController
 
@@ -26,10 +26,13 @@ Item {
     Rectangle {
         anchors.fill: parent
 
-        color: "#729EC6"
+        color: Colors.chatsBarBackgroundColor
 
         ListView {
             anchors.fill: parent
+            anchors.leftMargin: 7
+            anchors.rightMargin: 7
+            spacing: 5
 
             model: chatsBar.controller.getChatModel()
             clip: true
@@ -54,7 +57,7 @@ Item {
                 selected: chatsBar.currentIndex == id && chatsBar.currentIsGroup == isGroupChat? true : false
 
                 width: parent ? parent.width : null
-                height: Sizes.maxChatObjectHeight // 70
+                height: Sizes.chatObjectHeight // 70
 
                 onClicked: {
                     if(isChat == false && isGroupChat == false)

@@ -6,8 +6,8 @@ import "../customwidgets/widgets"
 
 Popup {
     id: createChatWindow
-    width: 200
-    height: 80
+    width: 250
+    height: 140
     modal: true
 
     property int companionId: -1
@@ -32,41 +32,44 @@ Popup {
 
     background: Rectangle {
         color: Colors.addServerWindowBackgroundColor
-        radius: 5
+        radius: 26
     }
 
     MenuText {
+        id: menuText
         anchors.top: parent.top
+        anchors.topMargin: 25
         anchors.horizontalCenter: parent.horizontalCenter
         text: "Хотите создать чат?"
     }
 
-    CreateChatButton {
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
+    Row {
+        spacing: 5
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: menuText.bottom
+        anchors.topMargin: 10
 
-        displayText: "Да"
+        CreateChatButton {
+            displayText: "Да"
 
-        onClicked: {
-            if(createChatWindow.companionId != -1)
-            {
-                createChatWindow.createChat(createChatWindow.companionId)
+            onClicked: {
+                if(createChatWindow.companionId != -1)
+                {
+                    createChatWindow.createChat(createChatWindow.companionId)
+                    createChatWindow.companionId = -1
+                    createChatWindow.close()
+                }
+            }
+        }
+
+        CreateChatButton {
+            displayText: "Нет"
+
+            onClicked: {
                 createChatWindow.companionId = -1
                 createChatWindow.close()
             }
         }
+
     }
-
-    CreateChatButton {
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-
-        displayText: "Нет"
-
-        onClicked: {
-            createChatWindow.companionId = -1
-            createChatWindow.close()
-        }
-    }
-
 }

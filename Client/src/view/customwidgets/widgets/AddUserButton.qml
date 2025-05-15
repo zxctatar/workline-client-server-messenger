@@ -4,18 +4,16 @@ import "../../../resources"
 
 Button {
     id: addUserButton
-    width: Sizes.maxAddUserButtonWidth // 35
-    height: Sizes.maxAddUserButtonHeight // 35
+    width: Sizes.addUserButtonWidth // 35
+    height: Sizes.addUserButtonHeight // 35
 
     Image {
-        anchors.centerIn: parent
-        width: Sizes.maxAddUserButtonImageWidth // 19
-        height: Sizes.maxAddUserButtonImageHeight // 19
-        source: "qrc:/resources/img/add.svg"
+        anchors.fill: parent
+        source: addUserButton.hovered ? "qrc:/resources/img/AddHovered.svg" : "qrc:/resources/img/AddNormal.svg"
     }
 
     background: Rectangle {
-        color: addUserButton.hovered ? Colors.hoveredAddUserButtonColor : Colors.normalAddUserButtonColor
+        color: "transparent"
     }
 
     MouseArea {

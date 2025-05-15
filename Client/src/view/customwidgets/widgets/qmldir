@@ -31,3 +31,6 @@ ChatMessageObject 1.0 ChatMessageObject.qml
 AddImage 1.0 AddImage.qml
 ViewImage 1.0 ViewImage.qml
 AddUsersObject 1.0 AddUsersObject.qml
+RefreshButton 1.0 RefreshButton.qml
+TextButton 1.0 TextButton.qml
+ChatLastMessageText 1.0 ChatLastMessageText.qml

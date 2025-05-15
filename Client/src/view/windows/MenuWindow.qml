@@ -116,7 +116,9 @@ Popup {
 
     background: Rectangle {
         color: Colors.menuWindowBackgroundColor
-        radius: Sizes.radiusMenuWindow // 5
+        radius: Sizes.windowsRadius // 26
+        anchors.fill: parent
+        anchors.margins: -2
     }
 
     StackView {
@@ -142,7 +144,7 @@ Popup {
                 serverSelected: menuWindow.serverSelected
 
                 onProfileButtonClicked: {
-                    menuWindow.width = Sizes.maxMenuProfilePageWidth // 300
+                    menuWindow.width = Sizes.maxMenuProfilePageWidth // 475
                     menuWindow.height = Sizes.maxMenuProfilePageHeight // 550
 
                     var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menuprofilepage/MenuProfilePage.qml"), {
@@ -214,8 +216,8 @@ Popup {
                 }
 
                 onConfigureAdminButtonClicked: {
-                    menuWindow.width = 475
-                    menuWindow.height = 550
+                    menuWindow.width = Sizes.maxMenuConfigureAdminPageWidth // 475
+                    menuWindow.height = Sizes.maxMenuConfigureAdminPageHeight // 550
 
                     var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menuconfigureadminpage/MenuConfigureAdminPage.qml"), {
                         width: parent.width,
@@ -241,8 +243,8 @@ Popup {
                 }
 
                 onCreateGroupChatClicked: {
-                    menuWindow.width = 475
-                    menuWindow.height = 270
+                    menuWindow.width = Sizes.maxMenuCreateGroupChatPageWidth // 475
+                    menuWindow.height = Sizes.maxMenuCreateGroupChatPageHeight // 340
 
                     var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menucreategroupchatpage/MenuCreateGroupChatPage.qml"), {
                         width: parent.width,
@@ -274,8 +276,8 @@ Popup {
                         })
 
                         page.nextButtonClicked.connect(function() {
-                            menuWindow.width = 230
-                            menuWindow.height = 400
+                            menuWindow.width = Sizes.maxSelectUsersPageWidth // 400
+                            menuWindow.height = Sizes.maxSelectUsersPageHeight // 550
 
                             if(!selectUsersPage)
                             {
@@ -293,8 +295,8 @@ Popup {
                                     if(selectUsersPage)
                                     {
                                         selectUsersPage.backButtonClicked.connect(function() {
-                                            menuWindow.width = 475
-                                            menuWindow.height = 270
+                                            menuWindow.width = Sizes.maxMenuCreateGroupChatPageWidth // 475
+                                            menuWindow.height = Sizes.maxMenuCreateGroupChatPageHeight // 270
                                             stackView.pop()
                                         })
 
@@ -312,6 +314,27 @@ Popup {
 
                         })
                     }
+                }
+                onCreateTaskClicked: {
+                    menuWindow.width = 475
+                    menuWindow.height = 550
+
+                    var page = stackView.push(Qt.resolvedUrl("qrc:/view/windowpages/menucreatetaskpage/MenuCreateTaskPage.qml"),{
+                        width: parent.width,
+                        height: parent.height
+                    })
+
+                    if(page)
+                    {
+                        page.backButtonClicked.connect(function() {
+                            menuWindow.width = Sizes.maxMenuWindowWidth // 230
+                            menuWindow.height = Sizes.maxMenuWindowHeight // 550
+                            stackView.pop()
+                        })
+                    }
+                }
+                onCheckTasksClicked: {
+
                 }
             }
         }

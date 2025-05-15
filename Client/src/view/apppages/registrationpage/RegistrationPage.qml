@@ -11,6 +11,7 @@ Page {
 
     property var notificationManager // mainWindow notificationManager
 
+    signal regSuccess()
     signal backButtonClicked()
 
     background: Rectangle {
@@ -22,7 +23,9 @@ Page {
         anchors.fill: parent
 
         onClicked: {
-            inputFieldInitials.focus = false
+            inputFieldLastName.focus = false
+            inputFieldFirstName.focus = false
+            inputFieldMiddleName.focus = false
             inputFieldLogin.focus = false
             inputFieldPhoneNumber.focus = false
             inputFieldEmail.focus = false
@@ -32,35 +35,34 @@ Page {
         }
     }
 
-    RowLayout {
-        id: row
+    BackButton {
+        id: backButton
+
+        anchors.leftMargin: Sizes.backButtonLeftMarginSize // 29
+        anchors.topMargin: Sizes.backButtonTopMarginSize // 29
+        anchors.left: parent.left
+        anchors.top: parent.top
+
+        onClicked: {
+            registrationPage.backButtonClicked()
+        }
+    }
+
+    WindowText {
+        id: regText
         anchors.bottom: fields.top
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottomMargin: 20
-        width: 410
-        WindowText {
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
-            text: "Регистрация"
-
-            Tooltip {
-                width: Sizes.maxToolTipWidth // 20
-                height: Sizes.maxToolTipHeight // 20
-                anchors.left: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-
-                toolTipText: "Другие данные вы сможете заполнить позднее в профиле"
-            }
-        }
+        anchors.bottomMargin: 16
+        text: "Регистрация"
     }
 
 
     Item {
         id: fields
         anchors.centerIn: parent
-        anchors.top: row.bottom
         anchors.bottom: errorText.top
         width: Sizes.maxInputFieldWidth + 20  // например: 410 + 20 = 430
-        height: (Sizes.maxInputFieldHeight * 6) + (18 * 5) + 10 // 6 полей и 5 промежутков
+        height: (Sizes.maxInputFieldHeight * 6) + (16 * 5) + 10 // 6 полей и 5 промежутков
 
         ScrollView {
             anchors.fill: parent
@@ -81,17 +83,16 @@ Page {
                 ColumnLayout {
                     id: coll
                     anchors.centerIn: parent
-                    spacing: 18
+                    spacing: 16
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: Sizes.maxInputFieldWidth
 
                     AddImage {
                         id: addAvatar
-                        Layout.topMargin: 5
-                        Layout.preferredWidth: 100
-                        Layout.preferredHeight: 100
+                        Layout.preferredWidth: Sizes.addImageWidth // 100
+                        Layout.preferredHeight: Sizes.addImageHeight // 100
                         Layout.alignment: Qt.AlignHCenter
-                        radius: 50
+                        radius: Sizes.addImageRadius // 50
 
                         onBadImage: {
                             errorText.text = "Неверное изображение"
@@ -103,13 +104,36 @@ Page {
                         }
                     }
 
-                    InputField {
-                        id: inputFieldInitials
+                    RowLayout {
                         Layout.alignment: Qt.AlignHCenter
-                        Layout.leftMargin: 10
-                        Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
-                        Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
-                        placeholderText: "ФИО"
+                        spacing: 2
+
+                        InputField {
+                            id: inputFieldLastName
+                            Layout.alignment: Qt.AlignHCenter
+                            Layout.leftMargin: 10
+                            Layout.preferredWidth: 129
+                            Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
+                            placeholderText: "Фамилия"
+                        }
+
+                        InputField {
+                            id: inputFieldFirstName
+                            Layout.alignment: Qt.AlignHCenter
+                            Layout.leftMargin: 10
+                            Layout.preferredWidth: 129
+                            Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
+                            placeholderText: "Имя"
+                        }
+
+                        InputField {
+                            id: inputFieldMiddleName
+                            Layout.alignment: Qt.AlignHCenter
+                            Layout.leftMargin: 10
+                            Layout.preferredWidth: 129
+                            Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
+                            placeholderText: "Отчество"
+                        }
                     }
 
                     InputField {
@@ -148,7 +172,7 @@ Page {
                         Layout.leftMargin: 10
                         Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
                         Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
-                        placeholderText: "Введите логин"
+                        placeholderText: "Логин"
                     }
 
                     InputField {
@@ -157,7 +181,7 @@ Page {
                         Layout.leftMargin: 10
                         Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
                         Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
-                        placeholderText: "Введите номер телефона"
+                        placeholderText: "Номер телефона"
 
                         maximumLength: 11
                         validator: RegularExpressionValidator { regularExpression: /[0-9]+/ }
@@ -178,7 +202,7 @@ Page {
                         Layout.leftMargin: 10
                         Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
                         Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
-                        placeholderText: "Введите почту"
+                        placeholderText: "Почта"
 
                         validator: RegularExpressionValidator { regularExpression: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/}
 
@@ -198,7 +222,7 @@ Page {
                         Layout.leftMargin: 10
                         Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
                         Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
-                        placeholderText: "Введите пароль"
+                        placeholderText: "Пароль"
 
                         isPassword: true
                     }
@@ -222,7 +246,7 @@ Page {
     ErrorText {
         id: errorText
         anchors.top: fields.bottom
-        anchors.topMargin: 5
+        anchors.topMargin: 16
         width: 410
         anchors.horizontalCenter: parent.horizontalCenter
         visible: false
@@ -232,8 +256,8 @@ Page {
 
     MyButton {
         id: regButton
-        anchors.topMargin: 10
-        anchors.top: errorText.bottom
+        anchors.topMargin: 16
+        anchors.top: errorText.visible ? errorText.bottom : fields.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         width: Sizes.maxButtonWidth // 410
         height: Sizes.maxButtonHeight // 48
@@ -241,9 +265,15 @@ Page {
         text: "Зарегистрироваться"
 
         onClicked: {
-            if(inputFieldInitials.length <= 0)
+            if(inputFieldLastName.length <= 0)
             {
-                errorText.text = "Введите ваши инициалы"
+                errorText.text = "Введите вашу фамилию"
+                errorText.visible = true
+                return
+            }
+            else if(inputFieldFirstName.length <= 0)
+            {
+                errorText.text = "Введите ваше имя"
                 errorText.visible = true
                 return
             }
@@ -304,7 +334,7 @@ Page {
 
             errorText.visible = false
 
-            registrationPage.controller.prepareRegistrationRequest(addAvatar.base64Image, inputFieldInitials.text, inputFieldBirthDate.text, inputFieldLogin.text, inputFieldPhoneNumber.text, inputFieldEmail.text, inputFieldPassword.text)
+            registrationPage.controller.prepareRegistrationRequest(addAvatar.encodedFilePath, inputFieldLastName.text, inputFieldFirstName.text, inputFieldMiddleName.text, inputFieldBirthDate.text, inputFieldLogin.text, inputFieldPhoneNumber.text, inputFieldEmail.text, inputFieldPassword.text)
         }
     }
 
@@ -332,6 +362,7 @@ Page {
             errorText.visible = false
 
             registrationPage.notificationManager.showNotificationManager("Регистрация: Регистрация успешна")
+            registrationPage.regSuccess()
 
             return
         }
@@ -342,20 +373,6 @@ Page {
             registrationPage.notificationManager.showNotificationManager("Регистрация: Ошибка на сервере")
 
             return
-        }
-    }
-
-    BackButton {
-        width: Sizes.maxBackButtonRegPageWidth // 48
-        height: Sizes.maxBackButtonRegPageHeight // 48
-
-        anchors.leftMargin: Sizes.backButtonLeftMarginSize // 9
-        anchors.topMargin: Sizes.backButtonTopMarginSize // 9
-        anchors.left: parent.left
-        anchors.top: parent.top
-
-        onClicked: {
-            registrationPage.backButtonClicked()
         }
     }
 }

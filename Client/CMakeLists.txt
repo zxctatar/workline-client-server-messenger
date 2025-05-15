@@ -75,6 +75,9 @@ qt_add_qml_module(appClient
     QML_FILES src/view/customwidgets/widgets/AddImage.qml
     QML_FILES src/view/customwidgets/widgets/ViewImage.qml
     QML_FILES src/view/customwidgets/widgets/AddUsersObject.qml
+    QML_FILES src/view/customwidgets/widgets/RefreshButton.qml
+    QML_FILES src/view/customwidgets/widgets/TextButton.qml
+    QML_FILES src/view/customwidgets/widgets/ChatLastMessageText.qml
     RESOURCES src/view/customwidgets/widgets/qmldir
 
     QML_FILES src/view/windowpages/menuprofilepage/MenuProfilePage.qml
@@ -93,7 +96,6 @@ qt_add_qml_module(appClient
     QML_FILES src/view/windows/MenuWindow.qml
     QML_FILES src/view/windows/CreateChatWindow.qml
     QML_FILES src/view/windows/ChatInfoWindow.qml
-    QML_FILES src/view/windows/AddUsersWindow.qml
     QML_FILES src/view/windows/GroupChatInfoWindow.qml
     RESOURCES src/view/windows/qmldir
 
@@ -102,6 +104,9 @@ qt_add_qml_module(appClient
 
     QML_FILES src/view/windowpages/menucreategroupchatpage/MenuCreateGroupChatPage.qml
     RESOURCES src/view/windowpages/menucreategroupchatpage/qmldir
+
+    QML_FILES src/view/windowpages/menucreatetaskpage/MenuCreateTaskPage.qml
+    RESOURCES src/view/windowpages/menucreatetaskpage/qmldir
 
     QML_FILES src/view/windowpages/selectuserspage/SelectUsersPage.qml
     RESOURCES src/view/windowpages/selectuserspage/qmldir

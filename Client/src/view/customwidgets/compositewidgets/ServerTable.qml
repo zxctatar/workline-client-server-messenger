@@ -52,10 +52,17 @@ Item {
         ListView {
             id: listView
             anchors.fill: backList
-            spacing: Sizes.serverTableSpacing // 10
+            spacing: Sizes.serverTableSpacing // 15
             model: serverTable.controller.getServerModel() // serverModel
             interactive: true
             clip: true
+
+            boundsBehavior: Flickable.StopAtBounds
+
+            header: Item {
+                width: 1
+                height: 10
+            }
 
             delegate: ServerObject {
                 id: serverObject
@@ -109,8 +116,8 @@ Item {
                 anchors.centerIn: parent
                 notificationManager: serverTable.notificationManager
 
-                onAddServerSignal: function(base64Image, serverName, serverDescription) {
-                    serverTable.controller.preparingAddServerRequest(base64Image, serverName, serverDescription)
+                onAddServerSignal: function(encodedFilePath, serverName, serverDescription) {
+                    serverTable.controller.preparingAddServerRequest(encodedFilePath, serverName, serverDescription)
                 }
             }
         }

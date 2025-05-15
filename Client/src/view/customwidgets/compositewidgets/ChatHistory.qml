@@ -32,6 +32,7 @@ Item {
         selectedChat: chatHistory.selectedChat
         selectedIsGroup: chatHistory.selectedIsGroup
 
+        anchors.bottomMargin: 2
         anchors.bottom: chatInput.top
         anchors.right: parent.right
         anchors.left: parent.left

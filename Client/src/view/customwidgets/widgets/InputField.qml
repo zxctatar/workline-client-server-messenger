@@ -18,8 +18,9 @@ TextField {
     color: Colors.pressedInputFieldTextColor
     placeholderTextColor: Colors.normalInputFieldTextColor
 
-    font.pixelSize: Sizes.inputFieldTextSize // 16
+    font.pixelSize: Sizes.standartTextSize // 16
     font.family: Fonts.textFont
+    font.weight: Fonts.normalWeight
 
     echoMode: showPasswordBtn.visible ? (showPasswordBtn.showPassword ? TextInput.Normal : TextInput.Password) : TextInput.Normal
 
@@ -35,12 +36,5 @@ TextField {
         radius: Sizes.radiusInputFieldRectangle // 10
         color: parent.activeFocus ? Colors.pressedInputFieldColor : Colors.normalInputFieldColor
         border.color: parent.activeFocus ? Colors.pressedInputFieldBorderColor : Colors.normalInputFieldBorderColor
-        layer.enabled: true
-        layer.effect: DropShadow {
-            anchors.fill: parent
-            transparentBorder: Shadows.transparentBorder // true
-            radius: Shadows.radius // 5
-            color: Shadows.shadowColor
-        }
     }
 }

@@ -16,7 +16,7 @@ public:
     explicit RegistrationPageController(QObject* parent = nullptr);
     ~RegistrationPageController();
 
-    Q_INVOKABLE void prepareRegistrationRequest(const QString& q_image, const QString& q_initials, const QString& q_birthDate, const QString& q_login, const QString& q_phoneNumber, const QString& q_email, const QString& q_password) const;
+    Q_INVOKABLE void prepareRegistrationRequest(const QString& q_image, const QString& q_lastName, const QString& q_firstName, const QString& q_middleName, const QString& q_birthDate, const QString& q_login, const QString& q_phoneNumber, const QString& q_email, const QString& q_password) const;
 
 signals:
     void registrationRequestSignal(const QString& request_) const;

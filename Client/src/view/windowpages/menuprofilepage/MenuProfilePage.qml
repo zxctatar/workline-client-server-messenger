@@ -43,11 +43,8 @@ Page {
 
     BackButton {
         id: backButton
-        width: Sizes.maxBackButtonMenuWidth // 40
-        height: Sizes.maxBackButtonMenuHeight // 40
-
-        anchors.leftMargin: Sizes.backButtonLeftMarginSizeMenu // 7
-        anchors.topMargin: Sizes.backButtonTopMarginSizeMenu // 7
+        anchors.leftMargin: Sizes.backButtonLeftMarginSizeMenu // 25
+        anchors.topMargin: Sizes.backButtonTopMarginSizeMenu // 20
         anchors.left: parent.left
         anchors.top: parent.top
 
@@ -58,16 +55,27 @@ Page {
 
     WindowText {
         id: windowText
-        anchors.topMargin: Sizes.textTopMargin // 10
-        font.pixelSize: Sizes.menuTextSizeInMenu // 20
+        anchors.topMargin: Sizes.textTopMargin // 20
+        font.pixelSize: Sizes.menuTextSize // 20
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         text: "Профиль"
     }
 
+    Separator {
+        id: sep
+        anchors.top: windowText.bottom
+        anchors.topMargin: 20
+        width: parent.width - 50
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+
     Item {
         id: fields
-        anchors.top: windowText.bottom
+        anchors.top: sep.bottom
+        anchors.topMargin: 20
+        anchors.leftMargin: 25
+        anchors.rightMargin: 25
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -94,15 +102,14 @@ Page {
                     anchors.right: parent.right
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: parent.width
-                    spacing: Sizes.mainPageWidgetsSpacing
+                    spacing: Sizes.menuProfilePageSpacing // 3
 
                     AddImage {
                         id: avatar
-                        Layout.topMargin: 10
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-                        radius: 50
-                        Layout.preferredWidth: 100
-                        Layout.preferredHeight: 100
+                        radius: Sizes.addImageRadius // 50
+                        Layout.preferredWidth: Sizes.addImageWidth // 100
+                        Layout.preferredHeight: Sizes.addImageHeight // 100
                         change: false
                         path: menuProfilePage.avatarPath
                     }

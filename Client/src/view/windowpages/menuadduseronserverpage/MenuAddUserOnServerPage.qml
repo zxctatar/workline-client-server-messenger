@@ -53,11 +53,8 @@ Page {
 
     BackButton {
         id: backButton
-        width: Sizes.maxBackButtonMenuWidth // 40
-        height: Sizes.maxBackButtonMenuHeight // 40
-
-        anchors.leftMargin: Sizes.backButtonLeftMarginSizeMenu // 7
-        anchors.topMargin: Sizes.backButtonTopMarginSizeMenu // 7
+        anchors.leftMargin: Sizes.backButtonLeftMarginSizeMenu // 25
+        anchors.topMargin: Sizes.backButtonTopMarginSizeMenu // 20
         anchors.left: parent.left
         anchors.top: parent.top
 
@@ -68,20 +65,31 @@ Page {
 
     WindowText {
         id: windowText
-        anchors.topMargin: Sizes.textTopMargin // 10
-        font.pixelSize: Sizes.menuTextSizeInMenu // 20
+        anchors.topMargin: Sizes.textTopMargin // 20
+        font.pixelSize: Sizes.menuTextSize // 20
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         text: "Добавить пользователя"
     }
 
-    ListView {
+    Separator {
+        id: sep
         anchors.top: windowText.bottom
+        anchors.topMargin: 20
+        width: parent.width - 50
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+
+    ListView {
+        anchors.top: sep.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: refreshbutton.top
-        anchors.topMargin: 10
-        spacing: 10
+        anchors.topMargin: 20
+        anchors.bottomMargin: 20
+        anchors.leftMargin: 25
+        anchors.rightMargin: 25
+        spacing: Sizes.objectDistance // 15
         model: addUserOnServerPage.controller ? addUserOnServerPage.controller.getCandidateUserModel() : null // candidate user model
         interactive: true
         clip: true
@@ -93,7 +101,7 @@ Page {
 
             displayName: name
             width: parent ? parent.width : undefined
-            height: Sizes.maxCandidateUserObjectHeight // 50
+            height: Sizes.objectHeight // 50
             path: imagePath
 
             onAddUserClicked: {
@@ -102,14 +110,11 @@ Page {
         }
     }
 
-    MyButton {
+    RefreshButton {
         id: refreshbutton
-        width: Sizes.maxMenuAddUserOnServerPageRefreshButtonWidth // 100
-        height: Sizes.maxMenuAddUserOnServerPageRefreshButtonHeight // 50
         anchors.horizontalCenter: parent.horizontalCenter
-        font.pixelSize: Sizes.menuTextSizeInWidgets // 16
         anchors.bottom: parent.bottom
-        text: "Обновить"
+        anchors.bottomMargin: 15
 
         onClicked: {
             addUserOnServerPage.controller.refreshCandidateUsers()

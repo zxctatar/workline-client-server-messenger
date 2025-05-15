@@ -6,7 +6,7 @@ import "../../../resources"
 
 Item {
     id: applicationObject
-    height: Sizes.maxApplicationObjectHeight // 50
+    height: Sizes.objectHeight // 50
 
     property string displayName
     property string path
@@ -21,8 +21,8 @@ Item {
         Rectangle {
             id: recta
             radius: 24
-            Layout.preferredWidth: Sizes.maxApplicationObjectImageWidth // 40
-            Layout.preferredHeight: Sizes.maxApplicationObjectImageHeight // 40
+            Layout.preferredWidth: Sizes.objectImageWidth // 50
+            Layout.preferredHeight: Sizes.objectImageHeight // 50
             Layout.alignment: Qt.AlignVCenter
             color: "transparent"
 
@@ -50,10 +50,10 @@ Item {
         }
 
         RowLayout {
-            spacing: 5
+            spacing: 10
 
             ApproveButton {
-                Layout.preferredWidth: Sizes.maxApproveButtonWidth //35
+                Layout.preferredWidth: Sizes.maxApproveButtonWidth // 35
                 Layout.preferredHeight: Sizes.maxApproveButtonHeight // 35
 
                 onClicked: {

@@ -4,11 +4,15 @@ import "../../../resources"
 
 Button {
     id: menuWidget
-    width: Sizes.maxMenuWidgetWidth // 200
-    height: Sizes.maxMenuWidgetHeight // 50
-    palette.buttonText: Colors.normalButtonTextColor
+    width: Sizes.menuWidgetWidth // 200
+    height: Sizes.menuWidgetHeight // 50
+    palette.buttonText: Colors.menuWidgetTextColor
+    font.pixelSize: Sizes.standartTextSize // 16
+    font.family: Fonts.textFont
+    font.weight: menuWidget.hovered ? Fonts.boldWeight : Fonts.normalWeight
+
     background: Rectangle {
-        color: menuWidget.hovered ? Colors.hoveredMenuWidgetColor : Colors.normalMenuWidgetColor
+        color: Colors.normalMenuWidgetColor
     }
 
     MouseArea {

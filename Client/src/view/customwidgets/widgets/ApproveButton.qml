@@ -9,11 +9,11 @@ Button {
 
     Image {
         anchors.fill: parent
-        source: "qrc:/resources/img/yes.svg"
+        source: approveButton.hovered ? "qrc:/resources/img/YesHovered.svg" : "qrc:/resources/img/YesNormal.svg"
     }
 
     background: Rectangle {
-        color: approveButton.hovered ? Colors.hoverApproveButtonColor : Colors.normalApproveButtonColor
+        color: "transparent"
     }
 
     MouseArea {

@@ -28,9 +28,9 @@ Item {
 
         ViewImage {
             visible: chatMessageObject.visibleAvatar
-            width: Sizes.maxChatMessageObjectAvatarWidth // 45
-            height: Sizes. maxChatMessageObjectAvatarHeight // 45
-            radius: Sizes.chatMessageObjectAvatarRadius // 24
+            width: Sizes. chatMessageObjectImageWidth // 45
+            height: Sizes. chatMessageObjectImageHeight // 45
+            radius: Sizes.imageRadius // 24
             path: chatMessageObject.path
             anchors.bottom: backgroundRect.bottom
         }
@@ -38,11 +38,11 @@ Item {
         Rectangle {
             id: backgroundRect
             color: chatMessageObject.isCompanion ? Colors.chatMessageCandidateColor : Colors.chatMessageUserColor
-            radius: Sizes.chatMessageObjectRadius // 5
+            radius: Sizes.chatMessageObjectRadius // 12
 
             property int checkWidth: chatMessageObject.isCompanion ? 0 : 26
 
-            width: Math.min(messageText.paintedWidth + messageTime.paintedWidth + 5 + 20 + checkWidth, Sizes.maxChatMessageObjectWidth) // 400
+            width: Math.min(messageText.paintedWidth + messageTime.paintedWidth + 5 + 20 + checkWidth, Sizes.chatMessageObjectWidth) // 400
             height: messageText.paintedHeight + 20
 
             Text {
@@ -51,8 +51,8 @@ Item {
                 wrapMode: Text.WordWrap
                 width: Math.min(
                     Math.min(
-                        Sizes.maxChatMessageObjectWidth - messageTime.implicitWidth - 20,
-                        chatMessageObject.width - 40 - 50 - messageTime.paintedWidth - 10 - 15
+                        Sizes.chatMessageObjectWidth - messageTime.implicitWidth - 20,
+                        chatMessageObject.width - 40 - 50 - messageTime.paintedWidth - 10 - 15 - 50
                     ),
                     implicitWidth
                 )
@@ -60,8 +60,9 @@ Item {
                 x: 10
                 y: 10
 
-                font.family: Fonts.windowTextFont
-                font.pixelSize: Sizes.chatMessageTextSizes // 16
+                font.family: Fonts.textFont
+                font.weight: Fonts.normalWeight
+                font.pixelSize: Sizes.standartTextSize // 16
                 color: Colors.chatMessageTextColor
             }
 
@@ -74,8 +75,9 @@ Item {
                 anchors.bottom: backgroundRect.bottom
                 anchors.bottomMargin: 5
 
-                font.family: Fonts.windowTextFont
-                font.pixelSize: 12
+                font.family: Fonts.textFont
+                font.weight: Fonts.normalWeight
+                font.pixelSize: Sizes.smallTextSize // 12
                 color: Colors.chatMessageTextColor
             }
 

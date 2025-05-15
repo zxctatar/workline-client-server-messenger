@@ -4,8 +4,8 @@ import "../../../resources"
 
 Button {
     id: menuButton
-    width: Sizes.maxMenuButtonWidth // 47
-    height: Sizes.maxMenuButtonHeight // 47
+    width: Sizes.menuButtonWidth // 47
+    height: Sizes.menuButtonHeight // 47
 
     background: Rectangle {
         color: Colors.menuButtonBackgroundColor
@@ -13,7 +13,7 @@ Button {
 
     Image {
         anchors.fill: parent
-        source: "qrc:/resources/img/MenuButton.svg"
+        source: menuButton.hovered ? "qrc:/resources/img/MenuButtonHovered.svg" : "qrc:/resources/img/MenuButtonNormal.svg"
     }
 
     MouseArea {

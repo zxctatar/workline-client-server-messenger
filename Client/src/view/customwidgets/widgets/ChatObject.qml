@@ -24,7 +24,8 @@ Button {
     }
 
     background: Rectangle {
-        color: chatObject.selected ? Colors.selectedChatColor : (chatObject.hovered ? "#85B4DE" : Colors.normalChatColor)
+        color: chatObject.selected ? Colors.selectedChatColor : (chatObject.hovered ? Colors.hoveredChatColor : Colors.normalChatColor)
+        radius: 10
     }
 
     Row {
@@ -36,8 +37,8 @@ Button {
         Rectangle {
             id: recta
             radius: 24
-            width: Sizes.maxChatObjectImageWidth // 50
-            height: Sizes.maxChatObjectImageHeight // 50
+            width: Sizes.objectImageWidth // 50
+            height: Sizes.objectImageHeight // 50
             anchors.verticalCenter: parent.verticalCenter
             color: "transparent"
 
@@ -69,7 +70,7 @@ Button {
                 width: parent.width
             }
 
-            ChatMessageText {
+            ChatLastMessageText {
                 id: messageText
                 text: chatObject.processedLastMessage
                 width: parent.width
@@ -78,21 +79,23 @@ Button {
 
         Rectangle {
             id: notif
-            anchors.verticalCenter: parent.verticalCenter
+            //anchors.verticalCenter: parent.verticalCenter
+            anchors.bottom: parent.bottom
             radius: 30
             clip: true
 
             visible: chatObject.messageCount > 0 ? true : false
-            color: "#969BFF"
+            color: "#78A095"
 
-            width: 30
-            height: 30
+            width: 26
+            height: 26
 
             Text {
                 text: chatObject.messageCount
                 anchors.centerIn: parent
-                font.family: Fonts.windowTextFont
-                font.pixelSize: Sizes.chatNameTextSize // 16
+                font.family: Fonts.textFont
+                font.weight: Fonts.normalWeight
+                font.pixelSize: Sizes.standartTextSize // 16
                 elide: Text.ElideRight
                 color: Colors.chatNameTextColor
             }

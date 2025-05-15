@@ -60,7 +60,7 @@ Page {
 
         controller: mainPage.mainController.chatInfoBarController
 
-        height: Sizes.maxChatInfoBarHeight // 70
+        height: Sizes.chatInfoBarHeight // 70
     }
 
     ChatHistory {
@@ -84,12 +84,6 @@ Page {
         hoverEnabled: true
 
         cursorShape: Qt.SizeHorCursor
-
-        Rectangle {
-            width: parent.width - 4
-            height: parent.height
-            color: "#1673C8"
-        }
 
         onPressed: {
             drag.target = layout

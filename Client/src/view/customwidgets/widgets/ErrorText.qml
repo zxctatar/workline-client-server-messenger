@@ -4,6 +4,7 @@ import "../../../resources"
 Text {
     id: errorMessage
     color: Colors.errorTextColor
-    font.pixelSize: Sizes.errorTextSize // 16
+    font.pixelSize: Sizes.standartTextSize // 16
     font.family: Fonts.textFont
+    font.weight: Fonts.normalWeight
 }

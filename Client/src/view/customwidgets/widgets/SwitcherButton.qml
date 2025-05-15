@@ -11,11 +11,11 @@ Button {
 
     Image {
         anchors.fill: parent
-        source: swither.isSelected == true ? "qrc:/resources/img/no.svg" : "qrc:/resources/img/yes.svg"
+        source: swither.isSelected == true ? (swither.hovered ? "qrc:/resources/img/NoHovered.svg" : "qrc:/resources/img/NoNormal") : (swither.hovered ? "qrc:/resources/img/YesHovered.svg" : "qrc:/resources/img/YesNormal")
     }
 
     background: Rectangle {
-        color: swither.isSelected == true ? (swither.hovered ? Colors.switcherNoButtonHovered : Colors.switcherNoButtonNormal) : (swither.hovered ? Colors.switcherYesButtonHovered : Colors.switcherYesButtonNormal)
+        color: "transparent"
     }
 
     MouseArea {

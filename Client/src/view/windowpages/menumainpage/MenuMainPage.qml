@@ -16,6 +16,8 @@ Page {
     signal addUserOnServerButtonClicked()
     signal configureAdminButtonClicked()
     signal createGroupChatClicked()
+    signal createTaskClicked()
+    signal checkTasksClicked()
 
     background: Rectangle {
         color: Colors.menuWindowBackgroundColor
@@ -25,12 +27,12 @@ Page {
         id: layout
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        spacing: Sizes.mainPageWidgetsSpacing // 3
+        spacing: Sizes.menuMainPageSpacing // 3
 
         MenuWidget {
             Layout.topMargin: 5
             Layout.preferredWidth: menuMainPage.width
-            Layout.preferredHeight: Sizes.maxMenuWidgetHeight // 50
+            Layout.preferredHeight: Sizes.menuWidgetHeight // 50
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             text: "Профиль"
 
@@ -46,7 +48,7 @@ Page {
 
         MenuWidget {
             Layout.preferredWidth: menuMainPage.width
-            Layout.preferredHeight: Sizes.maxMenuWidgetHeight // 50
+            Layout.preferredHeight: Sizes.menuWidgetHeight // 50
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             text: "Заявки"
 
@@ -64,7 +66,7 @@ Page {
 
         MenuWidget {
             Layout.preferredWidth: menuMainPage.width
-            Layout.preferredHeight: Sizes.maxMenuWidgetHeight // 50
+            Layout.preferredHeight: Sizes.menuWidgetHeight // 50
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             text: "Добавить пользователя"
 
@@ -82,7 +84,7 @@ Page {
 
         MenuWidget {
             Layout.preferredWidth: menuMainPage.width
-            Layout.preferredHeight: Sizes.maxMenuWidgetHeight // 50
+            Layout.preferredHeight: Sizes.menuWidgetHeight // 50
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             text: "Настроить администраторов"
 
@@ -100,7 +102,7 @@ Page {
 
         MenuWidget {
             Layout.preferredWidth: menuMainPage.width
-            Layout.preferredHeight: Sizes.maxMenuWidgetHeight // 50
+            Layout.preferredHeight: Sizes.menuWidgetHeight // 50
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             text: "Создать групповой чат"
 
@@ -108,6 +110,42 @@ Page {
 
             onClicked: {
                 menuMainPage.createGroupChatClicked()
+            }
+        }
+
+        Separator {
+            Layout.fillWidth: true
+            visible: menuMainPage.serverSelected ? (menuMainPage.userRole == "admin" ? true : (menuMainPage.serverRole == 2 ? true : false)) : false
+        }
+
+        MenuWidget {
+            Layout.preferredWidth: menuMainPage.width
+            Layout.preferredHeight: Sizes.menuWidgetHeight // 50
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            text: "Создать задачу"
+
+            visible: menuMainPage.serverSelected ? (menuMainPage.userRole == "admin" ? true : (menuMainPage.serverRole == 2 ? true : false)) : false
+
+            onClicked: {
+                menuMainPage.createTaskClicked()
+            }
+        }
+
+        Separator {
+            Layout.fillWidth: true
+            visible: menuMainPage.serverSelected ? true : false
+        }
+
+        MenuWidget {
+            Layout.preferredWidth: menuMainPage.width
+            Layout.preferredHeight: Sizes.menuWidgetHeight // 50
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            text: "Просмотр задач"
+
+            visible: menuMainPage.serverSelected ? true : false
+
+            onClicked: {
+                menuMainPage.checkTasksClicked()
             }
         }
     }

@@ -16,8 +16,6 @@
         <file>resources/img/passwordOff.svg</file>
         <file>resources/img/passwordOn.svg</file>
         <file>resources/img/Icon.svg</file>
-        <file>resources/img/Plus.svg</file>
-        <file>resources/img/MenuButton.svg</file>
         <file>view/windows/AddServerWindow.qml</file>
         <file>view/windows/MenuWindow.qml</file>
         <file>view/windows/qmldir</file>
@@ -56,15 +54,12 @@
         <file>view/customwidgets/widgets/ApplicationObject.qml</file>
         <file>view/customwidgets/widgets/ApproveButton.qml</file>
         <file>view/customwidgets/widgets/RejectButton.qml</file>
-        <file>resources/img/yes.svg</file>
-        <file>resources/img/no.svg</file>
         <file>resources/img/avatar.svg</file>
         <file>view/customwidgets/widgets/ChatObject.qml</file>
         <file>view/windowpages/menuadduseronserverpage/MenuAddUserOnServerPage.qml</file>
         <file>view/windowpages/menuadduseronserverpage/qmldir</file>
         <file>view/customwidgets/widgets/CandidateUserObject.qml</file>
         <file>view/customwidgets/widgets/AddUserButton.qml</file>
-        <file>resources/img/add.svg</file>
         <file>view/customwidgets/compositewidgets/ChatsBar.qml</file>
         <file>view/customwidgets/widgets/ChatNameText.qml</file>
         <file>view/customwidgets/widgets/ChatMessageText.qml</file>
@@ -88,11 +83,29 @@
         <file>resources/img/checkNoUser.svg</file>
         <file>view/windowpages/menucreategroupchatpage/MenuCreateGroupChatPage.qml</file>
         <file>view/windowpages/menucreategroupchatpage/qmldir</file>
-        <file>view/windows/AddUsersWindow.qml</file>
         <file>view/windowpages/selectuserspage/qmldir</file>
         <file>view/windowpages/selectuserspage/SelectUsersPage.qml</file>
         <file>view/customwidgets/widgets/AddUsersObject.qml</file>
         <file>resources/img/groupAvatar.svg</file>
         <file>view/windows/GroupChatInfoWindow.qml</file>
+        <file>view/customwidgets/widgets/RefreshButton.qml</file>
+        <file>view/windowpages/menucreatetaskpage/MenuCreateTaskPage.qml</file>
+        <file>view/windowpages/menucreatetaskpage/qmldir</file>
+        <file>resources/fonts/Onest-Regular.ttf</file>
+        <file>resources/fonts/Onest-Bold.ttf</file>
+        <file>resources/fonts/OnestRegular1602-hint.woff</file>
+        <file>resources/fonts/Onest-VariableFont_wght.ttf</file>
+        <file>view/customwidgets/widgets/TextButton.qml</file>
+        <file>resources/img/PlusHovered.svg</file>
+        <file>resources/img/PlusNormal.svg</file>
+        <file>resources/img/MenuButtonHovered.svg</file>
+        <file>resources/img/MenuButtonNormal.svg</file>
+        <file>resources/img/NoHovered.svg</file>
+        <file>resources/img/NoNormal.svg</file>
+        <file>resources/img/YesHovered.svg</file>
+        <file>resources/img/YesNormal.svg</file>
+        <file>resources/img/AddHovered.svg</file>
+        <file>resources/img/AddNormal.svg</file>
+        <file>view/customwidgets/widgets/ChatLastMessageText.qml</file>
     </qresource>
 </RCC>

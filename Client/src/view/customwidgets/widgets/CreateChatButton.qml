@@ -4,17 +4,17 @@ import "../../../resources"
 
 MyButton {
     id: createChatButton
-    width: Sizes.maxCreateChatButtonWidth // 75
-    height: Sizes.maxCreateChatButtonHeight // 30
+    width: Sizes.createChatButtonWidth // 90
+    height: Sizes.createChatButtonHeight // 40
 
     property string displayText
 
     text: displayText
-    font.pixelSize: Sizes.fontPixelSizeCreateChatButton // 14
+    font.pixelSize: Sizes.standartTextSize // 16
 
     background: Rectangle {
         color: createChatButton.hovered ? Colors.hoverButtonColor : Colors.normalButtonColor
-        radius: Sizes.createChatButtonRadius // 0
+        radius: Sizes.createChatButtonRadius // 20
     }
 
     MouseArea {

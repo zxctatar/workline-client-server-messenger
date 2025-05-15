@@ -23,7 +23,8 @@ Image {
         contentItem: Text {
             id: textToolTip
             font.family: Fonts.textFont
-            font.pixelSize: Sizes.toolTipTextSize // 14
+            font.weight: Fonts.normalWeight
+            font.pixelSize: Sizes.normalTextSize // 14
             color: Colors.toolTipTextColor
             text: ""
         }

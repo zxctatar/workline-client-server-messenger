@@ -6,7 +6,7 @@ import "../../../resources"
 
 Item {
     id: candidateUserObject
-    height: Sizes.maxCandidateUserObjectHeight // 50
+    height: Sizes.objectHeight // 50
 
     property string displayName
     property string path
@@ -20,8 +20,8 @@ Item {
         Rectangle {
             id: recta
             radius: 24
-            Layout.preferredWidth: Sizes.maxApplicationObjectImageWidth // 40
-            Layout.preferredHeight: Sizes.maxApplicationObjectImageHeight // 40
+            Layout.preferredWidth: Sizes.objectImageWidth // 50
+            Layout.preferredHeight: Sizes.objectImageHeight // 50
             Layout.alignment: Qt.AlignVCenter
             color: "transparent"
 
@@ -49,9 +49,8 @@ Item {
         }
 
         AddUserButton {
-            Layout.preferredWidth: Sizes.maxAddUserButtonWidth // 35
-            Layout.preferredHeight: Sizes.maxAddUserButtonHeight // 35
-            Layout.rightMargin: Sizes.rightMargineAddUserButton // 5
+            Layout.preferredWidth: Sizes.addUserButtonWidth // 35
+            Layout.preferredHeight: Sizes.addUserButtonHeight // 35
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
 
             onClicked: {

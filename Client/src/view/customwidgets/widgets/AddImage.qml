@@ -8,7 +8,7 @@ import "../../../resources"
 Button {
     id: addImage
 
-    readonly property string base64Image: Qt.btoa(image.source)
+    readonly property string encodedFilePath: Qt.btoa(image.source)
     property bool isFileDialogOpen: false
     property int radius: 0
     property string path: ""
@@ -18,9 +18,9 @@ Button {
 
     background: Rectangle {
         radius: addImage.radius
-        border.color: Colors.addImageBorderColor
+        border.color: addImage.hovered ? Colors.addImageHoveredBorderColor : Colors.addImageNormalBorderColor
         border.width: 1
-        color: Colors.addImageBackgroundColor
+        color: addImage.hovered ? Colors.addImageHoveredBackgroundColor : Colors.addImageNormalBackgroundColor
     }
 
     Rectangle {
@@ -71,7 +71,7 @@ Button {
         height: parent.height - 5
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 11
+        font.pixelSize: Sizes.smallTextSize // 12
         wrapMode: Text.WordWrap
         color: "black"
         text: "Добавить изображение 100x100 (png, ico, svg, jpeg, jpg)"

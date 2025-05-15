@@ -32,13 +32,36 @@ Popup {
     }
 
     background: Rectangle {
-        color: "#D3E3F1"
-        radius: Sizes.radiusChatInfoWindow // 5
+        color: "#F2F2F2"
+        radius: Sizes.windowsRadius // 26
+    }
+
+    WindowText {
+        id: windowText
+        anchors.topMargin: Sizes.textTopMargin // 20
+        font.pixelSize: Sizes.menuTextSize // 20
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        text: "Профиль"
+    }
+
+    Separator {
+        id: sep
+        anchors.top: windowText.bottom
+        anchors.topMargin: 20
+        width: parent.width - 50
+        anchors.horizontalCenter: parent.horizontalCenter
     }
 
     Item {
         id: fields
-        anchors.fill: parent
+        anchors.top: sep.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.topMargin: 20
+        anchors.leftMargin: 25
+        anchors.rightMargin: 25
 
         ScrollView {
             anchors.fill: parent
@@ -62,11 +85,10 @@ Popup {
                     anchors.right: parent.right
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: parent.width
-                    spacing: Sizes.mainPageWidgetsSpacing
+                    spacing: 3
 
                     ViewImage {
                         id: avatar
-                        Layout.topMargin: 10
                         Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
                         radius: 50
                         Layout.preferredWidth: 100

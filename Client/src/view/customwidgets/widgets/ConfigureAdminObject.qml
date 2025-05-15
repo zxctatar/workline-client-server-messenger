@@ -6,7 +6,7 @@ import "../../../resources"
 
 Item {
     id: configureAdminObject
-    height: Sizes.maxConfigureAdminObjectHeight // 50
+    height: Sizes.objectHeight // 50
 
     property string displayName
     property string path
@@ -18,13 +18,13 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: Sizes.spacingConfigureAdminObject // 10
+        spacing: Sizes.configureAdminObjectSpacing // 10
 
         Rectangle {
             id: recta
             radius: 24
-            Layout.preferredWidth: Sizes.maxConfigureAdminObjectImageWidth // 40
-            Layout.preferredHeight: Sizes.maxConfigureAdminObjectImageHeight // 40
+            Layout.preferredWidth: Sizes.objectImageWidth // 50
+            Layout.preferredHeight: Sizes.objectImageHeight // 50
             Layout.alignment: Qt.AlignVCenter
             color: "transparent"
 
@@ -54,7 +54,6 @@ Item {
         SwitcherButton {
             Layout.preferredWidth: Sizes.maxSwitcherButtonWidth // 35
             Layout.preferredHeight: Sizes.maxSwitcherButtonHeight // 35
-            Layout.rightMargin: Sizes.rightMargineSwitcherButton // 5
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
 
             isSelected: configureAdminObject.isAdmin

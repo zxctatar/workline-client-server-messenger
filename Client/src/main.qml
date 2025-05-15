@@ -98,6 +98,10 @@ ApplicationWindow {
                 onBackButtonClicked: {
                     stackView.pop()
                 }
+
+                onRegSuccess: {
+                    stackView.pop()
+                }
             }
         }
 

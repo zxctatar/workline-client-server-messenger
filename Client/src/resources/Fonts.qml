@@ -2,16 +2,12 @@ pragma Singleton
 import QtQuick 2.15
 
 Item {
-    readonly property alias textFont: textFont.name
-    readonly property alias windowTextFont: windowTextFont.name
+    readonly property string textFont: textFont.name
+    readonly property string boldWeight: Font.Bold
+    readonly property string normalWeight: Font.Normal
 
-    FontLoader { // шрифт текста окна
-        id: windowTextFont
-        source: "qrc:/resources/fonts/Lato-SemiBold.ttf"
-    }
-
-    FontLoader { // шрифт текста (кнопок, полей и т.д.)
+    FontLoader {
         id: textFont
-        source: "qrc:/resources/fonts/Inter-Regular.otf"
+        source: "qrc:/resources/fonts/Onest-VariableFont_wght.ttf"
     }
 }

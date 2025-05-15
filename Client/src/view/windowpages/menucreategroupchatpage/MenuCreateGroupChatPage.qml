@@ -25,11 +25,8 @@ Page {
 
     BackButton {
         id: backButton
-        width: Sizes.maxBackButtonMenuWidth // 40
-        height: Sizes.maxBackButtonMenuHeight // 40
-
-        anchors.leftMargin: Sizes.backButtonLeftMarginSizeMenu // 7
-        anchors.topMargin: Sizes.backButtonTopMarginSizeMenu // 7
+        anchors.leftMargin: Sizes.backButtonLeftMarginSizeMenu // 25
+        anchors.topMargin: Sizes.backButtonTopMarginSizeMenu // 20
         anchors.left: parent.left
         anchors.top: parent.top
 
@@ -40,66 +37,77 @@ Page {
 
     WindowText {
         id: windowText
-        anchors.topMargin: Sizes.textTopMargin // 10
-        font.pixelSize: Sizes.menuTextSizeInMenu // 20
+        anchors.topMargin: Sizes.textTopMargin // 20
+        font.pixelSize: Sizes.menuTextSize // 20
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         text: "Создать групповой чат"
     }
+
+    Separator {
+        id: sep
+        anchors.top: windowText.bottom
+        anchors.topMargin: 20
+        width: parent.width - 50
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+
 
     ColumnLayout {
         id: coll
         spacing: 10
         anchors.right: parent.right
         anchors.left: parent.left
-        anchors.top: windowText.bottom
+        anchors.top: sep.bottom
+        anchors.leftMargin: 25
+        anchors.rightMargin: 25
+        anchors.topMargin: 20
+        anchors.bottomMargin: 20
 
         AddImage {
             id: addImage
-            Layout.topMargin: 10
             Layout.alignment: Qt.AlignHCenter
-            radius: 50
-            Layout.preferredWidth: 100
-            Layout.preferredHeight: 100
+            radius: Sizes.addImageRadius // 50
+            Layout.preferredWidth: Sizes.addImageWidth // 100
+            Layout.preferredHeight: Sizes.addImageHeight // 100
         }
 
         InputField {
             id: inputFieldName
-            Layout.preferredWidth: 375
-            Layout.preferredHeight: 40
+            Layout.preferredWidth: Sizes.createGroupChatInputFieldWidth // 375
+            Layout.preferredHeight: Sizes.createGroupChatInputFieldHeight // 40
             Layout.alignment: Qt.AlignHCenter
-            font.pixelSize: Sizes.addServerWindowFontSize // 16
+            font.pixelSize: Sizes.standartTextSize // 16
             placeholderText: "Название чата"
         }
 
         ErrorText {
             id: errorText
             visible: false
-            Layout.preferredWidth: 375
+            Layout.preferredWidth: Sizes.createGroupChatPageErrorTextWidth // 375
             Layout.alignment: Qt.AlignHCenter
         }
-    }
 
-    MyButton {
-        id: refreshbutton
-        width: Sizes.maxMenuApplicaionPageRefreshButtonWidth // 100
-        height: Sizes.maxMenuApplicaionPageRefreshButtonHeight // 50
-        anchors.horizontalCenter: parent.horizontalCenter
-        font.pixelSize: Sizes.menuTextSizeInWidgets // 16
-        anchors.bottom: parent.bottom
-        text: "Далее"
+        MyButton {
+            id: nextButton
+            Layout.preferredWidth: Sizes.maxNextButtonWidth // 100
+            Layout.preferredHeight: Sizes.maxNextButtonHeight // 50
+            Layout.alignment: Qt.AlignHCenter
+            font.pixelSize: Sizes.standartTextSize // 16
+            text: "Далее"
 
-        onClicked: {
-            if(inputFieldName.length == 0)
-            {
-                errorText.text = "Введите название чата"
-                errorText.visible = true
-                return
+            onClicked: {
+                if(inputFieldName.length == 0)
+                {
+                    errorText.text = "Введите название чата"
+                    errorText.visible = true
+                    return
+                }
+
+                errorText.visible = false
+                createGropChatPage.controller.saveAvatarAndName(addImage.encodedFilePath, inputFieldName.text)
+                createGropChatPage.nextButtonClicked()
             }
-
-            errorText.visible = false
-            createGropChatPage.controller.saveAvatarAndName(addImage.base64Image, inputFieldName.text)
-            createGropChatPage.nextButtonClicked()
         }
     }
 }

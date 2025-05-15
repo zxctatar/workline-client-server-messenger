@@ -208,7 +208,6 @@ void ServerConnector::slotSendToServer(const QString& request_)
     }
 }
 
-
 void ServerConnector::slotConnected()
 {
     qDebug() << "Connected to the server";

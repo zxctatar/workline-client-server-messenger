@@ -2,7 +2,7 @@ import QtQuick 2.15
 import "../../../resources"
 
 Rectangle {
-    height: Sizes.separatorHeight // 2
+    height: Sizes.separatorHeight // 1
     color: Colors.separatorColor
-    radius: Sizes.radiusSeparator // 2
+    radius: Sizes.separatorRadius // 2
 }

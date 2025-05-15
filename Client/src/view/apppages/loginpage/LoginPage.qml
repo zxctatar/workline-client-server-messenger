@@ -1,4 +1,4 @@
-import QtQuick 2.15
+    import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 2.15
 import "../../../resources"
@@ -30,17 +30,17 @@ Page {
 
     ColumnLayout {
         anchors.centerIn: parent
-        spacing: Sizes.loginPageWidgetsSpacing
+        spacing: Sizes.loginPageWidgetsSpacing // 15
 
         WindowText {
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
-            text: "Войти"
+            Layout.alignment: Qt.AlignHCenter
+            text: "Вход"
         }
 
         InputField {
             id: inputFieldLogin
-            Layout.preferredWidth: Sizes.maxInputFieldWidth
-            Layout.preferredHeight: Sizes.maxInputFieldHeight
+            Layout.preferredWidth: Sizes.maxInputFieldWidth // 410
+            Layout.preferredHeight: Sizes.maxInputFieldHeight // 48
             Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
             placeholderText: "Логин"
         }
@@ -80,16 +80,28 @@ Page {
             }
         }
 
-        MyButton {
-            Layout.preferredWidth: Sizes.maxButtonWidth
-            Layout.preferredHeight: Sizes.maxButtonHeight
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
-            text: "Регистрация"
+        Row {
+            Layout.alignment: Qt.AlignHCenter
 
-            onClicked: {
-                loginPage.registerClicked()
+            Text {
+                font.family: Fonts.textFont
+                font.weight: Fonts.normalWeight
+                font.pixelSize: Sizes.standartTextSize // 16
+                color: Colors.windowTextColor
+                text: "У вас нет аккаунта? "
+            }
+
+            TextButton {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignLeft
+                text: "Зарегистрироваться"
+
+                onClicked: {
+                    loginPage.registerClicked()
+                }
             }
         }
+
     }
 
     Connections {

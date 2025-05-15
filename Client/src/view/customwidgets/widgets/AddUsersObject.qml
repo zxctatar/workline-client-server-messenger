@@ -6,7 +6,6 @@ import "../../../resources"
 
 Item {
     id: addUsersObject
-    height: Sizes.maxAddUserObjectHeight // 50
 
     property string displayName
     property string path
@@ -22,9 +21,9 @@ Item {
 
         Rectangle {
             id: recta
-            radius: 24
-            Layout.preferredWidth: Sizes.maxAddUserObjectImageWidth // 40
-            Layout.preferredHeight: Sizes.maxAddUserObjectImageHeight // 40
+            radius: Sizes.imageRadius // 24
+            Layout.preferredWidth: Sizes.objectImageWidth // 50
+            Layout.preferredHeight: Sizes.objectImageHeight // 50
             Layout.alignment: Qt.AlignVCenter
             color: "transparent"
 
@@ -52,9 +51,8 @@ Item {
         }
 
         SwitcherButton {
-            Layout.preferredWidth: Sizes.maxAddUserButtonWidth // 35
-            Layout.preferredHeight: Sizes.maxAddUserButtonHeight // 35
-            Layout.rightMargin: Sizes.rightMargineAddUserButton // 5
+            Layout.preferredWidth: Sizes.maxSwitcherButtonWidth // 35
+            Layout.preferredHeight: Sizes.maxSwitcherButtonHeight // 35
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
 
             isSelected: addUsersObject.isSelected

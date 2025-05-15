@@ -21,7 +21,8 @@ Popup {
         text: popup.popupText
         color: Colors.popupTextColor
         font.family: Fonts.textFont
-        font.pixelSize: Sizes.popupTextSize // 20
+        font.weight: Fonts.normalWeight
+        font.pixelSize: Sizes.standartTextSize // 16
     }
 
     Timer {

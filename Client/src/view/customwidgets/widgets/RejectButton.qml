@@ -9,11 +9,11 @@ Button {
 
     Image {
         anchors.fill: parent
-        source: "qrc:/resources/img/no.svg"
+        source: rejectButton.hovered ? "qrc:/resources/img/NoHovered.svg" : "qrc:/resources/img/NoNormal.svg"
     }
 
     background: Rectangle {
-        color: rejectButton.hovered ? Colors.hoverRejectButtonColor : Colors.normalRejectButtonColor
+        color: "transparent"
     }
 
     MouseArea {

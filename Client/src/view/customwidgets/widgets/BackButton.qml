@@ -4,8 +4,8 @@ import "../../../resources"
 
 Button {
     id: root
-    width: Sizes.maxBackButtonRegPageWidth // 48
-    height: Sizes.maxBackButtonRegPageHeight // 48
+    width: Sizes.maxBackButtonRegPageWidth // 19
+    height: Sizes.maxBackButtonRegPageHeight // 29
 
     Image {
         anchors.fill: parent

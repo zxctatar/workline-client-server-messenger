@@ -7,8 +7,9 @@ Item {
         id: inputField
         width: parent.width
         palette.text: "black"
-        font.pixelSize: 16
+        font.pixelSize: Sizes.standartTextSize // 16
         font.family: Fonts.textFont
+        font.weight: Fonts.normalWeight
 
         background: Rectangle {
             color: "transparent"

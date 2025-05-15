@@ -10,8 +10,8 @@ Button {
     property bool isAdmin: false
     property bool selected: false
 
-    width: Sizes.maxServerObjectWidth
-    height: Sizes.maxServerObjectHeight
+    width: Sizes.maxServerObjectWidth // 56
+    height: Sizes.maxServerObjectHeight // 56
 
     signal deleteServerClicked(int serverId)
 
@@ -19,17 +19,18 @@ Button {
     property string imagePath
 
     palette.buttonText: "black"
-    font.pixelSize: Sizes.serverObjectTextSize
+    font.pixelSize: Sizes.bigTextSize // 32
     font.family: Fonts.textFont
+    font.weight: Fonts.normalWeight
 
     background: Rectangle {
-        radius: Sizes.serverObjectRadius // 10
-        color: "#93CCFF"
+        radius: Sizes.serverObjectRadius // 28
+        color: "#F2F2F2"
     }
 
     Rectangle {
         id: recta
-        radius: Sizes.serverObjectRadius // 10
+        radius: Sizes.serverObjectRadius // 28
         anchors.fill: parent
         anchors.verticalCenter: parent.verticalCenter
         color: "transparent"
@@ -54,9 +55,9 @@ Button {
         // Рамка поверх изображения
         Rectangle {
             anchors.fill: parent
-            radius: Sizes.serverObjectRadius // 10
+            radius: Sizes.serverObjectRadius // 28
             color: "transparent"
-            border.color: serverObject.selected ? "#00FF62" : "transparent"
+            border.color: serverObject.selected ? "#1AED77" : "transparent"
             border.width: serverObject.selected ? 6 : 0
             z: 1
         }

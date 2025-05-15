@@ -9,11 +9,12 @@ Button {
 
     palette.buttonText: myButton.hovered ? Colors.hoverButtonTextColor : Colors.normalButtonTextColor
     font.family: Fonts.textFont
-    font.pixelSize: Sizes.buttonTextSize // 16
+    font.weight: Fonts.normalWeight
+    font.pixelSize: Sizes.standartTextSize // 16
 
     background: Rectangle {
         color: myButton.hovered ? Colors.hoverButtonColor : Colors.normalButtonColor
-        radius: Sizes.radiusButtonRectangle // 10
+        radius: Sizes.radiusButtonRectangle // 20
     }
 
     MouseArea {

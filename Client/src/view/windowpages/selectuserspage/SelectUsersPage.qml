@@ -15,7 +15,7 @@ Page {
     property var notificationManager
 
     background: Rectangle {
-        color: "#D3E3F1"
+        color: Colors.menuWindowBackgroundColor
     }
 
     Component.onCompleted: {
@@ -48,11 +48,9 @@ Page {
 
     BackButton {
         id: backButton
-        width: Sizes.maxBackButtonMenuWidth // 40
-        height: Sizes.maxBackButtonMenuHeight // 40
 
-        anchors.leftMargin: Sizes.backButtonLeftMarginSizeMenu // 7
-        anchors.topMargin: Sizes.backButtonTopMarginSizeMenu // 7
+        anchors.leftMargin: Sizes.backButtonLeftMarginSizeMenu // 25
+        anchors.topMargin: Sizes.backButtonTopMarginSizeMenu // 20
         anchors.left: parent.left
         anchors.top: parent.top
 
@@ -61,14 +59,35 @@ Page {
         }
     }
 
+    WindowText {
+        id: windowText
+        anchors.topMargin: Sizes.textTopMargin // 20
+        font.pixelSize: Sizes.menuTextSize // 20
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        text: "Выбор пользователей"
+    }
+
+    Separator {
+        id: sep
+        anchors.top: windowText.bottom
+        anchors.topMargin: 20
+        width: parent.width - 50
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+
     ListView {
         id: listView
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: refreshbutton.top
-        anchors.top: backButton.bottom
+        anchors.bottom: doneButton.top
+        anchors.top: sep.bottom
+        anchors.topMargin: 20
+        anchors.bottomMargin: 20
+        anchors.leftMargin: 25
+        anchors.rightMargin: 25
         clip: true
-        spacing: 10
+        spacing: 15
         model: selectUsersPage.controller.getUsersModel()
 
         delegate: AddUsersObject {
@@ -79,7 +98,7 @@ Page {
             displayName: name
             path: imagePath
             width: parent.width
-            height: 40
+            height: Sizes.objectHeight // 50
 
             onAddUserSignal: {
                 selectUsersPage.controller.addUser(id)
@@ -93,11 +112,11 @@ Page {
     }
 
     MyButton {
-        id: refreshbutton
-        width: Sizes.maxMenuApplicaionPageRefreshButtonWidth // 100
-        height: Sizes.maxMenuApplicaionPageRefreshButtonHeight // 50
+        id: doneButton
+        width: Sizes.doneButtonWidth // 100
+        height: Sizes.doneButtonHeight // 50
         anchors.horizontalCenter: parent.horizontalCenter
-        font.pixelSize: Sizes.menuTextSizeInWidgets // 16
+        font.pixelSize: Sizes.standartTextSize // 16
         anchors.bottom: parent.bottom
         text: "Готово"
 

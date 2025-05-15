@@ -10,11 +10,11 @@ Button {
 
     background: Rectangle {
         color: Colors.addServerButtonBackgroundColor
-        radius: Sizes.addServerButtonRadius // 10
+        radius: Sizes.addServerButtonRadius // 28
     }
 
     Image {
-        source: "qrc:/resources/img/Plus.svg"
+        source: addServer.hovered ? "qrc:/resources/img/PlusHovered.svg" : "qrc:/resources/img/PlusNormal.svg"
         anchors.centerIn: parent
     }
 
