@@ -247,6 +247,11 @@ ReconnectResult UserDBManager::reconnectUser(std::shared_ptr<DBConnection> conne
                     return result_;
                 }
             }
+            else if(!result_check_is_admin_.empty())
+            {
+                result_.userRole_ = "admin";
+                return result_;
+            }
             else
             {
                 return result_;

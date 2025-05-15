@@ -174,11 +174,11 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
 
         if(response_.userRole_ == "user")
         {
-            connUsers_.addAuthorizeUser(response_.userID_, session_);
+            connUsers_.reconnectUser(response_.userID_, session_);
         }
         else if(response_.userRole_ == "admin")
         {
-            connUsers_.addAuthorizeAdmin(response_.userID_, session_);
+            connUsers_.reconnectAdmin(response_.userID_, session_);
         }
     }
     else if(json_["Info"] == "DeleteServer")
@@ -700,7 +700,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
         std::vector<uint8_t> receivedGroupAvatar_ = imageWorker_.base64_decode(json_["groupAvatar"].get<std::string>());
 
         auto connection_ = connectionPool_.getConnection();
-        CreateGroupChatResult response_ = chatManager_.createGroupChat(connection_, receivedServerId_, receivedServerId_, receivedGroupName_, receivedGroupAvatar_, receivedAddedUsers_);
+        CreateGroupChatResult response_ = chatManager_.createGroupChat(connection_, receivedServerId_, receivedUserId_, receivedGroupName_, receivedGroupAvatar_, receivedAddedUsers_);
         connectionPool_.returnConnection(connection_);
 
         std::string responseJson_ = jsonWorker_.createCreateGroupChatJson(response_.groupId_, receivedServerId_, receivedUserId_, receivedGroupName_, json_["groupAvatar"].get<std::string>());
@@ -717,6 +717,7 @@ void RequestRouter::defineQuery(const boost::asio::any_io_executor& executor_, c
                 std::weak_ptr<Session> user_  = connUsers_.getUser(i);
 
                 boost::asio::post(executor_, [this, user_, responseJson_](){
+
                     if(auto s_ = user_.lock())
                     {
                         s_->do_write(responseJson_);

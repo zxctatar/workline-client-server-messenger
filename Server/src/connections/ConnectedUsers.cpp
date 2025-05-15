@@ -29,6 +29,20 @@ void ConnectedUsers::addAuthorizeAdmin(const int id_, std::weak_ptr<Session> ses
     }
 }
 
+void ConnectedUsers::reconnectUser(const int id_, std::weak_ptr<Session> session_)
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    session_.lock()->setAccountId(id_);
+    authorized_users[id_] = session_;
+}
+
+void ConnectedUsers::reconnectAdmin(const int id_, std::weak_ptr<Session> session_)
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    session_.lock()->setAccountId(id_);
+    authorized_admins[id_] = session_;
+}
+
 void ConnectedUsers::removeAuthorize(const int id_)
 {
     std::lock_guard<std::mutex> lock(mutex_);

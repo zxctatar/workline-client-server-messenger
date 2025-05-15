@@ -16,6 +16,10 @@ public:
 
     void addAuthorizeUser(const int id_, std::weak_ptr<Session> session_);
     void addAuthorizeAdmin(const int id_, std::weak_ptr<Session> session_);
+
+    void reconnectUser(const int id_, std::weak_ptr<Session> session_);
+    void reconnectAdmin(const int id_, std::weak_ptr<Session> session_);
+
     void removeAuthorize(const int id_);
     std::weak_ptr<Session> getUser(const int id_) const;
 
