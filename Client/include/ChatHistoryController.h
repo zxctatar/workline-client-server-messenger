@@ -8,6 +8,7 @@
 #include "SelectedServerManager.h"
 #include "SelectedChatManager.h"
 #include "JsonWorker.h"
+#include "Encryption.h"
 
 class ChatHistoryController : public QObject
 {
@@ -40,6 +41,7 @@ public slots:
 
 private:
     JsonWorker jsonWorker_;
+    Encryption encryption_;
     ChatHistoryModel* historyModel_;
 };
 

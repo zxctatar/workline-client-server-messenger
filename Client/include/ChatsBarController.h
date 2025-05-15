@@ -9,6 +9,7 @@
 #include "SelectedChatManager.h"
 #include "ChatModel.h"
 #include "ImageWorker.h"
+#include "Encryption.h"
 
 class ChatsBarController : public QObject
 {
@@ -45,6 +46,7 @@ public slots:
 private:
     JsonWorker jsonWorker_;
     ImageWorker imageWorker_;
+    Encryption encryption_;
     ChatModel* chatModel_;
 };
 

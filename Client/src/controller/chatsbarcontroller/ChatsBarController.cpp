@@ -48,7 +48,7 @@ void ChatsBarController::slotChatsProcessing(const QJsonObject& jsonObj_)
             QString firstName_ = chat_["firstName"].toString();
             QString lastName_ = chat_["lastName"].toString();
             QString middleName_ = chat_["middleName"].toString();
-            QString lastMessage_ = chat_["lastMessage"].toString();
+            QString lastMessage_ = encryption_.decrypt(chat_["lastMessage"].toString());
             QString messageTime_ = chat_["messageTime"].toString();
             bool isChat_ = chat_["isChat"].toBool();
             int newMessagesCount_ = chat_["newMessagesCount"].toInt();
@@ -72,7 +72,7 @@ void ChatsBarController::slotChatsProcessing(const QJsonObject& jsonObj_)
 
             QImage image_ = imageWorker_.decodeImage(groupChat_["avatar"].toString());
 
-            QString lastMessage_ = groupChat_["lastMessage"].toString();
+            QString lastMessage_ = encryption_.decrypt(groupChat_["lastMessage"].toString());
             QString messageTime_ = groupChat_["messageTime"].toString();
             int newMessagesCount_ = groupChat_["newMessagesCount"].toInt();
 
@@ -157,7 +157,7 @@ void ChatsBarController::slotSetNewLastMessage(const QJsonObject& jsonObj_)
 {
     int serverId_ = jsonObj_["serverId"].toInt();
     int chatId_ = jsonObj_["chatId"].toInt();
-    QString lastMessage_ = jsonObj_["message"].toString();
+    QString lastMessage_ = encryption_.decrypt(jsonObj_["message"].toString());
     bool isGroup_ = jsonObj_["isGroup"].toBool();
 
     if(SelectedServerManager::instance().getServerId() == serverId_)

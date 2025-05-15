@@ -20,7 +20,9 @@ void ChatHistoryController::sendMessage(const int chatId_, const bool isGroup_, 
     int userId_ = UserAccountManager::instance().getUserId();
     int serverId_ = SelectedServerManager::instance().getServerId();
 
-    QString request_ = jsonWorker_.createJsonSendMessage(chatId_, isGroup_, userId_, serverId_, message_);
+    QString encryptMessage_ = encryption_.encrypt(message_);
+
+    QString request_ = jsonWorker_.createJsonSendMessage(chatId_, isGroup_, userId_, serverId_, encryptMessage_);
 
     emit sendMessageSignal(request_);
 }
@@ -83,7 +85,7 @@ void ChatHistoryController::slotSetChatData(const QJsonObject& jsonObj_)
 
             int senderId_ = mObj_["senderId"].toInt();
             int messageId_ = mObj_["messageId"].toInt();
-            QString message_ = mObj_["message"].toString();
+            QString message_ = encryption_.decrypt(mObj_["message"].toString());
             QString stringTime_ = mObj_["time"].toString();
 
             QString trimmed_ = stringTime_.left(19);
@@ -109,7 +111,7 @@ void ChatHistoryController::slotSetNewMessage(const QJsonObject& jsonObj_)
     if(serverId_ == SelectedServerManager::instance().getServerId() && chatId_ == SelectedChatManager::instance().getChatId() && isGroup_ == SelectedChatManager::instance().getGroup())
     {
         int messageId_ = jsonObj_["messageId"].toInt();
-        QString message_ = jsonObj_["message"].toString();
+        QString message_ = encryption_.decrypt(jsonObj_["message"].toString());
         QString stringTime_ = jsonObj_["time"].toString();
 
         QString trimmed_ = stringTime_.left(19);
