@@ -50,10 +50,31 @@ QHash<int, QByteArray> UsersModel::roleNames() const
     return roles_;
 }
 
-void UsersModel::addUser(const int serverId_, const QImage& image_, const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const bool isServerAdmin_, const bool isGlobalAdmin_)
+void UsersModel::addUserForCandidate(const int serverId_, const QImage& image_, const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const bool isServerAdmin_, const bool isGlobalAdmin_)
 {
     if(SelectedServerManager::instance().getServerId() == serverId_ && !isGlobalAdmin_)
     {
+        QString avatarPath_ = imageWorker_.saveImageToTempFile(image_);
+
+        QString displayName_ = lastName_ + ' ' + firstName_[0] + ". " + middleName_[0] + '.';
+
+        beginInsertRows(QModelIndex(), users_.size(), users_.size());
+        users_.append({avatarPath_, displayName_, userId_, firstName_, lastName_, middleName_, isServerAdmin_});
+        endInsertRows();
+    }
+}
+
+void UsersModel::addUserForSelect(const int serverId_, const QImage& image_, const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const bool isServerAdmin_, const bool isGlobalAdmin_)
+{
+    QString userRole_ = UserAccountManager::instance().getUserRole();
+
+    if(SelectedServerManager::instance().getServerId() == serverId_)
+    {
+        if(userRole_ != "admin" && isGlobalAdmin_)
+        {
+            return;
+        }
+
         QString avatarPath_ = imageWorker_.saveImageToTempFile(image_);
 
         QString displayName_ = lastName_ + ' ' + firstName_[0] + ". " + middleName_[0] + '.';

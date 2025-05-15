@@ -56,7 +56,7 @@ void ConfigureAdminController::slotSetUsersOnServerPreparing(const QJsonObject& 
             bool isServerAdmin_ = userObject_["isServerAdmin"].toBool();
             bool isGlobalAdmin_ = userObject_["isGlobalAdmin"].toBool();
 
-            usersModel_->addUser(serverId_, image_, userId_, firstName_, lastName_, middleName_, isServerAdmin_, isGlobalAdmin_);
+            usersModel_->addUserForCandidate(serverId_, image_, userId_, firstName_, lastName_, middleName_, isServerAdmin_, isGlobalAdmin_);
         }
     }
 }

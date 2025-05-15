@@ -31,6 +31,8 @@ void UserAccountManager::setUserData(const QString& receivedUserAvatar_, const Q
     id_ = receivedUserId_;
     userRole_ = receivedUserRole_;
 
+    qDebug() << userRole_;
+
     isAuthorized = true;
 }
 

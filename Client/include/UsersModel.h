@@ -5,6 +5,7 @@
 #include <qqml.h>
 #include <QAbstractListModel>
 #include "SelectedServerManager.h"
+#include "UserAccountManager.h"
 #include "ImageWorker.h"
 
 class UsersModel : public QAbstractListModel
@@ -19,7 +20,8 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
-    void addUser(const int serverId_, const QImage& image_, const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const bool isServerAdmin_, const bool isGlobalAdmin_);
+    void addUserForCandidate(const int serverId_, const QImage& image_, const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const bool isServerAdmin_, const bool isGlobalAdmin_);
+    void addUserForSelect(const int serverId_, const QImage& image_, const int userId_, const QString& firstName_, const QString& lastName_, const QString& middleName_, const bool isServerAdmin_, const bool isGlobalAdmin_);
     void addAdminRole(const int userId_, const int serverId_);
     void removeAdminRole(const int userId_, const int serverId_);
     void clearUsers();

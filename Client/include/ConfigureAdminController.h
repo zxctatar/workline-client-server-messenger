@@ -6,6 +6,7 @@
 #include <memory>
 #include "UsersModel.h"
 #include "SelectedServerManager.h"
+#include "UserAccountManager.h"
 #include "JsonWorker.h"
 #include "ImageWorker.h"
 

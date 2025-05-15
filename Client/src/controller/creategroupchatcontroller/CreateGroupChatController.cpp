@@ -46,12 +46,17 @@ void CreateGroupChatController::slotSetUsersOnServerPreparing(const QJsonObject&
         {
             if(!i.isObject())
             {
-                return;
+                continue;
             }
 
             QJsonObject userObject_ = i.toObject();
 
             int userId_ = userObject_["userId"].toInt();
+
+            if(userId_ == UserAccountManager::instance().getUserId())
+            {
+                continue;
+            }
 
             QImage image_ = imageWorker_.decodeImage(userObject_["avatar"].toString());
 
@@ -61,7 +66,7 @@ void CreateGroupChatController::slotSetUsersOnServerPreparing(const QJsonObject&
             bool isServerAdmin_ = userObject_["isServerAdmin"].toBool();
             bool isGlobalAdmin_ = userObject_["isGlobalAdmin"].toBool();
 
-            usersModel_->addUser(serverId_, image_, userId_, firstName_, lastName_, middleName_, isServerAdmin_, isGlobalAdmin_);
+            usersModel_->addUserForSelect(serverId_, image_, userId_, firstName_, lastName_, middleName_, isServerAdmin_, isGlobalAdmin_);
         }
     }
 }
@@ -107,6 +112,13 @@ void CreateGroupChatController::createChat()
     int serverId_ = SelectedServerManager::instance().getServerId();
     int userId_ = UserAccountManager::instance().getUserId();
     addedUsers_.push_back(userId_);
+
+    qDebug() << serverId_ << ' ' << userId_;
+
+    for(auto& i : addedUsers_)
+    {
+        qDebug() << "u = " << i;
+    }
 
     QString request_ = jsonWorker_.createJsonCreateGroupChat(serverId_, userId_, receivedGroupAvatar_, receivedGroupName_, addedUsers_);
     emit createGroupChatSignal(request_);

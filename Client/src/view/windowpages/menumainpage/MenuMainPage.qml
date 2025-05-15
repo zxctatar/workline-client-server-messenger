@@ -61,7 +61,7 @@ Page {
 
         Separator {
             Layout.fillWidth: true
-            visible: menuMainPage.userRole == "admin" ? (menuMainPage.serverSelected ? true : false) : false
+            visible: menuMainPage.userRole == "admin" ? (menuMainPage.serverSelected ? true : false) : menuMainPage.serverRole == 2 ? (menuMainPage.serverSelected ? true : false) : false
         }
 
         MenuWidget {
